@@ -27,6 +27,7 @@ paths:
                 schema:
                     type: string
                 description: The sport key obtained from calling the /sports endpoint. 'upcoming' is always valid.
+                example: 'americanfootball_nfl' # Single example for path parameter
               - in: query
                 name: regions
                 required: true
@@ -34,6 +35,7 @@ paths:
                     type: string
                 description: >-
                     Bookmaker regions, comma delimited. Valid regions: us, us2, uk, au, eu.
+                example: 'us,uk' # Single example for query parameter
               - in: query
                 name: markets
                 schema:
@@ -96,17 +98,25 @@ components:
             properties:
                 name:
                     type: string
+                    description: A label of the outcome. For totals markets, this can be 'Over' or 'Under'. For all other markets, this will be the name of the team or participant, or 'Draw'
+                    example: 'Houston Texans' # Single example for path parameter
                 price:
                     type: number
+                    description: The odds of the outcome. The format is determined by the oddsFormat query param. The format is decimal by default.
+                    example: '2.23' # Single example for path parameter
                 point:
                     type: number
                     nullable: true # since point is not present in all outcomes
+                    description: The handicap or points of the outcome, only applicable to spreads and totals markets (this property will be missing for h2h and outrights markets)
+                    example: '20.5' # Single example for path parameter
 
         Market:
             type: object
             properties:
                 key:
                     type: string
+                    description: The sport key obtained from calling the /sports endpoint. 'upcoming' is always valid.
+                    example: 'americanfootball_nfl' # Single example for path parameter
                 outcomes:
                     type: array
                     items:
@@ -117,10 +127,16 @@ components:
             properties:
                 key:
                     type: string
+                    description: key of the bookmaker used to get odds from a specific bookmaker endpoint
+                    example: 'draftkings' # Single example for path parameter
                 title:
                     type: string
+                    description: The commonly known name of the bookmaker
+                    example: 'DraftKings' # Single example for path parameter
                 last_update:
                     type: string
+                    description: The last time the odds were updated from this bookmaker
+                    example: '2020-01-01T14:45:13Z' # Single example for path parameter
                     format: date-time
                 markets:
                     type: array
@@ -132,15 +148,25 @@ components:
             properties:
                 id:
                     type: string
+                    description: A unique 32 character identifier for the event.
+                    example: 'e912304de2b2ce35b473ce2ecd3d1502' # Single example for path parameter
                 sport_key:
                     type: string
+                    description: A unique slug for the sport. Use this as the "sport" param in /odds requests
+                    example: 'americanfootball_nfl' # Single example for path parameter
                 commence_time:
                     type: string
+                    description: The match start time (ISO 8601 formatted). This will be unix timestamp integer if the dateFormat query param is set to dateFormat=unix.
+                    example: '2020-01-02T23:10:00Z' # Single example for path parameter
                     format: date-time
                 home_team:
                     type: string
+                    description: The home team. If home/away is not applicable for the sport (such as MMA and Tennis), it will be one of the participants. Null for outrights (futures) events.
+                    example: 'Houston Texans' # Single example for path parameter
                 away_team:
                     type: string
+                    description: The away team. If home/away is not applicable for the sport (such as MMA and Tennis), it will be one of the participants. Null for outrights (futures) events.
+                    example: 'Kansas City Chiefs' # Single example for path parameter
                 bookmakers:
                     type: array
                     items:
