@@ -88,6 +88,36 @@ def odds_endpoint():
   return jsonify(result)
 
 
+def get_sport_scores(api_key, sport, daysFrom=None, dateFormat=None, eventIds=None):
+  base_url = "https://api.example.com/v4/sports"  # Replace with actual base URL
+  endpoint = f"{base_url}/{sport}/scores/"
+  
+  params = {
+      'apiKey': api_key,
+      'daysFrom': daysFrom if daysFrom is not None else '',
+      'dateFormat': dateFormat if dateFormat is not None else '',
+      'eventIds': eventIds if eventIds is not None else ''
+  }
+
+  response = requests.get(endpoint, params=params)
+  
+  if response.status_code == 200:
+    return response.json()
+  else:
+    return response.status_code, response.reason
+
+@app.route('/sports/scores', methods=['GET'])
+def scores_endpoint():
+  api_key = API_KEY_ODDS
+  sport = request.args.get('sport')
+  daysFrom = request.args.get('daysFrom')
+  dateFormat = request.args.get('dateFormat')
+  eventIds = request.args.get('eventIds')
+
+  result = get_sport_scores(api_key, sport, daysFrom, dateFormat, eventIds)
+  return jsonify(result)
+
+
 #################### CHATGPT FUNCTIONS ######################
 # ChatGPT will use this route to find our manifest file, ai-plugin.json; it will look in the "".well-known" folder
 @app.route('/.well-known/ai-plugin.json')
