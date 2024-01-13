@@ -87,6 +87,55 @@ def odds_endpoint():
                            commenceTimeTo)
   return jsonify(result)
 
+def get_event_odds(api_key,
+                    sport,
+                    regions,
+                    eventId,
+                    markets=None,
+                    dateFormat=None,
+                    oddsFormat=None,
+                    bookmakers=None):
+  base_url = "https://api.the-odds-api.com/v4/sports"
+  endpoint = f"{base_url}/{sport}/events/{eventId}/odds/"
+
+  params = {'apiKey': api_key, 'regions': regions}
+  # Add other parameters if they exist
+  # ...
+  if markets is not None:
+    params['markets'] = markets
+  if dateFormat is not None:
+    params['dateFormat'] = dateFormat
+  if oddsFormat is not None:
+    params['oddsFormat'] = oddsFormat
+  else:
+    params['oddsFormat'] = 'american'
+  if bookmakers is not None:
+    params['bookmakers'] = bookmakers
+
+  response = requests.get(endpoint, params=params)
+  if response.status_code == 200:
+    return response.json()
+  else:
+    return response.status_code, response.reason
+
+
+@app.route('/sports/events', methods=['GET'])
+def events_endpoint():
+  api_key = API_KEY_ODDS
+  regions = request.args.get('regions')
+  sport   = request.args.get('sport')
+  eventId = request.args.get('eventId')
+  get_event_odds
+  # Fetch other parameters similarly
+  # ...
+  markets = request.args.get('markets')
+  dateFormat = request.args.get('dateFormat')
+  oddsFormat = request.args.get('oddsFormat')
+  bookmakers = request.args.get('bookmakers')
+
+  result = get_event_odds(api_key, sport, regions, eventId, markets, dateFormat,
+                           oddsFormat, bookmakers)
+  return jsonify(result)
 
 def get_sport_scores(api_key, sport, daysFrom=None, dateFormat=None, eventIds=None):
   base_url = "https://api.the-odds-api.com/v4/sports"
