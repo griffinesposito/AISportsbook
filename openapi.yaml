@@ -10,17 +10,12 @@ paths:
         get:
             operationId: getInSeasonSports
             summary: Retrieves a list of the current sports that are in-season and have available betting odds.
-#            parameters:
-#                - in: query
-#                  name: symbol
-#                  schema:
-#                      type: string
-#                  description: The symbol of the stock to get a quote for. For example, the stock symbol MSFT represents the company Microsoft.
             responses:
                 "200":
                     description: OK
     /sports/{sport}/odds/:
         get:
+            operationId: getOdds
             summary: Returns a list of upcoming and live games with recent odds
             description: >-
                 Retrieves odds for a given sport, region, and market. It includes
