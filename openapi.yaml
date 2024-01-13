@@ -4,7 +4,7 @@ info:
     description: Retrieve current odds for various sports and historical data for sports teams and players.
     version: "v1"
 servers:
-    - url: https://chatgpt-plugin-demo-espositogriffin.replit.app/
+    - url: https://ai-sportsbook.replit.app
 paths:
     /sports:
         get:
