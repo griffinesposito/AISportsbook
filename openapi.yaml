@@ -19,3 +19,85 @@ paths:
             responses:
                 "200":
                     description: OK
+    /sports/{sport}/odds/:
+        get:
+            summary: Returns a list of upcoming and live games with recent odds
+            description: >-
+                Retrieves odds for a given sport, region, and market. It includes
+                upcoming and live games.
+            parameters:
+                - in: path
+                name: sport
+                required: true
+                schema:
+                    type: string
+                description: The sport key obtained from calling the /sports endpoint. 'upcoming' is always valid.
+                - in: query
+                name: regions
+                required: true
+                schema:
+                    type: string
+                description: >-
+                    Bookmaker regions, comma delimited. Valid regions: us, us2, uk, au, eu.
+                - in: query
+                name: markets
+                schema:
+                    type: string
+                description: >-
+                    Types of odds market, comma delimited. Defaults to h2h. Valid values: h2h, spreads, totals, outrights.
+                - in: query
+                name: dateFormat
+                schema:
+                    type: string
+                    enum: [unix, iso]
+                description: Format of timestamps in the response. Defaults to iso.
+                - in: query
+                name: oddsFormat
+                schema:
+                    type: string
+                    enum: [decimal, american]
+                description: Format of odds in the response. Defaults to decimal.
+                - in: query
+                name: eventIds
+                schema:
+                    type: string
+                description: Comma-separated game ids to filter the response.
+                - in: query
+                name: bookmakers
+                schema:
+                    type: string
+                description: Comma-separated list of bookmakers to be returned.
+                - in: query
+                name: commenceTimeFrom
+                schema:
+                    type: string
+                    format: date-time
+                description: >-
+                    Filter to show games commencing on/after this time. ISO 8601 format. No effect if sport is 'upcoming'.
+                - in: query
+                name: commenceTimeTo
+                schema:
+                    type: string
+                    format: date-time
+                description: >-
+                    Filter to show games commencing on/before this time. ISO 8601 format. No effect if sport is 'upcoming'.
+            responses:
+                '200':
+                description: Successful response with odds data
+                content:
+                    application/json:
+                    schema:
+                        type: object
+                        properties:
+                        games:
+                            type: array
+                            items:
+                            type: object
+                            properties:
+                                # Define game object properties here
+                '400':
+                description: Bad request due to invalid parameters
+                '401':
+                description: Unauthorized access due to missing or invalid apiKey
+                '500':
+                description: Internal server error
