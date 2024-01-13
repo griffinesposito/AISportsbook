@@ -4,7 +4,7 @@ info:
     description: Retrieve current odds for various sports and historical data for sports teams and players.
     version: "v1"
 servers:
-    - url: https://ai-sportsbook.replit.app
+    - url: https://chatgpt-plugin-demo-espositogriffin.replit.app/
 paths:
     /sports:
         get:
@@ -13,7 +13,7 @@ paths:
             responses:
                 "200":
                     description: OK
-    /sports/{sport}/odds/:
+    /sports/{sport}/odds:
         get:
             operationId: getOdds
             summary: Returns a list of upcoming and live games with recent odds
@@ -86,13 +86,74 @@ paths:
                         properties:
                         games:
                             type: array
-                            items:
+                            items: 
+                                $ref: '#/components/schemas/Game'
                             type: object
-                            properties:
-                                # Define game object properties here
                 '400':
                 description: Bad request due to invalid parameters
                 '401':
                 description: Unauthorized access due to missing or invalid apiKey
                 '500':
                 description: Internal server error
+components:
+    schemas:
+        Outcome:
+        type: object
+        properties:
+            name:
+            type: string
+            price:
+            type: number
+            point:
+            type: number
+            nullable: true # since point is not present in all outcomes
+
+        Market:
+        type: object
+        properties:
+            key:
+            type: string
+            outcomes:
+            type: array
+            items:
+                $ref: '#/components/schemas/Outcome'
+
+        Bookmaker:
+        type: object
+        properties:
+            key:
+            type: string
+            title:
+            type: string
+            last_update:
+            type: string
+            format: date-time
+            markets:
+            type: array
+            items:
+                $ref: '#/components/schemas/Market'
+
+        Game:
+        type: object
+        properties:
+            id:
+            type: string
+            sport_key:
+            type: string
+            commence_time:
+            type: string
+            format: date-time
+            home_team:
+            type: string
+            away_team:
+            type: string
+            bookmakers:
+            type: array
+            items:
+                $ref: '#/components/schemas/Bookmaker'
+
+        GamesArray:
+        type: array
+        items:
+            $ref: '#/components/schemas/Game'
+                
