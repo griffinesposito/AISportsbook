@@ -78,82 +78,76 @@ paths:
                     Filter to show games commencing on/before this time. ISO 8601 format. No effect if sport is 'upcoming'.
             responses:
                 '200':
-                description: Successful response with odds data
-                content:
-                    application/json:
-                    schema:
-                        type: object
-                        properties:
-                        games:
-                            type: array
-                            items: 
-                                $ref: '#/components/schemas/Game'
-                            type: object
+                    description: Successful response with odds data
+                    content:
+                        application/json:
+                        schema:
+                            $ref: '#/components/schemas/GamesArray'
                 '400':
-                description: Bad request due to invalid parameters
+                    description: Bad request due to invalid parameters
                 '401':
-                description: Unauthorized access due to missing or invalid apiKey
+                    description: Unauthorized access due to missing or invalid apiKey
                 '500':
-                description: Internal server error
+                    description: Internal server error
 components:
     schemas:
         Outcome:
-        type: object
-        properties:
-            name:
-            type: string
-            price:
-            type: number
-            point:
-            type: number
-            nullable: true # since point is not present in all outcomes
+            type: object
+            properties:
+                name:
+                    type: string
+                price:
+                    type: number
+                point:
+                    type: number
+                    nullable: true # since point is not present in all outcomes
 
         Market:
-        type: object
-        properties:
-            key:
-            type: string
-            outcomes:
-            type: array
-            items:
-                $ref: '#/components/schemas/Outcome'
+            type: object
+            properties:
+                key:
+                    type: string
+                outcomes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Outcome'
 
         Bookmaker:
-        type: object
-        properties:
-            key:
-            type: string
-            title:
-            type: string
-            last_update:
-            type: string
-            format: date-time
-            markets:
-            type: array
-            items:
-                $ref: '#/components/schemas/Market'
+            type: object
+            properties:
+                key:
+                    type: string
+                title:
+                    type: string
+                last_update:
+                    type: string
+                    format: date-time
+                markets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Market'
 
         Game:
-        type: object
-        properties:
-            id:
-            type: string
-            sport_key:
-            type: string
-            commence_time:
-            type: string
-            format: date-time
-            home_team:
-            type: string
-            away_team:
-            type: string
-            bookmakers:
-            type: array
-            items:
-                $ref: '#/components/schemas/Bookmaker'
+            type: object
+            properties:
+                id:
+                    type: string
+                sport_key:
+                    type: string
+                commence_time:
+                    type: string
+                    format: date-time
+                home_team:
+                    type: string
+                away_team:
+                    type: string
+                bookmakers:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Bookmaker'
 
         GamesArray:
-        type: array
-        items:
-            $ref: '#/components/schemas/Game'
+            type: array
+            items:
+                $ref: '#/components/schemas/Game'
                 
