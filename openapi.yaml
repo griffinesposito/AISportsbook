@@ -91,6 +91,56 @@ paths:
                     description: Unauthorized access due to missing or invalid apiKey
                 '500':
                     description: Internal server error
+    /sports/scores:
+        get:
+            operationId: getScores
+            summary: Returns a list of upcoming, live, and recently completed games
+            description: >-
+                Retrieves scores for upcoming, live, and recently completed games for a given sport.
+                Live and recently completed games include scores. Games from up to 3 days ago can
+                be returned using the daysFrom parameter. Live scores update approximately every 30 seconds.
+            parameters:
+              - in: query
+                name: sport
+                required: true
+                schema:
+                    type: string
+                description: The sport key obtained from calling the /sports endpoint.
+              - in: query
+                name: daysFrom
+                schema:
+                    type: integer
+                    minimum: 1
+                    maximum: 3
+                description: >-
+                    Optional - Number of days in the past to return completed games. Valid values are 1 to 3.
+                    If missing, only live and upcoming games are returned.
+              - in: query
+                name: dateFormat
+                schema:
+                    type: string
+                    enum: [unix, iso]
+                description: >-
+                    Optional - Format of timestamps in the response. Valid values are unix and iso (ISO 8601). Defaults to iso.
+              - in: query
+                name: eventIds
+                schema:
+                    type: string
+                description: >-
+                    Optional - Comma-separated game ids to filter the response.
+            responses:
+                '200':
+                    description: Successful response with odds data
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GamesArray'
+                '400':
+                    description: Bad request due to invalid parameters
+                '401':
+                    description: Unauthorized access due to missing or invalid apiKey
+                '500':
+                    description: Internal server error
 components:
     schemas:
         Outcome:
@@ -142,9 +192,22 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/Market'
+        
+        Score:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: The participant name
+                    example: Houston Texans
+                score:
+                    type: string
+                    description: The most recent score for the participant
+                    example: "20"
 
         Game:
             type: object
+            description: A list of live and upcoming games for the specified sport, and optionally recently completed games. Scores will be included for live and recently completed games.
             properties:
                 id:
                     type: string
@@ -167,8 +230,23 @@ components:
                     type: string
                     description: The away team. If home/away is not applicable for the sport (such as MMA and Tennis), it will be one of the participants. Null for outrights (futures) events.
                     example: 'Kansas City Chiefs' # Single example for path parameter
+                completed:
+                    type: boolean
+                    nullable: true # since completed is not present in all games
+                    description: Flag that says whether the game is completed or not.
+                last_update:
+                    type: string
+                    nullable: true # since last_update is not present in all games
+                    description: Last time there was a score update for the game.
+                    format: date-time
+                scores:
+                    type: array
+                    nullable: true # since scores are not preset in all games
+                    items:
+                        $ref: '#/components/schemas/Score'
                 bookmakers:
                     type: array
+                    nullable: true # since bookmakers are not preset in scores of live games
                     items:
                         $ref: '#/components/schemas/Bookmaker'
 
