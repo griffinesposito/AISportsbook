@@ -67,7 +67,7 @@ def get_sports_odds(api_key,
     return response.status_code, response.reason
 
 
-@app.route('/sports/odds/', methods=['GET'])
+@app.route('/sports/odds', methods=['GET'])
 def odds_endpoint():
   api_key = API_KEY_ODDS
   regions = request.args.get('regions')
