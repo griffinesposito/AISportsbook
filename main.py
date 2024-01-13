@@ -4,8 +4,8 @@ from flask import Flask, request, send_from_directory
 
 # Replace "YOUR_API_KEY_HERE" with your actual API key
 # Even better, use best practices and store it as a secret (not hard-coded!)
-API_KEY = "MRDQIAYL0H5ZDC1Z"
-BASE_URL = "https://www.alphavantage.co/query"
+API_KEY_ODDS = "d49677105cab61622d60e57635c1b4dd"
+BASE_URL = "https://api.the-odds-api.com/v4/"
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -20,12 +20,12 @@ def index():
 
 # This route contains the core functionality to get stock information.  This calls the "Quote Endpoint" API from Alpha Vantage: https://www.alphavantage.co/documentation/#latestprice
 @app.route('/stock', methods=['GET'])
-def get_stock_data():
-  symbol = request.args.get('symbol')
+def get_in_season_sports():
+  #symbol = request.args.get('symbol')
 
-  params = {"function": "GLOBAL_QUOTE", "symbol": symbol, "apikey": API_KEY}
+  params = {"apikey": API_KEY_ODDS}
 
-  response = requests.get(BASE_URL, params=params)
+  response = requests.get(BASE_URL + "sports", params=params)
   return response.json()
 
 
