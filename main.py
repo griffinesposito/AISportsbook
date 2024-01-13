@@ -85,7 +85,7 @@ def odds_endpoint():
   result = get_sports_odds(api_key, sport, regions, markets, dateFormat,
                            oddsFormat, eventIds, bookmakers, commenceTimeFrom,
                            commenceTimeTo)
-  return result.json()
+  return jsonify(result)
 
 
 #################### CHATGPT FUNCTIONS ######################
