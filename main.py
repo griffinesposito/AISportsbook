@@ -21,8 +21,6 @@ def index():
 #
 @app.route('/sports', methods=['GET'])
 def get_in_season_sports():
-  #symbol = request.args.get('symbol')
-
   params = {"apiKey": API_KEY_ODDS}
 
   response = requests.get(BASE_URL + "sports", params=params)
@@ -69,10 +67,11 @@ def get_sports_odds(api_key,
     return response.status_code, response.reason
 
 
-@app.route('/sports/<sport>/odds/', methods=['GET'])
+@app.route('/sports/odds/', methods=['GET'])
 def odds_endpoint(sport):
   api_key = API_KEY_ODDS
   regions = request.args.get('regions')
+  sport   = request.args.get('sport')
   # Fetch other parameters similarly
   # ...
   markets = request.args.get('markets')
@@ -86,7 +85,7 @@ def odds_endpoint(sport):
   result = get_sports_odds(api_key, sport, regions, markets, dateFormat,
                            oddsFormat, eventIds, bookmakers, commenceTimeFrom,
                            commenceTimeTo)
-  return jsonify(result)
+  return result.json()
 
 
 #################### CHATGPT FUNCTIONS ######################
