@@ -1,6 +1,6 @@
 # Import the libraries we need
 import requests
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, jsonify
 
 # Replace "YOUR_API_KEY_HERE" with your actual API key
 # Even better, use best practices and store it as a secret (not hard-coded!)
@@ -15,10 +15,10 @@ app = Flask(__name__)
 # This is not required for the plugin, but makes it easier to see that things are working when we deploy and test
 @app.route("/")
 def index():
-  return "Hello world!  Your web application is working!"
+  return "Welcome to AI Sportsbook API"
 
 
-# This route contains the core functionality to get stock information.  This calls the "Quote Endpoint" API from Alpha Vantage: https://www.alphavantage.co/documentation/#latestprice
+#
 @app.route('/sports', methods=['GET'])
 def get_in_season_sports():
   #symbol = request.args.get('symbol')
@@ -29,56 +29,64 @@ def get_in_season_sports():
   return response.json()
 
 
-def get_sports_odds(api_key, sport, regions, markets=None, dateFormat=None, oddsFormat=None, eventIds=None, bookmakers=None, commenceTimeFrom=None, commenceTimeTo=None):
-    base_url = "https://api.example.com/v4/sports"  # Replace with the actual base URL
-    endpoint = f"{base_url}/{sport}/odds/"
+def get_sports_odds(api_key,
+                    sport,
+                    regions,
+                    markets=None,
+                    dateFormat=None,
+                    oddsFormat=None,
+                    eventIds=None,
+                    bookmakers=None,
+                    commenceTimeFrom=None,
+                    commenceTimeTo=None):
+  base_url = "https://api.the-odds-api.com/v4/sports"  # Replace with the actual base URL
+  endpoint = f"{base_url}/{sport}/odds/"
 
-    params = {
-        'apiKey': api_key,
-        'regions': regions
-    }
-    # Add other parameters if they exist
-    # ...
-    if markets is not None:
-      params['markets'] = markets
-    if dateFormat is not None:
-      params['dateFormat'] = dateFormat
-    if oddsFormat is not None:
-      params['oddsFormat'] = oddsFormat
-    if eventIds is not None:
-      params['eventIds'] = eventIds
-    if bookmakers is not None:
-      params['bookmakers'] = bookmakers
-    if commenceTimeFrom is not None:
-      params['commenceTimeFrom'] = commenceTimeFrom
-    if commenceTimeTo is not None:
-      params['commenceTimeTo'] = commenceTimeTo
+  params = {'apiKey': api_key, 'regions': regions}
+  # Add other parameters if they exist
+  # ...
+  if markets is not None:
+    params['markets'] = markets
+  if dateFormat is not None:
+    params['dateFormat'] = dateFormat
+  if oddsFormat is not None:
+    params['oddsFormat'] = oddsFormat
+  else:
+    params['oddsFormat'] = 'american'
+  if eventIds is not None:
+    params['eventIds'] = eventIds
+  if bookmakers is not None:
+    params['bookmakers'] = bookmakers
+  if commenceTimeFrom is not None:
+    params['commenceTimeFrom'] = commenceTimeFrom
+  if commenceTimeTo is not None:
+    params['commenceTimeTo'] = commenceTimeTo
+
+  response = requests.get(endpoint, params=params)
+  if response.status_code == 200:
+    return response.json()
+  else:
+    return response.status_code, response.reason
 
 
-    response = requests.get(endpoint, params=params)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return response.status_code, response.reason
+@app.route('/sports/<sport>/odds/', methods=['GET'])
+def odds_endpoint(sport):
+  api_key = API_KEY_ODDS
+  regions = request.args.get('regions')
+  # Fetch other parameters similarly
+  # ...
+  markets = request.args.get('markets')
+  dateFormat = request.args.get('dateFormat')
+  oddsFormat = request.args.get('oddsFormat')
+  eventIds = request.args.get('eventIds')
+  bookmakers = request.args.get('bookmakers')
+  commenceTimeFrom = request.args.get('commenceTimeFrom')
+  commenceTimeTo = request.args.get('commenceTimeTo')
 
-@app.route('/sports/{sport}/odds/', methods=['GET'])
-def odds_endpoint():
-    api_key           = API_KEY_ODDS
-    sport             = request.args.get('sport')
-    regions           = request.args.get('regions')
-    # Fetch other parameters similarly
-    # ...
-    markets           = request.args.get('markets')
-    dateFormat        = request.args.get('dateFormat')
-    oddsFormat        = request.args.get('oddsFormat')
-    eventIds          = request.args.get('eventIds')
-    bookmakers        = request.args.get('bookmakers')
-    commenceTimeFrom  = request.args.get('commenceTimeFrom')
-    commenceTimeTo    = request.args.get('commenceTimeTo')
-
-    result = get_sports_odds(api_key, sport, regions, markets,dateFormat,oddsFormat,eventIds,bookmakers,commenceTimeFrom,commenceTimeTo)
-    return jsonify(result)
-
+  result = get_sports_odds(api_key, sport, regions, markets, dateFormat,
+                           oddsFormat, eventIds, bookmakers, commenceTimeFrom,
+                           commenceTimeTo)
+  return jsonify(result)
 
 
 #################### CHATGPT FUNCTIONS ######################
