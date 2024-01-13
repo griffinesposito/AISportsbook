@@ -37,7 +37,7 @@ def get_sports_odds(api_key,
                     bookmakers=None,
                     commenceTimeFrom=None,
                     commenceTimeTo=None):
-  base_url = "https://api.the-odds-api.com/v4/sports"  # Replace with the actual base URL
+  base_url = "https://api.the-odds-api.com/v4/sports"
   endpoint = f"{base_url}/{sport}/odds/"
 
   params = {'apiKey': api_key, 'regions': regions}
@@ -89,7 +89,7 @@ def odds_endpoint():
 
 
 def get_sport_scores(api_key, sport, daysFrom=None, dateFormat=None, eventIds=None):
-  base_url = "https://api.example.com/v4/sports"  # Replace with actual base URL
+  base_url = "https://api.the-odds-api.com/v4/sports"
   endpoint = f"{base_url}/{sport}/scores/"
   
   params = {
