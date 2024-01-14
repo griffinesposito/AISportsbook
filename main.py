@@ -45,7 +45,6 @@ def events_endpoint():
   regions = request.args.get('regions')
   sport   = request.args.get('sport')
   eventId = request.args.get('eventId')
-  get_event_odds
   # Fetch other parameters similarly
   # ...
   markets               = request.args.get('markets')
@@ -74,7 +73,7 @@ def scores_endpoint():
   result = get_sport_scores(sport, daysFrom, dateFormat, eventIds)
   return jsonify(result)
 
-@app.route('sports/teamdata', methods=['GET'])
+@app.route('/sports/teamdata', methods=['GET'])
 def team_data():
   sport   = request.args.get('sport')
   league  = request.args.get('league')

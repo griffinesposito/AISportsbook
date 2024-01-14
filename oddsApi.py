@@ -3,7 +3,7 @@ import requests
 # Even better, use best practices and store it as a secret (not hard-coded!)
 api_key = "d49677105cab61622d60e57635c1b4dd"
 
-def get_in_season_sports()
+def get_in_season_sports():
     params = {"apiKey": api_key}
     base_url = "https://api.the-odds-api.com/v4/sports"
     response = requests.get(base_url, params=params)
