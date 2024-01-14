@@ -16,7 +16,9 @@ paths:
     /sports/odds:
         get:
             operationId: getOdds
-            summary: Returns a list of upcoming and live games with recent odds. Only includes Moneyline (h2h), Spreads (spreads), Total points bets (total), and Outrights
+            summary: >-
+                Returns a list of upcoming and live games with recent odds. 
+                Only includes Moneyline (h2h), Spreads (spreads), Total points bets (total), and Outrights
             description: >-
                 Retrieves odds for a given sport, region, and market. It includes
                 upcoming and live games. Only includes Moneyline (h2h), Spreads (spreads), Total points bets (total), and Outrights. Does not
@@ -131,7 +133,7 @@ paths:
                     type: array
                     $ref: '#/components/schemas/MarketKey'
                 description: >-
-                    (Optional) Featured betting markets, comma delimited.
+                    (Optional) Featured betting markets, NOT USED FOR PLAYER PROP BETS, comma delimited.
               - in: query
                 name: playerPropsFootball
                 schema:
@@ -153,6 +155,14 @@ paths:
                     $ref: '#/components/schemas/PlayerPropKeyBaseball'
                 description: >-
                     (Optional) Market keys used in the API to identify different betting markets for MLB player propositions, comma delimited.
+              - in: query
+                name: gamePeriodMarkets
+                schema:
+                    type: array
+                    $ref: '#/components/schemas/GamePeriodKey'
+                description: >-
+                    (Optional) Market keys used in the API to identify different time-specific betting markets across various sports.
+                    Covers Moneyline, spreads, over/under, and point totals for different periods of the game, comma delimited.
               - in: query
                 name: dateFormat
                 schema:
@@ -233,6 +243,56 @@ paths:
                     description: Unauthorized access due to missing or invalid apiKey
                 '500':
                     description: Internal server error
+
+    /sports/teamdata:
+        get:
+            operationId: getTeamData
+            summary: Returns information about a specific team
+            description: >-
+                Retrieves information about a specific team for a specific sport
+            parameters:
+              - in: query
+                name: sport
+                required: true
+                schema:
+                    type: string
+                description: Type of sport that the requested team falls under
+                example: 'baseball'
+              - in: query
+                name: league
+                required: true
+                schema:
+                    type: string
+                description: League name abbreviated
+                example: 'nfl'
+              - in: query
+                name: year
+                required: true
+                schema:
+                    type: string
+                description: The season year (format="YYYY") that you are requesting team data for.
+                example: '2023'
+              - in: query
+                name: team
+                required: true
+                schema:
+                    type: string
+                description: Abbreviated team name, example CHI for Chicago Bears
+                example: 'CHI'
+            responses:
+                '200':
+                    description: Successful response with team data
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TeamData'
+                '400':
+                    description: Bad request due to invalid parameters
+                '401':
+                    description: Unauthorized access due to missing or invalid apiKey
+                '500':
+                    description: Internal server error
+
 components:
     schemas:
         Outcome:
@@ -299,7 +359,9 @@ components:
 
         Game:
             type: object
-            description: A list of live and upcoming games for the specified sport, and optionally recently completed games. Scores will be included for live and recently completed games.
+            description: >-
+                A list of live and upcoming games for the specified sport, and optionally recently completed games. 
+                Scores will be included for live and recently completed games.
             properties:
                 id:
                     type: string
@@ -507,3 +569,314 @@ components:
                 pitcher_walks: "Pitcher walks (Over/Under): Betting on the over/under of the walks issued by a pitcher."
                 pitcher_earned_runs: "Pitcher earned runs (Over/Under): Betting on the over/under of the earned runs allowed by a pitcher."
                 pitcher_outs: "Pitcher outs (Over/Under): Betting on the over/under of the outs recorded by a pitcher."
+
+        GamePeriodKey:
+            type: string
+            description: >-
+                An enumeration of the market keys used in the API to identify different time-specific betting markets across various sports.
+                Covers Moneyline, spreads, over/under, and point totals for different periods of the game.
+            enum:
+                - h2h_q1
+                - h2h_q2
+                - h2h_q3
+                - h2h_q4
+                - h2h_h1
+                - h2h_h2
+                - h2h_p1
+                - h2h_p2
+                - h2h_p3
+                - h2h_1st_1_innings
+                - h2h_1st_3_innings
+                - h2h_1st_5_innings
+                - h2h_1st_7_innings
+                - h2h_3_way_1st_1_innings
+                - h2h_3_way_1st_3_innings
+                - h2h_3_way_1st_5_innings
+                - h2h_3_way_1st_7_innings
+                - spreads_q1
+                - spreads_q2
+                - spreads_q3
+                - spreads_q4
+                - spreads_h1
+                - spreads_h2
+                - spreads_p1
+                - spreads_p2
+                - spreads_p3
+                - spreads_1st_1_innings
+                - spreads_1st_3_innings
+                - spreads_1st_5_innings
+                - spreads_1st_7_innings
+                - alternate_spreads_1st_1_innings
+                - alternate_spreads_1st_5_innings
+                - totals_q1
+                - totals_q2
+                - totals_q3
+                - totals_q4
+                - totals_h1
+                - totals_h2
+                - totals_p1
+                - totals_p2
+                - totals_p3
+                - totals_1st_1_innings
+                - totals_1st_3_innings
+                - totals_1st_5_innings
+                - totals_1st_7_innings
+                - alternate_totals_1st_5_innings
+            x-descriptions:
+                h2h_q1: "Moneyline 1st Quarter: Bet on the team/player to win the first quarter."
+                h2h_q2: "Moneyline 2nd Quarter: Bet on the team/player to win the second quarter."
+                h2h_q3: "Moneyline 3rd Quarter: Bet on the team/player to win the third quarter."
+                h2h_q4: "Moneyline 4th Quarter: Bet on the team/player to win the fourth quarter."
+                h2h_h1: "Moneyline 1st Half: Bet on the team/player to win the first half."
+                h2h_h2: "Moneyline 2nd Half: Bet on the team/player to win the second half."
+                h2h_p1: "Moneyline 1st Period (Ice Hockey): Bet on the team/player to win the first period."
+                h2h_p2: "Moneyline 2nd Period (Ice Hockey): Bet on the team/player to win the second period."
+                h2h_p3: "Moneyline 3rd Period (Ice Hockey): Bet on the team/player to win the third period."
+                h2h_1st_1_innings: "Moneyline 1st inning (Baseball): Bet on the team/player to win the first inning."
+                h2h_1st_3_innings: "Moneyline 1st 3 innings (Baseball): Bet on the team/player to win the first 3 innings."
+                h2h_1st_5_innings: "Moneyline 1st 5 innings (Baseball): Bet on the team/player to win the first 5 innings."
+                h2h_1st_7_innings: "Moneyline 1st 7 innings (Baseball): Bet on the team/player to win the first 7 innings."
+                h2h_3_way_1st_1_innings: "3-way moneyline 1st inning (Baseball): Three-way bet on the team/player to win the first inning, including the option for a draw."
+                h2h_3_way_1st_3_innings: "3-way moneyline 1st 3 innings (Baseball): Three-way bet on the team/player to win the first 3 innings, including the option for a draw."
+                h2h_3_way_1st_5_innings: "3-way moneyline 1st 5 innings (Baseball): Three-way bet on the team/player to win the first 5 innings, including the option for a draw."
+                h2h_3_way_1st_7_innings: "3-way moneyline 1st 7 innings (Baseball): Three-way bet on the team/player to win the first 7 innings, including the option for a draw."
+                spreads_q1: "Spreads 1st Quarter: Bet on the team/player to cover the spread in the first quarter."
+                spreads_q2: "Spreads 2nd Quarter: Bet on the team/player to cover the spread in the second quarter."
+                spreads_q3: "Spreads 3rd Quarter: Bet on the team/player to cover the spread in the third quarter."
+                spreads_q4: "Spreads 4th Quarter: Bet on the team/player to cover the spread in the fourth quarter."
+                spreads_h1: "Spreads 1st Half: Bet on the team/player to cover the spread in the first half."
+                spreads_h2: "Spreads 2nd Half: Bet on the team/player to cover the spread in the second half."
+                spreads_p1: "Spreads 1st Period (Ice Hockey): Bet on the team/player to cover the spread in the first period."
+                spreads_p2: "Spreads 2nd Period (Ice Hockey): Bet on the team/player to cover the spread in the second period."
+                spreads_p3: "Spreads 3rd Period (Ice Hockey): Bet on the team/player to cover the spread in the third period."
+                spreads_1st_1_innings: "Spreads 1st inning (Baseball): Bet on the team/player to cover the spread in the first inning."
+                spreads_1st_3_innings: "Spreads 1st 3 innings (Baseball): Bet on the team/player to cover the spread in the first 3 innings."
+                spreads_1st_5_innings: "Spreads 1st 5 innings (Baseball): Bet on the team/player to cover the spread in the first 5 innings."
+                spreads_1st_7_innings: "Spreads 1st 7 innings (Baseball): Bet on the team/player to cover the spread in the first 7 innings."
+                alternate_spreads_1st_1_innings: "Alternate spreads 1st inning (Baseball): Bet on the team/player to cover the alternate spread in the first inning."
+                alternate_spreads_1st_5_innings: "Alternate spreads 1st 5 innings (Baseball): Bet on the team/player to cover the alternate spread in the first 5 innings."
+                totals_q1: "Over/under 1st Quarter: Bet on the total points scored in the first quarter to be over or under the bookmaker's line."
+                totals_q2: "Over/under 2nd Quarter: Bet on the total points scored in the second quarter to be over or under the bookmaker's line."
+                totals_q3: "Over/under 3rd Quarter: Bet on the total points scored in the third quarter to be over or under the bookmaker's line."
+                totals_q4: "Over/under 4th Quarter: Bet on the total points scored in the fourth quarter to be over or under the bookmaker's line."
+                totals_h1: "Over/under 1st Half: Bet on the total points scored in the first half to be over or under the bookmaker's line."
+                totals_h2: "Over/under 2nd Half: Bet on the total points scored in the second half to be over or under the bookmaker's line."
+                totals_p1: "Over/under 1st Period (Ice Hockey): Bet on the total points scored in the first period to be over or under the bookmaker's line."
+                totals_p2: "Over/under 2nd Period (Ice Hockey): Bet on the total points scored in the second period to be over or under the bookmaker's line."
+                totals_p3: "Over/under 3rd Period (Ice Hockey): Bet on the total points scored in the third period to be over or under the bookmaker's line."
+                totals_1st_1_innings: "Over/under 1st inning (Baseball): Bet on the total points scored in the first inning to be over or under the bookmaker's line."
+                totals_1st_3_innings: "Over/under 1st 3 innings (Baseball): Bet on the total points scored in the first 3 innings to be over or under the bookmaker's line."
+                totals_1st_5_innings: "Over/under 1st 5 innings (Baseball): Bet on the total points scored in the first 5 innings to be over or under the bookmaker's line."
+                totals_1st_7_innings: "Over/under 1st 7 innings (Baseball): Bet on the total points scored in the first 7 innings to be over or under the bookmaker's line."
+                alternate_totals_1st_5_innings: "Alternate over/under 1st 5 innings (Baseball): Bet on the alternate line for the total points scored in the first 5 innings to be over or under the bookmaker's line."
+
+        NFLTeamAbbreviation:
+            type: string
+            description: An enumeration of abbreviated names for NFL teams.
+            enum:
+                - ARI  # Arizona Cardinals
+                - ATL  # Atlanta Falcons
+                - BAL  # Baltimore Ravens
+                - BUF  # Buffalo Bills
+                - CAR  # Carolina Panthers
+                - CHI  # Chicago Bears
+                - CIN  # Cincinnati Bengals
+                - CLE  # Cleveland Browns
+                - DAL  # Dallas Cowboys
+                - DEN  # Denver Broncos
+                - DET  # Detroit Lions
+                - GB   # Green Bay Packers
+                - HOU  # Houston Texans
+                - IND  # Indianapolis Colts
+                - JAX  # Jacksonville Jaguars
+                - KC   # Kansas City Chiefs
+                - LAC  # Los Angeles Chargers
+                - LAR  # Los Angeles Rams
+                - LV   # Las Vegas Raiders
+                - MIA  # Miami Dolphins
+                - MIN  # Minnesota Vikings
+                - NE   # New England Patriots
+                - NO   # New Orleans Saints
+                - NYG  # New York Giants
+                - NYJ  # New York Jets
+                - PHI  # Philadelphia Eagles
+                - PIT  # Pittsburgh Steelers
+                - SF   # San Francisco 49ers
+                - SEA  # Seattle Seahawks
+                - TB   # Tampa Bay Buccaneers
+                - TEN  # Tennessee Titans
+                - WAS  # Washington Commanders
+
+        TeamData:
+            type: object
+            properties:
+                ref:
+                    type: string
+                id:
+                    type: string
+                guid:
+                    type: string
+                uid:
+                    type: string
+                alternateIds:
+                    type: object
+                    properties:
+                        sdr:
+                            type: string
+                slug:
+                    type: string
+                location:
+                    type: string
+                name:
+                    type: string
+                nickname:
+                    type: string
+                abbreviation:
+                    type: string
+                displayName:
+                    type: string
+                shortDisplayName:
+                    type: string
+                color:
+                    type: string
+                alternateColor:
+                    type: string
+                isActive:
+                    type: boolean
+                isAllStar:
+                    type: boolean
+                logos:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Logo'
+                record:
+                    $ref: '#/components/schemas/Ref'
+                oddsRecords:
+                    $ref: '#/components/schemas/Ref'
+                athletes:
+                    $ref: '#/components/schemas/Ref'
+                venue:
+                    $ref: '#/components/schemas/Venue'
+                groups:
+                    $ref: '#/components/schemas/Ref'
+                ranks:
+                    $ref: '#/components/schemas/Ref'
+                statistics:
+                    $ref: '#/components/schemas/Ref'
+                leaders:
+                    $ref: '#/components/schemas/Ref'
+                links:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Link'
+                injuries:
+                    $ref: '#/components/schemas/Ref'
+                notes:
+                    $ref: '#/components/schemas/Ref'
+                againstTheSpreadRecords:
+                    $ref: '#/components/schemas/Ref'
+                franchise:
+                    $ref: '#/components/schemas/Ref'
+                depthCharts:
+                    $ref: '#/components/schemas/Ref'
+                projection:
+                    $ref: '#/components/schemas/Ref'
+                events:
+                    $ref: '#/components/schemas/Ref'
+                transactions:
+                    $ref: '#/components/schemas/Ref'
+                coaches:
+                    $ref: '#/components/schemas/Ref'
+        Logo:
+            type: object
+            properties:
+                href:
+                    type: string
+                width:
+                    type: integer
+                height:
+                    type: integer
+                alt:
+                    type: string
+                rel:
+                    type: array
+                    items:
+                        type: string
+                lastUpdated:
+                    type: string
+                    format: date-time
+
+        Ref:
+            type: object
+            properties:
+                ref:
+                    type: string
+
+        Venue:
+            type: object
+            properties:
+                ref:
+                    type: string
+                id:
+                    type: string
+                fullName:
+                    type: string
+                address:
+                    $ref: '#/components/schemas/Address'
+                capacity:
+                    type: integer
+                grass:
+                    type: boolean
+                indoor:
+                    type: boolean
+                images:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Image'
+
+        Address:
+            type: object
+            properties:
+                city:
+                    type: string
+                state:
+                    type: string
+                zipCode:
+                    type: string
+
+        Image:
+            type: object
+            properties:
+                href:
+                    type: string
+                width:
+                    type: integer
+                height:
+                    type: integer
+                alt:
+                    type: string
+                rel:
+                    type: array
+                    items:
+                        type: string
+
+        Link:
+            type: object
+            properties:
+                language:
+                    type: string
+                rel:
+                    type: array
+                    items:
+                        type: string
+                href:
+                    type: string
+                text:
+                    type: string
+                shortText:
+                    type: string
+                isExternal:
+                    type: boolean
+                isPremium:
+                    type: boolean
+       
