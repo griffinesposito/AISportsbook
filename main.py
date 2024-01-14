@@ -92,6 +92,9 @@ def get_event_odds(api_key,
                     regions,
                     eventId,
                     markets=None,
+                    playerPropsFootball=None,
+                    playerPropsBasketball=None,
+                    playerPropsBaseball=None,
                     dateFormat=None,
                     oddsFormat=None,
                     bookmakers=None):
@@ -103,6 +106,12 @@ def get_event_odds(api_key,
   # ...
   if markets is not None:
     params['markets'] = markets
+  if playerPropsFootball is not None:
+    params['markets'] = playerPropsFootball
+  if playerPropsBasketball is not None:
+    params['markets'] = playerPropsBasketball
+  if playerPropsBaseball is not None:
+    params['markets'] = playerPropsBaseball
   if dateFormat is not None:
     params['dateFormat'] = dateFormat
   if oddsFormat is not None:
@@ -128,13 +137,17 @@ def events_endpoint():
   get_event_odds
   # Fetch other parameters similarly
   # ...
-  markets = request.args.get('markets')
-  dateFormat = request.args.get('dateFormat')
-  oddsFormat = request.args.get('oddsFormat')
-  bookmakers = request.args.get('bookmakers')
+  markets               = request.args.get('markets')
+  playerPropsFootball   = request.args.get('playerPropsFootball')
+  playerPropsBasketball = request.args.get('playerPropsBasketball')
+  playerPropsBaseball   = request.args.get('playerPropsBaseball')
+  dateFormat            = request.args.get('dateFormat')
+  oddsFormat            = request.args.get('oddsFormat')
+  bookmakers            = request.args.get('bookmakers')
 
-  result = get_event_odds(api_key, sport, regions, eventId, markets, dateFormat,
-                           oddsFormat, bookmakers)
+  result = get_event_odds(api_key, sport, regions, eventId, markets,
+                            playerPropsFootball, playerPropsBasketball, playerPropsBaseball, 
+                            dateFormat, oddsFormat, bookmakers)
   return jsonify(result)
 
 def get_sport_scores(api_key, sport, daysFrom=None, dateFormat=None, eventIds=None):
