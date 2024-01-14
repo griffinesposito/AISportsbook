@@ -1,6 +1,7 @@
 # Import the libraries we need
 from flask import Flask, request, send_from_directory, jsonify
-
+from oddsApi import get_in_season_sports, get_sports_odds, get_event_odds, get_sport_scores
+from espnApi import get_team_data
 
 # Initialize the Flask app
 app = Flask(__name__)
