@@ -1,6 +1,7 @@
 import requests, json, pprint
-base_url = "https://sports.core.api.espn.com/v2/sports"
-general_stats_to_include = ['general','passing','rushing','receiving','scoring']
+base_url    = "https://sports.core.api.espn.com/v2/sports"
+max_events  = 30
+#general_stats_to_include = ['general','passing','rushing','receiving','scoring']
 
 def get_team_data(sport, league, year, team):
 
@@ -95,20 +96,22 @@ def get_team_events(sport, league, year, team):
     endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/seasons/{year}/teams/{team}?lang=en&region=us"
     params   = {'lang': 'en', 'region': 'us'}
     # Get General Team Information
-    response = requests.get(endpoint, params=params)
+    response = requests.get(endpoint,params=params)
     if response.status_code != 200:
         return response.status_code, response.reason
         
     data = dict()
     team_general = response.json()
     # Get additional team information - events
-    response = requests.get(team_general['events']['$ref'])
+    response = requests.get(team_general['events']['$ref'],params={'limit': '250'})
     if response.status_code != 200:
         return response.status_code, response.reason
     events   = response.json()
     cnt = 0
     data['games'] = dict()
-    for link in events['items']:
+    events_limited = events['items'][::-1]
+    while cnt < max_events and cnt < len(events_limited):
+        link = events_limited[cnt]
         response = requests.get(link['$ref'])
         if response.status_code != 200:
             return response.status_code, response.reason
@@ -116,9 +119,12 @@ def get_team_events(sport, league, year, team):
         gameDict = dict()
         gameDict['id']          = event['competitions'][0]['id']
         gameDict['shortName']   = event['shortName']
+        gameDict['date']        = event['date']
         competitors             = event['competitions'][0]['competitors']
         for comp in competitors:
             if comp['id'] == team_general['id']: # This is the team data is being requested for
+                if 'statistics' not in comp:
+                    continue
                 response = requests.get(comp['statistics']['$ref'])
                 if response.status_code != 200:
                     return response.status_code, response.reason
@@ -126,8 +132,8 @@ def get_team_events(sport, league, year, team):
                 gameDict['stats'] = dict()
                 for statTypeDict in stats['splits']['categories']:
                     statName = statTypeDict['name']
-                    if statName in general_stats_to_include:
-                        gameDict['stats'][statName] = statTypeDict['stats']
+                    #if statName in general_stats_to_include:
+                    gameDict['stats'][statName] = statTypeDict['stats']
         data['games'][cnt] = gameDict
         cnt = cnt + 1
     return data
