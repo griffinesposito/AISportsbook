@@ -1,7 +1,7 @@
 # Import the libraries we need
 from flask import Flask, request, send_from_directory, jsonify
 from oddsApi import get_in_season_sports, get_sports_odds, get_event_odds, get_sport_scores
-from espnApi import get_team_data
+from espnApi import get_team_data, get_team_record, get_team_injuries, get_team_events
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -81,6 +81,36 @@ def team_data():
   team    = request.args.get('team')
 
   result = get_team_data(sport, league, year, team)
+  return jsonify(result)
+
+@app.route('/sports/teamrecord', methods=['GET'])
+def team_data():
+  sport   = request.args.get('sport')
+  league  = request.args.get('league')
+  year    = request.args.get('year')
+  team    = request.args.get('team')
+
+  result = get_team_record(sport, league, year, team)
+  return jsonify(result)
+
+@app.route('/sports/teaminjuries', methods=['GET'])
+def team_data():
+  sport   = request.args.get('sport')
+  league  = request.args.get('league')
+  year    = request.args.get('year')
+  team    = request.args.get('team')
+
+  result = get_team_injuries(sport, league, year, team)
+  return jsonify(result)
+
+@app.route('/sports/teamevents', methods=['GET'])
+def team_data():
+  sport   = request.args.get('sport')
+  league  = request.args.get('league')
+  year    = request.args.get('year')
+  team    = request.args.get('team')
+
+  result = get_team_events(sport, league, year, team)
   return jsonify(result)
 
 

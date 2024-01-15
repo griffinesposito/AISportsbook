@@ -3,6 +3,7 @@ base_url = "https://sports.core.api.espn.com/v2/sports"
 general_stats_to_include = ['general','passing','rushing','receiving','scoring']
 
 def get_team_data(sport, league, year, team):
+
     endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/seasons/{year}/teams/{team}?lang=en&region=us"
     params   = {'lang': 'en', 'region': 'us'}
     # Get General Team Information
@@ -19,14 +20,36 @@ def get_team_data(sport, league, year, team):
     data['links']       = team_general['links']
     data['location']    = team_general['location']
     data['logos']       = team_general['logos']
+    return data
 
+def get_team_record(sport, league, year, team):
+    endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/seasons/{year}/teams/{team}?lang=en&region=us"
+    params   = {'lang': 'en', 'region': 'us'}
+    # Get General Team Information
+    response = requests.get(endpoint, params=params)
+    if response.status_code != 200:
+        return response.status_code, response.reason
+        
+    data = dict()
+    team_general = response.json()
     # Get additional team information - record
     response = requests.get(team_general['record']['$ref'])
     if response.status_code != 200:
         return response.status_code, response.reason
     record = response.json()
     data['record'] = record['items']
-    
+    return data
+
+def get_team_injuries(sport, league, year, team):
+    endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/seasons/{year}/teams/{team}?lang=en&region=us"
+    params   = {'lang': 'en', 'region': 'us'}
+    # Get General Team Information
+    response = requests.get(endpoint, params=params)
+    if response.status_code != 200:
+        return response.status_code, response.reason
+        
+    data = dict()
+    team_general = response.json()
     # Get additional team information - injuries
     response = requests.get(team_general['injuries']['$ref'])
     if response.status_code != 200:
@@ -66,10 +89,18 @@ def get_team_data(sport, league, year, team):
         injuryDict['playerPosition']= athlete['position']['abbreviation']
         data['injuries'][cnt] = injuryDict
         cnt = cnt + 1
+    return data
 
-
-
-
+def get_team_events(sport, league, year, team):
+    endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/seasons/{year}/teams/{team}?lang=en&region=us"
+    params   = {'lang': 'en', 'region': 'us'}
+    # Get General Team Information
+    response = requests.get(endpoint, params=params)
+    if response.status_code != 200:
+        return response.status_code, response.reason
+        
+    data = dict()
+    team_general = response.json()
     # Get additional team information - events
     response = requests.get(team_general['events']['$ref'])
     if response.status_code != 200:
@@ -82,13 +113,12 @@ def get_team_data(sport, league, year, team):
         if response.status_code != 200:
             return response.status_code, response.reason
         event = response.json()
-        #pprint.pprint(event)
         gameDict = dict()
-        gameDict['id']  = event['competitions'][0]['id']
-        gameDict['shortName']  = event['shortName']
-        competitors     = event['competitions'][0]['competitors']
+        gameDict['id']          = event['competitions'][0]['id']
+        gameDict['shortName']   = event['shortName']
+        competitors             = event['competitions'][0]['competitors']
         for comp in competitors:
-            if comp['id'] == data['id']: # This is the team data is being requested for
+            if comp['id'] == team_general['id']: # This is the team data is being requested for
                 response = requests.get(comp['statistics']['$ref'])
                 if response.status_code != 200:
                     return response.status_code, response.reason
@@ -98,10 +128,6 @@ def get_team_data(sport, league, year, team):
                     statName = statTypeDict['name']
                     if statName in general_stats_to_include:
                         gameDict['stats'][statName] = statTypeDict['stats']
-
-                #pprint.pprint(stats)
         data['games'][cnt] = gameDict
         cnt = cnt + 1
-    
-
     return data
