@@ -256,6 +256,7 @@ paths:
                 required: true
                 schema:
                     type: string
+                    $ref: '#/components/schemas/SportsTypes'
                 description: Type of sport that the requested team falls under
                 example: 'baseball'
               - in: query
@@ -263,6 +264,7 @@ paths:
                 required: true
                 schema:
                     type: string
+                    $ref: '#/components/schemas/LeagueTypes'
                 description: League name abbreviated
                 example: 'nfl'
               - in: query
@@ -295,6 +297,8 @@ paths:
 
 components:
     schemas:
+
+######################### ODDS API DEFINTIONS ##################################
         Outcome:
             type: object
             properties:
@@ -670,6 +674,7 @@ components:
                 totals_1st_7_innings: "Over/under 1st 7 innings (Baseball): Bet on the total points scored in the first 7 innings to be over or under the bookmaker's line."
                 alternate_totals_1st_5_innings: "Alternate over/under 1st 5 innings (Baseball): Bet on the alternate line for the total points scored in the first 5 innings to be over or under the bookmaker's line."
 
+########################## ESPN API Definitions ################################
         NFLTeamAbbreviation:
             type: string
             description: An enumeration of abbreviated names for NFL teams.
@@ -706,6 +711,22 @@ components:
                 - TB   # Tampa Bay Buccaneers
                 - TEN  # Tennessee Titans
                 - WAS  # Washington Commanders
+
+        SportsTypes:
+            type: string
+            description: An enumeration of acceptable sport parameters
+            enum:
+                - football
+                - baseball
+                - basketball
+
+        LeagueTypes:
+            type: string
+            description: An enumeration of acceptable league parameters
+            enum:
+                - nfl # National Football League (NFL)
+                - mlb # Major League Baseball (MLB)
+                - nba # National Basketball Association (NBA)
 
         TeamData:
             type: object

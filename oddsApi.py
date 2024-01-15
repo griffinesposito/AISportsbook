@@ -99,11 +99,14 @@ def get_sport_scores(sport, daysFrom=None, dateFormat=None, eventIds=None):
     
     params = {
         'apiKey': api_key,
-        'daysFrom': daysFrom if daysFrom is not None else '',
-        'dateFormat': dateFormat if dateFormat is not None else '',
-        'eventIds': eventIds if eventIds is not None else ''
     }
-
+    if daysFrom is not None:
+        params['daysFrom'] = daysFrom
+    if dateFormat is not None:
+        params['dateFormat'] = dateFormat
+    if eventIds is not None:
+        params['eventIds'] = eventIds
+        
     response = requests.get(endpoint, params=params)
     
     if response.status_code == 200:
