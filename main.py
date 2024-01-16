@@ -84,7 +84,7 @@ def team_data():
   return jsonify(result)
 
 @app.route('/sports/teamrecord', methods=['GET'])
-def team_data():
+def team_record():
   sport   = request.args.get('sport')
   league  = request.args.get('league')
   year    = request.args.get('year')
@@ -94,7 +94,7 @@ def team_data():
   return jsonify(result)
 
 @app.route('/sports/teaminjuries', methods=['GET'])
-def team_data():
+def team_injuries():
   sport   = request.args.get('sport')
   league  = request.args.get('league')
   year    = request.args.get('year')
@@ -104,7 +104,7 @@ def team_data():
   return jsonify(result)
 
 @app.route('/sports/teamevents', methods=['GET'])
-def team_data():
+def team_events():
   sport   = request.args.get('sport')
   league  = request.args.get('league')
   year    = request.args.get('year')
