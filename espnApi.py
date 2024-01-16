@@ -149,13 +149,13 @@ def get_team_events(sport, league, year, team):
     data['games']['oppScore']       = []
     data['games']['score']          = []
     data['games']['winner']         = []
-    data['games']['stats']          = dict()
+    data['games']['stats']          = []
     data['statsMetadata']           = dict()
     data['statsMetadata']['abbreviation']       = []
     data['statsMetadata']['description']        = []
     data['statsMetadata']['name']               = []
     data['statsMetadata']['shortDisplayName']   = []
-
+    statMap = dict()
     events_limited = events['items'][::-1]
 
     while cntWithStats < max_events and cnt < len(events_limited):
@@ -198,8 +198,14 @@ def get_team_events(sport, league, year, team):
                                 data['statsMetadata']['abbreviation'].append(stat['abbreviation'])
                                 data['statsMetadata']['description'].append(stat['description'])
                                 data['statsMetadata']['shortDisplayName'].append(stat['shortDisplayName'])
-                                data['games']['stats'][stat['name']] = []
-                            data['games']['stats'][stat['name']].append(stat['value'])
+                                statMap[stat['name']] = len(data['games']['stats'])
+                                statDict = dict()
+                                statDict['name'] = stat['name']
+                                statDict['values'] = []
+                                data['games']['stats'].append(statDict)
+                            
+                        
+                            data['games']['stats'][statMap[stat['name']]]['values'].append(stat['value'])
                     #if statName in general_stats_to_include:
                     #gameDict['stats'][statName] = statTypeDict['stats']
             else:
@@ -207,13 +213,13 @@ def get_team_events(sport, league, year, team):
                     continue
                 response = requests.get(comp['score']['$ref'])
                 score = response.json()
-                data['games']['oppcore']  = score['displayValue']
+                data['games']['oppScore'].append(score['displayValue'])
 
         if statsForGameExist:
             if data['games']['homeAway'][-1] == 'home':
-                data['games']['score'].append(f"{data['games']['oppScore'][:-1]}-{data['games']['teamScore'][:-1]}")
+                data['games']['score'].append(f"{data['games']['oppScore'][-1]}-{data['games']['teamScore'][-1]}")
             else:
-                data['games']['score'].append(f"{data['games']['teamScore'][:-1]}-{data['games']['oppScore'][:-1]}")
+                data['games']['score'].append(f"{data['games']['teamScore'][-1]}-{data['games']['oppScore'][-1]}")
             cntWithStats = cntWithStats + 1
 
         cnt = cnt + 1
