@@ -29,12 +29,15 @@ function fetchLeagueEvents(sport, league) {
             container.innerHTML = '';
 
             // Loop through the elements and add new divs
-            data.events.forEach(item => {
-                const newDiv = document.createElement('div');
-                newDiv.className = 'paragraph-block'; // Set the class
-                newDiv.textContent = item.date + ":" + item.name; // Set the text content to level3 value
-                container.appendChild(newDiv); // Append the new div to the container
-            });
+            for (const key in data.events) {
+                if (jsonObject.hasOwnProperty(key)) {
+                    const item = data.events[key];
+                    const newDiv = document.createElement('div');
+                    newDiv.className = 'paragraph-block'; // Set the class
+                    newDiv.textContent = item.date + ":" + item.name; // Set the text content to level3 value
+                    container.appendChild(newDiv); // Append the new div to the container
+                }
+            }
         })
         .catch(error => console.error('Error:', error));
 }
