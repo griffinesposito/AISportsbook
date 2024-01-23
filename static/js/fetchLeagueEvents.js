@@ -23,7 +23,7 @@ function fetchLeagueEvents(sport, league) {
             console.log('Data:', data);
             // Handle the data here
             // Get the container element
-            const container = document.getElementById("current-" + league + "-events");
+            const container = document.getElementById("current-" + league.toUpperCase() + "-events");
 
             // Clear the container
             container.innerHTML = '';
