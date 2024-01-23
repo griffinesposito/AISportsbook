@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta
 
 def convert_list_to_json(listTable):
     # Extract the header and the rows
@@ -12,3 +13,20 @@ def convert_list_to_json(listTable):
 
     # Printing the JSON object
     return json_output
+
+
+def get_time_range_str():
+    # Get the current datetime
+    current_time = datetime.now()
+
+    # Calculate one week ago and one week in the future
+    one_week_ago = current_time - timedelta(weeks=1)
+    one_week_future = current_time + timedelta(weeks=1)
+
+    # Format dates as 'YYYYMMDD'
+    formatted_one_week_ago = one_week_ago.strftime('%Y%m%d')
+    formatted_one_week_future = one_week_future.strftime('%Y%m%d')
+
+    # Concatenate the dates
+    date_range = f"{formatted_one_week_ago}-{formatted_one_week_future}"
+    return date_range

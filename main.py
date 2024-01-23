@@ -2,10 +2,16 @@
 from flask import Flask, request, send_from_directory, jsonify, render_template
 from oddsApi import get_in_season_sports, get_sports_odds, get_event_odds, get_sport_scores
 from espnApi import get_team_data, get_team_record, get_team_injuries, get_team_events, get_current_events
+from pythonUtils import get_time_range_str
 from flask_socketio import SocketIO
 import threading
 import time
 import random
+
+# Global Data structures
+current_nfl_events = {}  # Global data structure
+current_nba_events = {}  # Global data structure
+current_mlb_events = {}  # Global data structure
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -20,6 +26,38 @@ def fetch_and_emit():
     print(f"Emitting data: {data}")
     socketio.emit('live_data', {'data': data})
     time.sleep(1)  # Fetch data every second
+
+def fetch_nfl_events():
+  """ Fetch and process live data, then emit using SocketIO """
+  while True:
+    # Simulate data fetching and processing
+    dates = get_time_range_str()
+    sport = 'football'
+    league = 'nfl'
+    current_nfl_events = get_current_events(sport, league, dates)
+    time.sleep(60*5)  # Fetch data every 5 minutes
+
+
+def fetch_nba_events():
+  """ Fetch and process live data, then emit using SocketIO """
+  while True:
+    # Simulate data fetching and processing
+    dates = get_time_range_str()
+    sport = 'basketball'
+    league = 'nba'
+    current_nba_events = get_current_events(sport, league, dates)
+    time.sleep(60*5)  # Fetch data every 5 minutes
+
+
+def fetch_mlb_events():
+  """ Fetch and process live data, then emit using SocketIO """
+  while True:
+    # Simulate data fetching and processing
+    dates = get_time_range_str()
+    sport = 'baseball'
+    league = 'mlb'
+    current_mlb_events = get_current_events(sport, league, dates)
+    time.sleep(60*5)  # Fetch data every 5 minutes
 
 @app.route('/')
 def index():
@@ -127,11 +165,16 @@ def team_events():
 
 @app.route('/sports/leagueevents', methods=['GET'])
 def league_events():
-  sport   = request.args.get('sport')
+  #sport   = request.args.get('sport')
   league  = request.args.get('league')
-  dates    = request.args.get('dates')
-
-  result = get_current_events(sport, league, dates)
+  #dates    = request.args.get('dates')
+  if league.lower() == 'nfl':
+    result = current_nfl_events
+  elif league.lower() == 'nba':
+    result = current_nba_events
+  elif league.lower() == 'mlb':
+    result = current_mlb_events
+  #result = get_current_events(sport, league, dates)
   return jsonify(result)
 
 
@@ -161,4 +204,10 @@ if __name__ == "__main__":
   # Start the background thread for data fetching
   data_thread = threading.Thread(target=fetch_and_emit, daemon=True)
   data_thread.start()
+  nfl_events_thread = threading.Thread(target=fetch_nfl_events, daemon=True)
+  nfl_events_thread.start()
+  nba_events_thread = threading.Thread(target=fetch_nba_events, daemon=True)
+  nba_events_thread.start()
+  mlb_events_thread = threading.Thread(target=fetch_mlb_events, daemon=True)
+  mlb_events_thread.start()
   app.run(host='0.0.0.0', port=80)
