@@ -267,8 +267,17 @@ def get_current_events(sport, league, dates):
         event_dict['venue']['image']            = event['competitions'][0]['venue']['images'][0]['href']
         if not event['id'] in add_links:
             add_links[event['id']] = []
-        add_links[event['id']].append(('leaders',event['competitions'][0]['leaders']['$ref']))
-        add_links[event['id']].append(('predictor',event['competitions'][0]['predictor']['$ref']))
+
+        if not 'leaders' in event['competitions'][0]:
+            for competitor in event['competitions'][0]['competitors']:
+                if 'leaders' in competitor:
+                    add_links[event['id']].append(('teamleaders',competitor['leaders']['$ref']))
+        else:
+            add_links[event['id']].append(('gameleaders',event['competitions'][0]['leaders']['$ref']))
+
+        if 'predictor' in event['competitions'][0]:
+            add_links[event['id']].append(('predictor',event['competitions'][0]['predictor']['$ref']))
+            
         data['events'][event['id']] = event_dict
 
     add_data = fetch_data(add_links)
