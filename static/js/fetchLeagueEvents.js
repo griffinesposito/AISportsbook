@@ -22,6 +22,19 @@ function fetchLeagueEvents(sport, league) {
         .then(data => {
             console.log('Data:', data);
             // Handle the data here
+            // Get the container element
+            const container = document.getElementById("current-" + league + "-events");
+
+            // Clear the container
+            container.innerHTML = '';
+
+            // Loop through the elements and add new divs
+            data.events.forEach(item => {
+                const newDiv = document.createElement('div');
+                newDiv.className = 'paragraph-block'; // Set the class
+                newDiv.textContent = item.date + ":" + item.name; // Set the text content to level3 value
+                container.appendChild(newDiv); // Append the new div to the container
+            });
         })
         .catch(error => console.error('Error:', error));
 }

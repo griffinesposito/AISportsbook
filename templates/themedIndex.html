@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <div id="NFL" class="tab-content">
+    <div id="NFL" data-sport="football" class="tab-content">
         <div class="paragraph-block">
             <h2>NFL</h2>
             <p>The National Football League (NFL) is a professional American football league consisting of 32 teams, divided equally between the National Football Conference (NFC) and the American Football Conference (AFC). Established on August 20, 1920, as the American Professional Football Association before renaming itself to the NFL two years later, it is one of the four major professional sports leagues in North America and the highest professional level of American football in the world.
@@ -68,14 +68,18 @@
             <h2>NFL Data</h2>
             <canvas id="liveChart" width="400" height="400"></canvas>
         </div>
+
+        <div id="current-NFL-events">
+            
+        </div>
     </div>
-    <div id="NBA" class="tab-content">
+    <div id="NBA" data-sport="basketball" class="tab-content">
         <div class="paragraph-block">
             <h2>NBA</h2>
             <p>Content for NBA.</p>
         </div>
     </div>
-    <div id="MLB" class="tab-content">
+    <div id="MLB" data-sport="baseball" class="tab-content">
         <div class="paragraph-block">
             <h2>MLB</h2>
             <p>Content for MLB.</p>
@@ -89,8 +93,10 @@
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none";  
             }
-            document.getElementById(league).style.display = "block"; 
-            fetchLeagueEvents('football','nfl');
+            liveDataBlock = document.getElementById(league);
+            liveDataBlock.style.display = "block"; 
+            const sport = liveDataBlock.dataset.sport;
+            fetchLeagueEvents(sport,league.toLowerCase());
         }
 
         function openHistoricalData(league) {
