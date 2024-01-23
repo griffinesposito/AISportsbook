@@ -1,4 +1,6 @@
 import requests, json, pprint
+from asyncRequests import fetch_data
+
 base_url    = "https://sports.core.api.espn.com/v2/sports"
 max_events  = 25
 football_stats_to_include = ['fumblesLost','fumblesForced',
@@ -166,16 +168,14 @@ def get_team_events(sport, league, year, team):
             return response.status_code, response.reason
         
         event = response.json()
-        gameDict = dict()
-        data['games']['id'].append(         event['competitions'][0]['id'])
-        data['games']['shortName'].append(  event['shortName'])
-        data['games']['date'].append(       event['date'])
+        
         competitors             = event['competitions'][0]['competitors']
         statsForGameExist = False
         for comp in competitors:
             if comp['id'] == team_general['id']: # This is the team data is being requested for
-                if 'statistics' not in comp:
+                if 'statistics' not in comp: # This game hasnt happened yet
                     continue
+
                 statsForGameExist = True
                 data['games']['homeAway'].append(comp['homeAway'])
 
@@ -216,6 +216,9 @@ def get_team_events(sport, league, year, team):
                 data['games']['oppScore'].append(score['displayValue'])
 
         if statsForGameExist:
+            data['games']['id'].append(         event['competitions'][0]['id'])
+            data['games']['shortName'].append(  event['shortName'])
+            data['games']['date'].append(       event['date'])
             if data['games']['homeAway'][-1] == 'home':
                 data['games']['score'].append(f"{data['games']['oppScore'][-1]}-{data['games']['teamScore'][-1]}")
             else:
@@ -224,4 +227,53 @@ def get_team_events(sport, league, year, team):
 
         cnt = cnt + 1
 
+    return data
+
+def get_current_events(sport, league, dates):
+    endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/events?dates={dates}&lang=en&region=us"
+    #response = requests.get(endpoint,params={})
+    #if response.status_code != 200:
+    #    return response.status_code, response.reason  
+
+    #event_list = response.json()
+    event_list = fetch_data([(endpoint,None)])   
+    data = dict()  
+    data['events'] = dict()
+    event_links = []
+    for event_link in event_list[0]['items']:
+        event_links.append((event_link['$ref'],None))
+    
+    events = fetch_data(event_links)
+    add_links = dict()
+
+    for event in events:
+        event_dict = dict()
+        event_dict['name']                      = event['name']
+        event_dict['shortName']                 = event['shortName']
+        event_dict['date']                      = event['date']
+        event_dict['link']                      = dict()
+        event_dict['link']['href']              = event['links'][0]['href']
+        event_dict['link']['text']              = event['links'][0]['text']
+        if 'weather' in event:
+            event_dict['weather']                   = dict()
+            event_dict['weather']['displayValue']   = event['weather']['displayValue']
+            event_dict['weather']['windSpeed']      = event['weather']['windSpeed']
+            event_dict['weather']['windDirection']  = event['weather']['windDirection']
+            event_dict['weather']['temperature']    = event['weather']['temperature']
+            event_dict['weather']['gust']           = event['weather']['gust']
+            event_dict['weather']['precipitation']  = event['weather']['precipitation']
+        event_dict['venue']                     = dict()
+        event_dict['venue']['fullName']         = event['competitions'][0]['venue']['fullName']
+        event_dict['venue']['image']            = event['competitions'][0]['venue']['images'][0]['href']
+        if not event['id'] in add_links:
+            add_links[event['id']] = []
+        add_links[event['id']].append(('leaders',event['competitions'][0]['leaders']['$ref']))
+        add_links[event['id']].append(('predictor',event['competitions'][0]['predictor']['$ref']))
+        data['events'][event['id']] = event_dict
+
+    add_data = fetch_data(add_links)
+    for dat in add_data:
+        event_id = dat['id-request']
+        key_id   = dat['key-request']
+        data['events'][event_id][key_id] = dat
     return data

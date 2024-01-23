@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Data Plot</title>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Real-time Data Plot</h1>
+    <canvas id="liveChart" width="400" height="400"></canvas>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var socket = io.connect('https://' + document.domain + ':' + location.port);
+        var ctx = document.getElementById('liveChart').getContext('2d');
+        var liveChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [], // Time or other labels for x-axis
+                datasets: [{
+                    label: 'Live Data',
+                    data: [], // Your data array
+                    backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+  
+        socket.on('live_data', function(data) {
+            console.log('Received live data:', data);
+            // Assuming data is a single numerical value
+            // Update chart here. You might need to adjust depending on your data structure
+            liveChart.data.labels.push('New Data Point'); // Adjust this label as needed
+            liveChart.data.datasets[0].data.push(data.data);
+            liveChart.update();
+        });
+    });
+    </script>
+
+</body>
+</html>

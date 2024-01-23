@@ -295,6 +295,57 @@ paths:
                 '500':
                     description: Internal server error
 
+    /sports/teamevents:
+        get:
+            operationId: getTeamEvents
+            summary: Returns season overview statistics for previous games in the season
+            description: >-
+                Retrieves statistical data about a season for a specific team for a specific sport
+            parameters:
+              - in: query
+                name: sport
+                required: true
+                schema:
+                    type: string
+                    $ref: '#/components/schemas/SportsTypes'
+                description: Type of sport that the requested team falls under
+                example: 'baseball'
+              - in: query
+                name: league
+                required: true
+                schema:
+                    type: string
+                    $ref: '#/components/schemas/LeagueTypes'
+                description: League name abbreviated
+                example: 'nfl'
+              - in: query
+                name: year
+                required: true
+                schema:
+                    type: string
+                description: The season year (format="YYYY") that you are requesting team data for.
+                example: '2023'
+              - in: query
+                name: team
+                required: true
+                schema:
+                    type: string
+                description: Abbreviated team name, example CHI for Chicago Bears
+                example: 'CHI'
+            responses:
+                '200':
+                    description: Successful response with team data
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TeamEvents'
+                '400':
+                    description: Bad request due to invalid parameters
+                '401':
+                    description: Unauthorized access due to missing or invalid apiKey
+                '500':
+                    description: Internal server error
+
 components:
     schemas:
 
@@ -675,43 +726,6 @@ components:
                 alternate_totals_1st_5_innings: "Alternate over/under 1st 5 innings (Baseball): Bet on the alternate line for the total points scored in the first 5 innings to be over or under the bookmaker's line."
 
 ########################## ESPN API Definitions ################################
-        NFLTeamAbbreviation:
-            type: string
-            description: An enumeration of abbreviated names for NFL teams.
-            enum:
-                - ARI  # Arizona Cardinals
-                - ATL  # Atlanta Falcons
-                - BAL  # Baltimore Ravens
-                - BUF  # Buffalo Bills
-                - CAR  # Carolina Panthers
-                - CHI  # Chicago Bears
-                - CIN  # Cincinnati Bengals
-                - CLE  # Cleveland Browns
-                - DAL  # Dallas Cowboys
-                - DEN  # Denver Broncos
-                - DET  # Detroit Lions
-                - GB   # Green Bay Packers
-                - HOU  # Houston Texans
-                - IND  # Indianapolis Colts
-                - JAX  # Jacksonville Jaguars
-                - KC   # Kansas City Chiefs
-                - LAC  # Los Angeles Chargers
-                - LAR  # Los Angeles Rams
-                - LV   # Las Vegas Raiders
-                - MIA  # Miami Dolphins
-                - MIN  # Minnesota Vikings
-                - NE   # New England Patriots
-                - NO   # New Orleans Saints
-                - NYG  # New York Giants
-                - NYJ  # New York Jets
-                - PHI  # Philadelphia Eagles
-                - PIT  # Pittsburgh Steelers
-                - SF   # San Francisco 49ers
-                - SEA  # Seattle Seahawks
-                - TB   # Tampa Bay Buccaneers
-                - TEN  # Tennessee Titans
-                - WAS  # Washington Commanders
-
         SportsTypes:
             type: string
             description: An enumeration of acceptable sport parameters
@@ -730,93 +744,42 @@ components:
 
         TeamData:
             type: object
+            description: >-
+                General information about the team including where they are located, display name, 
+                and online links to various logos and team information
             properties:
-                ref:
-                    type: string
                 id:
                     type: string
-                guid:
-                    type: string
-                uid:
-                    type: string
-                alternateIds:
-                    type: object
-                    properties:
-                        sdr:
-                            type: string
-                slug:
-                    type: string
+                    description: The identifer for the team
                 location:
                     type: string
-                name:
-                    type: string
-                nickname:
-                    type: string
-                abbreviation:
-                    type: string
+                    description: Where the team is located
                 displayName:
                     type: string
-                shortDisplayName:
-                    type: string
-                color:
-                    type: string
-                alternateColor:
-                    type: string
-                isActive:
-                    type: boolean
-                isAllStar:
-                    type: boolean
+                    description: The human readable display name of the team
                 logos:
                     type: array
+                    description: Contains online links to team logo images
                     items:
                         $ref: '#/components/schemas/Logo'
-                record:
-                    $ref: '#/components/schemas/Ref'
-                oddsRecords:
-                    $ref: '#/components/schemas/Ref'
-                athletes:
-                    $ref: '#/components/schemas/Ref'
-                venue:
-                    $ref: '#/components/schemas/Venue'
-                groups:
-                    $ref: '#/components/schemas/Ref'
-                ranks:
-                    $ref: '#/components/schemas/Ref'
-                statistics:
-                    $ref: '#/components/schemas/Ref'
-                leaders:
-                    $ref: '#/components/schemas/Ref'
                 links:
                     type: array
+                    description: Contains online links to additional team information
                     items:
                         $ref: '#/components/schemas/Link'
-                injuries:
-                    $ref: '#/components/schemas/Ref'
-                notes:
-                    $ref: '#/components/schemas/Ref'
-                againstTheSpreadRecords:
-                    $ref: '#/components/schemas/Ref'
-                franchise:
-                    $ref: '#/components/schemas/Ref'
-                depthCharts:
-                    $ref: '#/components/schemas/Ref'
-                projection:
-                    $ref: '#/components/schemas/Ref'
-                events:
-                    $ref: '#/components/schemas/Ref'
-                transactions:
-                    $ref: '#/components/schemas/Ref'
-                coaches:
-                    $ref: '#/components/schemas/Ref'
+
         Logo:
             type: object
             properties:
                 href:
                     type: string
+                    description: The online link to the image
                 width:
                     type: integer
+                    description: The width of the linked image in pixels
                 height:
                     type: integer
+                    description: The height of the linked image in pixels
                 alt:
                     type: string
                 rel:
@@ -825,79 +788,126 @@ components:
                         type: string
                 lastUpdated:
                     type: string
+                    description: The last time the image was updated
                     format: date-time
-
-        Ref:
-            type: object
-            properties:
-                ref:
-                    type: string
-
-        Venue:
-            type: object
-            properties:
-                ref:
-                    type: string
-                id:
-                    type: string
-                fullName:
-                    type: string
-                address:
-                    $ref: '#/components/schemas/Address'
-                capacity:
-                    type: integer
-                grass:
-                    type: boolean
-                indoor:
-                    type: boolean
-                images:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Image'
-
-        Address:
-            type: object
-            properties:
-                city:
-                    type: string
-                state:
-                    type: string
-                zipCode:
-                    type: string
-
-        Image:
-            type: object
-            properties:
-                href:
-                    type: string
-                width:
-                    type: integer
-                height:
-                    type: integer
-                alt:
-                    type: string
-                rel:
-                    type: array
-                    items:
-                        type: string
 
         Link:
             type: object
             properties:
                 language:
                     type: string
+                    description: The language the linked information is in
                 rel:
                     type: array
                     items:
                         type: string
                 href:
                     type: string
+                    description: The online link to the addition team information
                 text:
                     type: string
+                    description: The text description of what the link contains
                 shortText:
                     type: string
+                    description: The short text description of what the link contains
                 isExternal:
                     type: boolean
                 isPremium:
                     type: boolean
+
+        TeamGames:
+            type: object
+            properties:
+                date:
+                    type: array
+                    description: Array of dates for the events
+                    items:
+                        type: string
+                        format: date-time
+                homeAway:
+                    type: array
+                    description: Array of strings describing home games or away games
+                    items:
+                        type: string
+                id:
+                    type: array
+                    description: Array of identifiers for each event
+                    items:
+                        type: string
+                oppScore:
+                    type: array
+                    description: Array of strings containing the opponent scores for each game
+                    items:
+                        type: string
+                score:
+                    type: array
+                    description: Array of strings showing the final scores of each game
+                    items:
+                        type: string
+                        example: "100-90"
+                shortName:
+                    type: array
+                    description: Array of strings containing the short name of each game
+                    items:
+                        type: string
+                        example: "ARI @ CHI"
+                stats:
+                    type: array
+                    description: Array of stats. Each stat name matches with a description in the StatsMetadata component schema
+                    items:
+                        $ref: '#/components/schemas/Stat'
+                teamScore:
+                    type: array
+                    description: Array of strings containing the requested teams scores for each game
+                    items:
+                        type: string
+                winner:
+                    type: array
+                    description: Array of booleans that says whether the requested team won or lost each game
+                    items:
+                        type: boolean
+
+        Stat:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: Name of the statistic
+                values:
+                    type: array
+                    description: Array of values for the statistic for each game
+                    items:
+                        type: number
+
+        StatMetadata:
+            type: object
+            properties:
+                abbreviation:
+                    type: array
+                    description: Array of abbreviations for each stat type
+                    items:
+                        type: string
+                description:
+                    type: array
+                    description: Array of descriptions for each stat type
+                    items:
+                        type: string
+                name:
+                    type: array
+                    description: Array of names for each stat type. This stat name matches the Stat name in the TeamGames structure
+                    items:
+                        type: string
+                shortDisplayName:
+                    type: array
+                    description: Array of short display names for each stat type.
+                    items:
+                        type: string
+
+        TeamEvents:
+            type: object
+            properties:
+                games:
+                    $ref: '#/components/schemas/TeamGames'
+                statsMetadata:
+                    $ref: '#/components/schemas/StatMetadata'
        

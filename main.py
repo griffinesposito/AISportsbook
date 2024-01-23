@@ -1,17 +1,29 @@
 # Import the libraries we need
-from flask import Flask, request, send_from_directory, jsonify
+from flask import Flask, request, send_from_directory, jsonify, render_template
 from oddsApi import get_in_season_sports, get_sports_odds, get_event_odds, get_sport_scores
-from espnApi import get_team_data, get_team_record, get_team_injuries, get_team_events
+from espnApi import get_team_data, get_team_record, get_team_injuries, get_team_events, get_current_events
+from flask_socketio import SocketIO
+import threading
+import time
+import random
 
 # Initialize the Flask app
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
+def fetch_and_emit():
+  """ Fetch and process live data, then emit using SocketIO """
+  while True:
+    # Simulate data fetching and processing
+    data = random.randint(1, 100)  # Replace this with actual data fetching logic
+    print(f"Emitting data: {data}")
+    socketio.emit('live_data', {'data': data})
+    time.sleep(1)  # Fetch data every second
 
-# When a user loads the home page, display 'Hello World!'
-# This is not required for the plugin, but makes it easier to see that things are working when we deploy and test
-@app.route("/")
+@app.route('/')
 def index():
-  return "Welcome to AI Sportsbook API"
+  return render_template('themedIndex.html')
 
 
 @app.route('/sports', methods=['GET'])
@@ -113,6 +125,15 @@ def team_events():
   result = get_team_events(sport, league, year, team)
   return jsonify(result)
 
+@app.route('/sports/leagueevents', methods=['GET'])
+def league_events():
+  sport   = request.args.get('sport')
+  league  = request.args.get('league')
+  dates    = request.args.get('dates')
+
+  result = get_current_events(sport, league, dates)
+  return jsonify(result)
+
 
 #################### CHATGPT FUNCTIONS ######################
 # ChatGPT will use this route to find our manifest file, ai-plugin.json; it will look in the "".well-known" folder
@@ -137,4 +158,7 @@ def plugin_logo():
 
 # Run the app
 if __name__ == "__main__":
+  # Start the background thread for data fetching
+  data_thread = threading.Thread(target=fetch_and_emit, daemon=True)
+  data_thread.start()
   app.run(host='0.0.0.0', port=80)
