@@ -30,7 +30,7 @@ function fetchLeagueEvents(sport, league) {
 
             // Loop through the elements and add new divs
             for (const key in data.events) {
-                if (jsonObject.hasOwnProperty(key)) {
+                if (data.events.hasOwnProperty(key)) {
                     const item = data.events[key];
                     const newDiv = document.createElement('div');
                     newDiv.className = 'paragraph-block'; // Set the class
