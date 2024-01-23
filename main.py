@@ -7,6 +7,7 @@ from flask_socketio import SocketIO
 import threading
 import time
 import random
+from databaseOperations import check_table_and_create
 
 # Global Data structures
 current_nfl_events = {}  # Global data structure
@@ -223,3 +224,9 @@ if __name__ == "__main__":
   mlb_events_thread = threading.Thread(target=fetch_mlb_events, daemon=True)
   mlb_events_thread.start()
   app.run(host='0.0.0.0', port=80)
+  check_table_and_create("nfl_teams")
+  check_table_and_create("nba_teams")
+  check_table_and_create("mlb_teams")
+  check_table_and_create("nfl_players")
+  check_table_and_create("nba_players")
+  check_table_and_create("mlb_players")
