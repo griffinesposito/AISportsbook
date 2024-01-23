@@ -2,16 +2,17 @@ function fetchLeagueEvents(sport, league) {
     // Calculate dates for one week ago and one week in the future
     const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
     const today = new Date();
-    const oneWeekAgo = new Date(today - oneWeek);
-    const oneWeekFuture = new Date(today + oneWeek);
-
+    today.setHours(0, 0, 0, 0); // Set time to midnight
+    const oneWeekAgo = new Date(today.getTime() - oneWeek);
+    const oneWeekFuture = new Date(today.getTime() + oneWeek);
+  
     // Format dates as 'YYYYMMDD'
     function formatDate(date) {
         return date.toISOString().split('T')[0].replace(/-/g, '');
     }
-
+  
     const dates = `${formatDate(oneWeekAgo)}-${formatDate(oneWeekFuture)}`;
-
+    console.log(dates);
     // Construct the URL with query parameters
     const url = `/sports/leagueevents?sport=${encodeURIComponent(sport)}&league=${encodeURIComponent(league)}&dates=${dates}`;
 
