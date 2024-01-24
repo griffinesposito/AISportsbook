@@ -83,6 +83,14 @@ body {
     border: 2px solid rgba(90, 127, 248, 0.8);
 }
 
+.search-box {
+    background-color: rgba(10, 15, 32, 0.8); /* White background with 50% opacity */
+    border-radius: 4px; /* Adjust the value for more or less rounding */
+    max-width: 800px; /* Maximum width of the paragraph block */
+    color: white; 
+    border: 2px solid rgba(90, 127, 248, 0.8);
+}
+
 .tab-content {
     display: none;
     padding: 20px;
@@ -147,8 +155,8 @@ body {
 .result-item {
     padding: 10px;
     cursor: pointer;
-    background-color: #f9f9f9;
+    background-color: rgba(10, 15, 32, 0.8);
 }
 .result-item:hover {
-    background-color: #f1f1f1;
+    background-color: rgba(90, 127, 248, 0.8);
 }
