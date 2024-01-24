@@ -25,10 +25,10 @@ function addCurrentEventsTable(eventObject,container) {
                 <th colspan="4">${name}</th>
             </tr>
             <tr>
-                <td><img src="${imageSrcHomeTeam}" alt="Image Home" class="game-image"></td>
-                <td>${homeTeamScore}</td>
+                <td><img src="${imageSrcAwayTeam}" alt="Image Home" class="game-image"></td>
                 <td>${awayTeamScore}</td>
-                <td><img src="${imageSrcAwayTeam}" alt="Image 2" class="game-image"></td>
+                <td>${homeTeamScore}</td>
+                <td><img src="${imageSrcHomeTeam}" alt="Image 2" class="game-image"></td>
             </tr>
         </table>
     `;
