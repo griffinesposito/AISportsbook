@@ -200,8 +200,7 @@ def search():
     # Connect to your PostgreSQL database and search
     # Return a list of matching results
     # For example:
-    results = [{"displayName": "Example Match"}]
-    return jsonify(results)
+    return jsonify(list)
 
 #################### CHATGPT FUNCTIONS ######################
 # ChatGPT will use this route to find our manifest file, ai-plugin.json; it will look in the "".well-known" folder
