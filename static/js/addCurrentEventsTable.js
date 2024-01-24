@@ -1,7 +1,7 @@
 function formatHumanReadableDate(dateString) {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' };
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', options) + ' ' + date.toLocaleTimeString('en-US', options);
+    return date.toLocaleDateString('en-US', options);
 }
 
 
@@ -20,13 +20,15 @@ function addCurrentEventsTable(eventObject,container) {
         <table>
             <tr>
                 <th colspan="4">${dateStr}</th>
+            </tr>
+            <tr>
                 <th colspan="4">${name}</th>
             </tr>
             <tr>
-                <td><img src="${imageSrcHomeTeam}" alt="Image Home"></td>
+                <td><img src="${imageSrcHomeTeam}" alt="Image Home" class="game-image"></td>
                 <td>${homeTeamScore}</td>
                 <td>${awayTeamScore}</td>
-                <td><img src="${imageSrcAwayTeam}" alt="Image 2"></td>
+                <td><img src="${imageSrcAwayTeam}" alt="Image 2" class="game-image"></td>
             </tr>
         </table>
     `;

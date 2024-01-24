@@ -78,7 +78,7 @@ body {
     box-shadow: 15px 15px 10px rgba(90, 127, 248, 0.8); /* Horizontal offset, vertical offset, blur radius, color */
     padding: 15px; /* Space inside the box */
     margin: 20px 0; /* Space outside the box, only top, and bottom in this case */
-    max-width: 800px; /* Maximum width of the paragraph block */
+    max-width: 100%; /* Maximum width of the paragraph block */
     color: white; 
     border: 2px solid rgba(90, 127, 248, 0.8);
 }
@@ -159,4 +159,39 @@ body {
 }
 .result-item:hover {
     background-color: rgba(90, 127, 248, 0.8);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    color: #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+img.game-image {
+    width: 100px; /* Adjust as needed */
+    height: auto;
+}
+
+.game-image {
+    vertical-align: middle;
 }

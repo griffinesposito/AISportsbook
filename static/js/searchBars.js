@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchBox = document.getElementById('searchBox');
-    const resultsBox = document.getElementById('searchResults');
+    const league = searchBox.dataset.league;
+    const category = searchBox.dataset.cat;
+    const resultsBox = document.getElementById('searchResults-' + league + '-' + category);
 
     let timeoutId;
     searchBox.addEventListener('input', function() {
