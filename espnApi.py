@@ -278,6 +278,11 @@ def get_current_events(sport, league, dates):
                     add_links[event['id']].append((competitor['homeAway'] + 'teamdata',competitor['team']['$ref']))
         else:
             add_links[event['id']].append(('gameleaders',event['competitions'][0]['leaders']['$ref']))
+            for competitor in event['competitions'][0]['competitors']:
+                if 'score' in competitor:
+                    add_links[event['id']].append((competitor['homeAway'] + 'teamscore',competitor['score']['$ref']))
+                if 'team' in competitor:
+                    add_links[event['id']].append((competitor['homeAway'] + 'teamdata',competitor['team']['$ref']))
 
         if 'predictor' in event['competitions'][0]:
             add_links[event['id']].append(('predictor',event['competitions'][0]['predictor']['$ref']))

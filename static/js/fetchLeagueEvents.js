@@ -34,7 +34,7 @@ function fetchLeagueEvents(sport, league) {
                     const item = data.events[key];
                     const newDiv = document.createElement('div');
                     newDiv.className = 'paragraph-block'; // Set the class
-                    newDiv.textContent = item.date + ":" + item.name; // Set the text content to level3 value
+                    addCurrentEventsTable(item,newDiv);
                     container.appendChild(newDiv); // Append the new div to the container
                 }
             }
