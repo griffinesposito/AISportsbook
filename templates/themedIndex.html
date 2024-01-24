@@ -17,8 +17,8 @@
                 <button class="tab-button">NFL</button>
                 <div class="dropdown-content">
                     <button onclick="openLiveData('NFL')">Live Data</button>
-                    <button onclick="openHistoricalData('NFL')">Historical Data</button>
-                    <button onclick="openOdds('NFL')">Odds</button>
+                    <button onclick="openTeamsData('NFL')">Teams</button>
+                    <button onclick="openPlayersData('NFL')">Players</button>
                     <!-- Add more buttons or other elements as needed -->
                 </div>
             </div>
@@ -26,8 +26,8 @@
                 <button class="tab-button">NBA</button>
                 <div class="dropdown-content">
                     <button onclick="openLiveData('NBA')">Live Data</button>
-                    <button onclick="openHistoricalData('NBA')">Historical Data</button>
-                    <button onclick="openOdds('NBA')">Odds</button>
+                    <button onclick="openTeamsData('NBA')">Historical Data</button>
+                    <button onclick="openPlayersData('NBA')">Odds</button>
                     <!-- Add more buttons or other elements as needed -->
                 </div>
             </div>
@@ -35,8 +35,8 @@
                 <button class="tab-button">MLB</button>
                 <div class="dropdown-content">
                     <button onclick="openLiveData('MLB')">Live Data</button>
-                    <button onclick="openHistoricalData('MLB')">Historical Data</button>
-                    <button onclick="openOdds('MLB')">Odds</button>
+                    <button onclick="openTeamsData('MLB')">Historical Data</button>
+                    <button onclick="openPlayersData('MLB')">Odds</button>
                     <!-- Add more buttons or other elements as needed -->
                 </div>
             </div>
@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <div id="NFL" data-sport="football" class="tab-content">
+    <div id="NFL-live" data-sport="football" class="tab-content">
         <div class="paragraph-block">
             <h2>NFL</h2>
             <p>The National Football League (NFL) is a professional American football league consisting of 32 teams, divided equally between the National Football Conference (NFC) and the American Football Conference (AFC). Established on August 20, 1920, as the American Professional Football Association before renaming itself to the NFL two years later, it is one of the four major professional sports leagues in North America and the highest professional level of American football in the world.
@@ -73,7 +73,19 @@
 
         </div>
     </div>
-    <div id="NBA" data-sport="basketball" class="tab-content">
+    <div id="NFL-players" data-sport="football" class="tab-content">
+        <div class="paragraph-block">
+            <input type="text" id="searchBox" placeholder="Type to search...">
+            <div id="searchResults"></div>
+        </div>
+    </div>
+
+    <div id="NFL-teams" data-sport="football" class="tab-content">
+        <div class="paragraph-block">
+        </div>
+    </div>
+
+    <div id="NBA-live" data-sport="basketball" class="tab-content">
         <div class="paragraph-block">
             <h2>NBA</h2>
             <p>Content for NBA.</p>
@@ -82,13 +94,32 @@
             
         </div>
     </div>
-    <div id="MLB" data-sport="baseball" class="tab-content">
+    <div id="NBA-players" data-sport="football" class="tab-content">
+        <div class="paragraph-block">
+        </div>
+    </div>
+
+    <div id="NBA-teams" data-sport="football" class="tab-content">
+        <div class="paragraph-block">
+        </div>
+    </div>
+
+    <div id="MLB-live" data-sport="baseball" class="tab-content">
         <div class="paragraph-block">
             <h2>MLB</h2>
             <p>Content for MLB.</p>
         </div>
         <div id="current-MLB-events">
             
+        </div>
+    </div>
+    <div id="MLB-players" data-sport="football" class="tab-content">
+        <div class="paragraph-block">
+        </div>
+    </div>
+
+    <div id="MLB-teams" data-sport="football" class="tab-content">
+        <div class="paragraph-block">
         </div>
     </div>
 
@@ -99,30 +130,79 @@
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none";  
             }
-            liveDataBlock = document.getElementById(league);
+            liveDataBlock = document.getElementById(league + "-live");
             liveDataBlock.style.display = "block"; 
             const sport = liveDataBlock.dataset.sport;
             fetchLeagueEvents(sport,league.toLowerCase());
         }
 
-        function openHistoricalData(league) {
+        function openPlayersData(league) {
             var i;
             var x = document.getElementsByClassName("tab-content");
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none";  
             }
-            document.getElementById(league).style.display = "block";  
+            liveDataBlock = document.getElementById(league + "-players");
+            liveDataBlock.style.display = "block";  
         }
 
-        function openOdds(league) {
+        function openTeamsData(league) {
             var i;
             var x = document.getElementsByClassName("tab-content");
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none";  
             }
-            document.getElementById(league).style.display = "block";  
+            liveDataBlock = document.getElementById(league + "-teams");
+            liveDataBlock.style.display = "block";  
         }
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBox = document.getElementById('searchBox');
+            const resultsBox = document.getElementById('searchResults');
+
+            let timeoutId;
+            searchBox.addEventListener('input', function() {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    const searchText = searchBox.value;
+                    if (searchText.trim()) {
+                        // Make an HTTP request to your server's endpoint
+                        fetch('/search?query=' + encodeURIComponent(searchText))
+                            .then(response => response.json())
+                            .then(data => {
+                                // Display the results
+                                resultsBox.innerHTML = '';
+                                data.forEach(item => {
+                                    const div = document.createElement('div');
+                                    div.classList.add('result-item');
+                                    div.textContent = item.displayName; // Assuming 'displayName' is the field you want to show
+                                    div.onclick = function() {
+                                        searchBox.value = div.textContent;
+                                        resultsBox.style.display = 'none';
+                                    };
+                                    resultsBox.appendChild(div);
+                                });
+                                resultsBox.style.display = 'block';
+                            })
+                            .catch(error => console.error('Error:', error));
+                    } else {
+                        resultsBox.style.display = 'none';
+                    }
+                }, 500); // Debounce time of 500 milliseconds
+            });
+
+            // Hide the result box when clicking outside
+            document.addEventListener('click', function(event) {
+                if (event.target !== searchBox) {
+                    resultsBox.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var socket = io.connect('https://' + document.domain + ':' + location.port);
