@@ -166,10 +166,10 @@ table {
     border-collapse: collapse;
     margin: 20px 0;
     font-family: Arial, sans-serif;
-    color: #333;
+    color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #05427779;
-    font-size: 18px; /* Increase font size */
+    font-size: 22px; /* Increase font size */
 }
 
 th, td {
