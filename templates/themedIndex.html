@@ -6,6 +6,9 @@
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/fetchLeagueEvents.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/openTabs.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/searchBars.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chartEvents.js') }}"></script>
 </head>
 <body>
 
@@ -48,40 +51,24 @@
     <div id="NFL-live" data-sport="football" class="tab-content">
         <div class="paragraph-block">
             <h2>NFL</h2>
-            <p>The National Football League (NFL) is a professional American football league consisting of 32 teams, divided equally between the National Football Conference (NFC) and the American Football Conference (AFC). Established on August 20, 1920, as the American Professional Football Association before renaming itself to the NFL two years later, it is one of the four major professional sports leagues in North America and the highest professional level of American football in the world.
-
-                The NFL's 17-week regular season runs from early September to late December, with each team playing 16 games and having one bye week. Following the conclusion of the regular season, seven teams from each conference advance to the playoffs, a single-elimination tournament that culminates in the Super Bowl, which is usually held on the first Sunday in February and is played between the champions of the NFC and AFC. The Super Bowl winner is awarded the Vince Lombardi Trophy.
-                
-                The league is headquartered in New York City and is known for its strict organization and scheduling. It consists of various departments that oversee the sport's rules, regulations, and marketing, as well as its media properties and community relations. The NFL is recognized for its competitive parity, due to its salary cap and draft system, which ensures that all teams have an equal opportunity to acquire talent and maintains the league's competitive balance.
-                
-                The NFL also places a strong emphasis on the development of the sport at all levels and actively promotes football through youth programs, international outreach, and various philanthropic efforts. It has established itself as a dominant media presence, and the television rights to broadcast NFL games are the most expensive rights of any American sport, with the Super Bowl often being the most-watched annual sporting event.
-                
-                One distinctive feature of the NFL is the prominence of the quarterback position. Quarterbacks often become the face of the team and are among the most well-known and marketable athletes in the league. The NFL has also been a launching pad for several cultural phenomena, including the rise of Super Bowl Sunday as an unofficial national holiday and the proliferation of the sport's influence on music, film, and television.
-                
-                The NFL has faced various challenges and controversies, including concerns about player safety, particularly related to concussions and chronic traumatic encephalopathy (CTE), as well as issues with performance-enhancing drugs, domestic violence, and the integrity of the game. Despite these issues, the NFL has taken steps to increase player safety by changing rules, enforcing stricter penalties, and supporting research.
-                
-                The league's popularity is not just limited to the United States, as it has a growing international following, with regular-season games being played abroad, such as in London and Mexico City. The NFL's international series has helped to grow the sport's popularity around the globe, and there is ongoing discussion about potential expansion or the creation of a satellite league in Europe or elsewhere.
-                
-                With a rich history that includes legendary teams, iconic players, and memorable moments, the NFL has ingrained itself into the fabric of American culture and continues to be a major force in the sports entertainment industry. </p>
         </div>
         <div class="paragraph-block">
             <h2>NFL Data</h2>
             <canvas id="liveChart" width="400" height="400"></canvas>
         </div>
-
-        <div id="current-NFL-events">
-
-        </div>
+        <div id="current-NFL-events"></div>
     </div>
     <div id="NFL-players" data-sport="football" class="tab-content">
         <div class="paragraph-block">
-            <input type="text" id="searchBox" placeholder="Search for player..." class="search-box">
-            <div id="searchResults"></div>
+            <input type="text" id="searchBox" placeholder="Search for player..." class="search-box" data-league="nfl" data-cat="players">
+            <div id="searchResults-nfl-players"></div>
         </div>
     </div>
 
     <div id="NFL-teams" data-sport="football" class="tab-content">
         <div class="paragraph-block">
+            <input type="text" id="searchBox" placeholder="Search for team..." class="search-box" data-league="nfl" data-cat="teams">
+            <div id="searchResults-nfl-teams"></div>
         </div>
     </div>
 
@@ -96,11 +83,15 @@
     </div>
     <div id="NBA-players" data-sport="football" class="tab-content">
         <div class="paragraph-block">
+            <input type="text" id="searchBox" placeholder="Search for players..." class="search-box" data-league="nba" data-cat="players">
+            <div id="searchResults-nba-players"></div>
         </div>
     </div>
 
     <div id="NBA-teams" data-sport="football" class="tab-content">
         <div class="paragraph-block">
+            <input type="text" id="searchBox" placeholder="Search for teams..." class="search-box" data-league="nba" data-cat="teams">
+            <div id="searchResults-nba-teams"></div>
         </div>
     </div>
 
@@ -113,139 +104,15 @@
             
         </div>
     </div>
-    <div id="MLB-players" data-sport="football" class="tab-content">
+    <div id="MLB-players" data-sport="baseball" class="tab-content">
         <div class="paragraph-block">
         </div>
     </div>
 
-    <div id="MLB-teams" data-sport="football" class="tab-content">
+    <div id="MLB-teams" data-sport="baseball" class="tab-content">
         <div class="paragraph-block">
         </div>
     </div>
 
-    <script>
-        function openLiveData(league) {
-            var i;
-            var x = document.getElementsByClassName("tab-content");
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";  
-            }
-            liveDataBlock = document.getElementById(league + "-live");
-            liveDataBlock.style.display = "block"; 
-            const sport = liveDataBlock.dataset.sport;
-            fetchLeagueEvents(sport,league.toLowerCase());
-        }
-
-        function openPlayersData(league) {
-            var i;
-            var x = document.getElementsByClassName("tab-content");
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";  
-            }
-            liveDataBlock = document.getElementById(league + "-players");
-            liveDataBlock.style.display = "block";  
-        }
-
-        function openTeamsData(league) {
-            var i;
-            var x = document.getElementsByClassName("tab-content");
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";  
-            }
-            liveDataBlock = document.getElementById(league + "-teams");
-            liveDataBlock.style.display = "block";  
-        }
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchBox = document.getElementById('searchBox');
-            const resultsBox = document.getElementById('searchResults');
-
-            let timeoutId;
-            searchBox.addEventListener('input', function() {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => {
-                    const searchText = searchBox.value;
-                    if (searchText.trim()) {
-                        // Make an HTTP request to your server's endpoint
-                        fetch('/search?query=' + encodeURIComponent(searchText))
-                            .then(response => response.json())
-                            .then(data => {
-                                // Display the results
-                                resultsBox.innerHTML = '';
-                                console.log('Received Search Results:', data);
-                                data.forEach(item => {
-                                    const div = document.createElement('div');
-                                    div.classList.add('result-item');
-                                    div.textContent = item[3]; // Assuming 'displayName' is the field you want to show
-                                    div.onclick = function() {
-                                        searchBox.value = div.textContent;
-                                        resultsBox.style.display = 'none';
-                                    };
-                                    resultsBox.appendChild(div);
-                                });
-                                resultsBox.style.display = 'block';
-                            })
-                            .catch(error => console.error('Error:', error));
-                    } else {
-                        resultsBox.style.display = 'none';
-                    }
-                }, 500); // Debounce time of 500 milliseconds
-            });
-
-            // Hide the result box when clicking outside
-            document.addEventListener('click', function(event) {
-                if (event.target !== searchBox) {
-                    resultsBox.style.display = 'none';
-                }
-            });
-        });
-    </script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var socket = io.connect('https://' + document.domain + ':' + location.port);
-            var ctx = document.getElementById('liveChart').getContext('2d');
-            var liveChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [], // Time or other labels for x-axis
-                    datasets: [{
-                        label: 'Live Data',
-                        data: [], // Your data array
-                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-    
-            socket.on('live_data', function(data) {
-                //console.log('Received live data:', data);
-                desiredDataPointCount = 25;
-                // Assuming data is a single numerical value
-                // Update chart here. You might need to adjust depending on your data structure
-                liveChart.data.labels.push('New Data Point'); // Adjust this label as needed
-                liveChart.data.datasets[0].data.push(data.data);
-
-                // Assuming 'myChart' is your Chart.js instance
-                var data = liveChart.data.datasets[0].data;
-                if (data.length > desiredDataPointCount) {
-                    data.shift(); // This removes the first (oldest) element
-                    liveChart.data.labels.shift(); //from the data array
-                }
-                liveChart.update('none');
-            });
-        });
-    </script>
 </body>
 </html>
