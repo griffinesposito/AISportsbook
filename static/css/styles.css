@@ -168,7 +168,8 @@ table {
     font-family: Arial, sans-serif;
     color: #333;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    background-color: #05427779;
+    font-size: 18px; /* Increase font size */
 }
 
 th, td {
@@ -178,7 +179,7 @@ th, td {
 }
 
 th {
-    background-color: #4CAF50;
+    background-color: #000000;
     color: white;
     font-weight: bold;
 }
