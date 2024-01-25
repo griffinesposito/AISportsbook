@@ -197,6 +197,15 @@ img.game-image {
     vertical-align: middle;
 }
 
+
+img.venue-image {
+    width: 250px; /* Adjust as needed */
+    height: auto;
+}
+.venue-image {
+    vertical-align: auto;
+}
+
 .interactive-div {
     background-color: rgba(10, 15, 32, 0.8); /* White background with 50% opacity */
     border-radius: 8px; /* Adjust the value for more or less rounding */
