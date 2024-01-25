@@ -2,13 +2,14 @@ let eventData = null;
 
 function fetchLeagueEvents(sport, league) {
     // Calculate dates for one week ago and one week in the future
+    var interval = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
     if (sport === 'football')
     {
-        const interval = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+        interval = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
     }
     else
     {
-        const interval = 3 * 24 * 60 * 60 * 1000; // One week in milliseconds
+        interval = 3 * 24 * 60 * 60 * 1000; // One week in milliseconds
     }
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set time to midnight
