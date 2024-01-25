@@ -230,7 +230,7 @@ def get_team_events(sport, league, year, team):
     return data
 
 def get_current_events(sport, league, dates):
-    endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/events?dates={dates}&lang=en&region=us"
+    endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/events?dates={dates}&lang=en&region=us&limit=100"
     #response = requests.get(endpoint,params={})
     #if response.status_code != 200:
     #    return response.status_code, response.reason  
@@ -271,7 +271,7 @@ def get_current_events(sport, league, dates):
         if not 'leaders' in event['competitions'][0]:
             for competitor in event['competitions'][0]['competitors']:
                 if 'leaders' in competitor:
-                    add_links[event['id']].append(('teamleaders',competitor['leaders']['$ref']))
+                    add_links[event['id']].append((competitor['homeAway'] + 'teamleaders',competitor['leaders']['$ref']))
                 if 'score' in competitor:
                     add_links[event['id']].append((competitor['homeAway'] + 'teamscore',competitor['score']['$ref']))
                 if 'team' in competitor:
@@ -279,6 +279,8 @@ def get_current_events(sport, league, dates):
         else:
             add_links[event['id']].append(('gameleaders',event['competitions'][0]['leaders']['$ref']))
             for competitor in event['competitions'][0]['competitors']:
+                if 'leaders' in competitor:
+                    add_links[event['id']].append((competitor['homeAway'] + 'teamleaders',competitor['leaders']['$ref']))
                 if 'score' in competitor:
                     add_links[event['id']].append((competitor['homeAway'] + 'teamscore',competitor['score']['$ref']))
                 if 'team' in competitor:

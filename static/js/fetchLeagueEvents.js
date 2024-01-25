@@ -2,18 +2,25 @@ let eventData = null;
 
 function fetchLeagueEvents(sport, league) {
     // Calculate dates for one week ago and one week in the future
-    const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+    if (sport === 'football')
+    {
+        const interval = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+    }
+    else
+    {
+        const interval = 3 * 24 * 60 * 60 * 1000; // One week in milliseconds
+    }
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set time to midnight
-    const oneWeekAgo = new Date(today.getTime() - oneWeek);
-    const oneWeekFuture = new Date(today.getTime() + oneWeek);
+    const intervalAgo = new Date(today.getTime() - interval);
+    const intervalFuture = new Date(today.getTime() + interval);
   
     // Format dates as 'YYYYMMDD'
     function formatDate(date) {
         return date.toISOString().split('T')[0].replace(/-/g, '');
     }
   
-    const dates = `${formatDate(oneWeekAgo)}-${formatDate(oneWeekFuture)}`;
+    const dates = `${formatDate(intervalAgo)}-${formatDate(intervalFuture)}`;
     console.log(dates);
     // Construct the URL with query parameters
     const url = `/sports/leagueevents?sport=${encodeURIComponent(sport)}&league=${encodeURIComponent(league)}&dates=${dates}`;
@@ -31,6 +38,9 @@ function fetchLeagueEvents(sport, league) {
             container.innerHTML = '';
 
             // Loop through the elements and add new divs
+            var previousDate = new Date();
+            var currentDate = new Date();
+            var previousDiv = null;
             for (const key in data.events) {
                 if (data.events.hasOwnProperty(key)) {
                     const item = data.events[key];
@@ -41,7 +51,15 @@ function fetchLeagueEvents(sport, league) {
                         toggleContent(newDiv, item);
                     };
                     addCurrentEventsContent(item,newDiv);
-                    container.appendChild(newDiv); // Append the new div to the container
+                    currentDate = new Date(item.date);
+                    if (currentDate > previousDate)
+                    {
+                        container.insertBefore(newDiv, previousDiv);
+                    }else{
+                        container.insertBefore(newDiv, previousDiv.nextSibling); // Append the new div to the container
+                    }
+                    previousDate = currentDate;
+                    previousDiv  = newDiv;
                 }
             }
         })
