@@ -25,10 +25,17 @@ function toggleContent(element, eventObject) {
     var venue               = eventObject.venue.fullName;
     var venueImage          = eventObject.venue.image;
     innerHTML = `
+    <div class="flex-container">
+        <div class="flex-item">
         <h2>Game Link</h2>
         <a href="${gameLink}">${gameLinkTxt}</a>
+        </div>
+        <div class="flex-item">
+        <h2>Venue: ${venue}</h2>
+        <img src="${venueImage}" alt="Image Venue" class="venue-image">
+        </div>
+    </div>
     `;
-
     if (typeof eventObject.weather !== 'undefined') {
         innerHTML = innerHTML + `
             <h2>Weather Forecast</h2>
@@ -52,10 +59,6 @@ function toggleContent(element, eventObject) {
             </table>
             `;
     }
-    innerHTML = innerHTML + `
-            <h2>Venue: ${venue}</h2>
-            <img src="${venueImage}" alt="Image Venue" class="venue-image">
-    `;
 
 
     /*        <h2>Predictions:</h2> */

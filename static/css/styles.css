@@ -233,3 +233,15 @@ img.venue-image {
     max-height: 1000px; /* Expand up to 1000px */
     overflow-y: auto; /* Scrollable if content exceeds 500px */
 }
+
+
+.flex-container {
+    display: flex; /* Use flexbox */
+    justify-content: space-between; 
+}
+
+.flex-item {
+    flex: 1; /* Each flex item will take up an equal amount of space */
+    padding: 10px; /* Add some space inside the columns */
+    border: none; /* Optional border for columns */
+}
