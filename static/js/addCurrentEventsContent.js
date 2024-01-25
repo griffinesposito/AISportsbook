@@ -62,27 +62,29 @@ function toggleContent(element, eventObject) {
         innerHTML = innerHTML + `
             <h2>Predictions:</h2>
             <table>
-                <tr colspan="4">Predictions</tr>
+                <tr colspan="4">
+                    <th>Predictions</th>
+                </tr>
                 <tr>
                     <th>Name</th>
                     <th>${awayTeamName}</th>
                     <th>${homeTeamName}</th>
                     <th>Description</th>
                 </tr>
-                <tr>
         `;
         for (let i = 0; i < eventObject.predictor.homeTeam.statistics.length; i++) {
             var statHome = eventObject.predictor.homeTeam.statistics[i]; // Access array elements
             var statAway = eventObject.predictor.awayTeam.statistics[i]; // Access array elements
             innerHTML = innerHTML + `
+                <tr>
                     <td>${statHome.displayName}</td>
                     <td>${statAway.displayValue}</td>
                     <td>${statHome.displayValue}</td>
                     <td>${statHome.description}</td>
+                </tr>
             `;
         }
         innerHTML = innerHTML + `
-                </tr>
             </table>
         `;
     }
