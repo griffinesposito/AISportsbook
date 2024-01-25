@@ -39,9 +39,6 @@ function fetchLeagueEvents(sport, league) {
             container.innerHTML = '';
 
             // Loop through the elements and add new divs
-            var previousDate = new Date();
-            var currentDate = new Date();
-            var previousDiv = null;
             for (const key in data.events) {
                 if (data.events.hasOwnProperty(key)) {
                     const item = data.events[key];
@@ -52,19 +49,7 @@ function fetchLeagueEvents(sport, league) {
                         toggleContent(newDiv, item);
                     };
                     addCurrentEventsContent(item,newDiv);
-                    currentDate = new Date(item.date);
-                    if (previousDiv === null)
-                    {
-                        container.appendChild(newDiv);
-                    }
-                    else if (currentDate > previousDate)
-                    {
-                        container.insertBefore(newDiv, previousDiv);
-                    }else{
-                        container.insertBefore(newDiv, previousDiv.nextSibling); // Append the new div to the container
-                    }
-                    previousDate = currentDate;
-                    previousDiv  = newDiv;
+                    container.appendChild(newDiv); // Append the new div to the container
                 }
             }
         })
