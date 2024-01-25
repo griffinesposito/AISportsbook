@@ -53,7 +53,11 @@ function fetchLeagueEvents(sport, league) {
                     };
                     addCurrentEventsContent(item,newDiv);
                     currentDate = new Date(item.date);
-                    if (currentDate > previousDate)
+                    if (previousDiv === null)
+                    {
+                        container.appendChild(newDiv);
+                    }
+                    else if (currentDate > previousDate)
                     {
                         container.insertBefore(newDiv, previousDiv);
                     }else{

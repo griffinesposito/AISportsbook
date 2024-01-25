@@ -81,6 +81,7 @@ function toggleContent(element, eventObject) {
             `;
             for (let i = 0; i < eventObject.predictor.awayTeam.statistics.length; i++) {
                 var statAway = eventObject.predictor.awayTeam.statistics[i]; // Access array elements
+                var statHome = eventObject.predictor.homeTeam.statistics[i]; // Access array elements
                 if (statAway.description.length === 0)
                 {var description = statAway.displayName;}
                 else
@@ -89,6 +90,7 @@ function toggleContent(element, eventObject) {
                     <tr>
                         <td>${statAway.abbreviation}</td>
                         <td>${statAway.displayValue}</td>
+                        <td>${statHome.displayValue}</td>
                         <td>${description}</td>
                     </tr>
                 `;
