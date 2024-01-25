@@ -76,7 +76,7 @@ function toggleContent(element, eventObject) {
             if (statAway.description.length === 0)
             {var description = statAway.displayName;}
             else
-            {var description = statHome.description;}
+            {var description = statAway.description;}
             innerHTML = innerHTML + `
                 <tr>
                     <td>${statAway.abbreviation}</td>
