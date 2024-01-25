@@ -4,13 +4,8 @@ function formatHumanReadableDate(dateString) {
     return date.toLocaleDateString('en-US', options);
 }
 
-function toggleContent(element) {
+function toggleContent(element, eventObject) {
     const hiddenContent = element.querySelector('.hidden-content');
-    hiddenContent.classList.toggle('show-content');
-}
-
-function addCurrentEventsContent(eventObject,container) {
-    // Define image source variables
     var imageSrcHomeTeam    = eventObject.hometeamdata.logos[0].href;
     var imageSrcAwayTeam    = eventObject.awayteamdata.logos[0].href;
     var dateStr             = formatHumanReadableDate(eventObject.date);
@@ -26,35 +21,16 @@ function addCurrentEventsContent(eventObject,container) {
         var weatherTemp         = eventObject.weather.temperature;
         var weatherGust         = eventObject.weather.gust;
         var weatherPrec         = eventObject.weather.precipitation;
-    } else {
-        var weatherDisplay      = "N/A";
-        var weatherSpeed        = "N/A";
-        var weatherDirection    = "N/A";
-        var weatherTemp         = "N/A";
-        var weatherGust         = "N/A";
-        var weatherPrec         = "N/A";
     }
     var venue               = eventObject.venue.fullName;
     var venueImage          = eventObject.venue.image;
-    // Define the table HTML using template literals and the image source variables
-    var innerHTML = `
-        <table>
-            <tr>
-                <th colspan="4">${dateStr}</th>
-            </tr>
-            <tr>
-                <th colspan="4">${name}</th>
-            </tr>
-            <tr>
-                <td><img src="${imageSrcAwayTeam}" alt="Image Home" class="game-image"></td>
-                <td>${awayTeamScore}</td>
-                <td>${homeTeamScore}</td>
-                <td><img src="${imageSrcHomeTeam}" alt="Image 2" class="game-image"></td>
-            </tr>
-        </table>
-        <div class="hidden-content" style="display: block;">
-            <h2>Game Link</h2>
-            <a href="${gameLink}">${gameLinkTxt}</a>
+    innerHTML = `
+        <h2>Game Link</h2>
+        <a href="${gameLink}">${gameLinkTxt}</a>
+    `;
+
+    if (typeof eventObject.weather !== 'undefined') {
+        innerHTML = innerHTML + `
             <h2>Weather Forecast</h2>
             <table>
                 <tr>
@@ -74,13 +50,48 @@ function addCurrentEventsContent(eventObject,container) {
                     <td>${weatherPrec}</td>
                 </tr>
             </table>
+            `;
+    }
+    innerHTML = innerHTML + `
             <h2>Venue: ${venue}</h2>
             <img src="${venueImage}" alt="Image Venue" class="venue-image">
+    `;
 
-            <h2>Predictions:</h2>
 
-            <h2>Game Leaders:</h2>
-        </div>
+    /*        <h2>Predictions:</h2> */
+
+    /*        <h2>Game Leaders:</h2> */
+
+    hiddenContent.innerHTML = innerHTML;
+    hiddenContent.classList.toggle('show-content');
+}
+
+function addCurrentEventsContent(eventObject,container) {
+    // Define image source variables
+    var imageSrcHomeTeam    = eventObject.hometeamdata.logos[0].href;
+    var imageSrcAwayTeam    = eventObject.awayteamdata.logos[0].href;
+    var dateStr             = formatHumanReadableDate(eventObject.date);
+    var name                = eventObject.name;
+    var homeTeamScore       = eventObject.hometeamscore.displayValue;
+    var awayTeamScore       = eventObject.awayteamscore.displayValue;
+    // Define the table HTML using template literals and the image source variables
+    var innerHTML = `
+        <table>
+            <tr>
+                <th colspan="4">${dateStr}</th>
+            </tr>
+            <tr>
+                <th colspan="4">${name}</th>
+            </tr>
+            <tr>
+                <td><img src="${imageSrcAwayTeam}" alt="Image Away" class="game-image"></td>
+                <td>${awayTeamScore}</td>
+                <td>${homeTeamScore}</td>
+                <td><img src="${imageSrcHomeTeam}" alt="Image Home" class="game-image"></td>
+            </tr>
+        </table>
+        <div class="hidden-content" style="display: block;"></div>
+            
     `;
 
     // Add the table HTML to the container

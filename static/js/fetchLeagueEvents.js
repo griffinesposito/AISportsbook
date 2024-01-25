@@ -1,3 +1,5 @@
+let eventData = null;
+
 function fetchLeagueEvents(sport, league) {
     // Calculate dates for one week ago and one week in the future
     const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
@@ -34,9 +36,9 @@ function fetchLeagueEvents(sport, league) {
                     const item = data.events[key];
                     const newDiv = document.createElement('div');
                     newDiv.className = 'interactive-div'; // Set the class
-                    // Set the onclick event handler
-                    newDiv.onclick = function() {
-                        toggleContent(this);
+                    // Set the onclick event handler using an arrow function
+                    newDiv.onclick = () => {
+                        toggleContent(newDiv, item);
                     };
                     addCurrentEventsContent(item,newDiv);
                     container.appendChild(newDiv); // Append the new div to the container
