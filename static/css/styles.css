@@ -196,3 +196,29 @@ img.game-image {
 .game-image {
     vertical-align: middle;
 }
+
+.interactive-div {
+    background-color: rgba(10, 15, 32, 0.8); /* White background with 50% opacity */
+    border-radius: 8px; /* Adjust the value for more or less rounding */
+    box-shadow: 15px 15px 10px rgba(90, 127, 248, 0.8); /* Horizontal offset, vertical offset, blur radius, color */
+    padding: 15px; /* Space inside the box */
+    margin: 35px 10px; /* Space outside the box, only top, and bottom in this case */
+    max-width: 100%; /* Maximum width of the paragraph block */
+    color: white; 
+    border: 2px solid rgba(90, 127, 248, 0.8);
+    transition: border-color 0.5s ease-in-out;
+}
+
+.interactive-div:hover {
+    border-color: #4CAF50; /* Border color when hovered */
+}
+
+.hidden-content {
+    transition: max-height 0.5s ease-in-out;
+    overflow: hidden;
+    max-height: 0;
+}
+
+.show-content {
+    max-height: 500px; /* Adjust as needed for your content */
+}

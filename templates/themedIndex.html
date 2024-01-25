@@ -9,7 +9,7 @@
     <script src="{{ url_for('static', filename='js/openTabs.js') }}"></script>
     <script src="{{ url_for('static', filename='js/searchBars.js') }}"></script>
     <script src="{{ url_for('static', filename='js/chartEvents.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/addCurrentEventsTable.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/addCurrentEventsContent.js') }}"></script>
 </head>
 <body>
 
@@ -30,8 +30,8 @@
                 <button class="tab-button">NBA</button>
                 <div class="dropdown-content">
                     <button onclick="openLiveData('NBA')">Live Data</button>
-                    <button onclick="openTeamsData('NBA')">Historical Data</button>
-                    <button onclick="openPlayersData('NBA')">Odds</button>
+                    <button onclick="openTeamsData('NBA')">Teams</button>
+                    <button onclick="openPlayersData('NBA')">Players</button>
                     <!-- Add more buttons or other elements as needed -->
                 </div>
             </div>
@@ -39,8 +39,8 @@
                 <button class="tab-button">MLB</button>
                 <div class="dropdown-content">
                     <button onclick="openLiveData('MLB')">Live Data</button>
-                    <button onclick="openTeamsData('MLB')">Historical Data</button>
-                    <button onclick="openPlayersData('MLB')">Odds</button>
+                    <button onclick="openTeamsData('MLB')">Teams</button>
+                    <button onclick="openPlayersData('MLB')">Players</button>
                     <!-- Add more buttons or other elements as needed -->
                 </div>
             </div>
@@ -53,10 +53,10 @@
         <div class="paragraph-block">
             <h2>NFL</h2>
         </div>
-        <div class="paragraph-block">
+        <!-- <div class="paragraph-block">
             <h2>NFL Data</h2>
             <canvas id="liveChart" width="400" height="400"></canvas>
-        </div>
+        </div> -->
         <div id="current-NFL-events"></div>
     </div>
     <div id="NFL-players" data-sport="football" class="tab-content">

@@ -33,8 +33,12 @@ function fetchLeagueEvents(sport, league) {
                 if (data.events.hasOwnProperty(key)) {
                     const item = data.events[key];
                     const newDiv = document.createElement('div');
-                    newDiv.className = 'paragraph-block'; // Set the class
-                    addCurrentEventsTable(item,newDiv);
+                    newDiv.className = 'interactive-div'; // Set the class
+                    // Set the onclick event handler
+                    newDiv.onclick = function() {
+                        toggleContent(this);
+                    };
+                    addCurrentEventsContent(item,newDiv);
                     container.appendChild(newDiv); // Append the new div to the container
                 }
             }
