@@ -37,12 +37,14 @@ function fetchLeagueEvents(sport, league) {
 
             // Clear the container
             container.innerHTML = '';
-
+            let dateArray = [];
             // Loop through the elements and add new divs
             for (const key in data.events) {
                 if (data.events.hasOwnProperty(key)) {
                     const item = data.events[key];
                     const newDiv = document.createElement('div');
+                    newDiv.setAttribute('data-date', item.date);
+                    dateArray.push(item.date);
                     newDiv.className = 'interactive-div'; // Set the class
                     // Set the onclick event handler using an arrow function
                     newDiv.onclick = () => {
@@ -52,6 +54,16 @@ function fetchLeagueEvents(sport, league) {
                     container.appendChild(newDiv); // Append the new div to the container
                 }
             }
+            dateArray.sort((a, b) => new Date(b) - new Date(a));
+            // Sort the divs based on the sorted date strings
+            dateArray.forEach(date => {
+                // Find the div that has the matching data-date attribute
+                let divs = Array.from(container.children).filter(div => div.getAttribute('data-date') === date);
+                divs.forEach(div => {
+                    // Append the div to the container
+                    container.appendChild(div);
+                });
+});
         })
         .catch(error => console.error('Error:', error));
 }
