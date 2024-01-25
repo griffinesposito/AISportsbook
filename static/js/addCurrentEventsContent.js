@@ -52,7 +52,7 @@ function addCurrentEventsContent(eventObject,container) {
                 <td><img src="${imageSrcHomeTeam}" alt="Image 2" class="game-image"></td>
             </tr>
         </table>
-        <div class="hidden-content" style="display: none;">
+        <div class="hidden-content" style="display: block;">
             <a href="${gameLink}">${gameLinkTxt}</a>
             <h2>Weather Forecast</h2>
             <table>

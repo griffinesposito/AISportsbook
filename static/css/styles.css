@@ -206,11 +206,12 @@ img.game-image {
     max-width: 100%; /* Maximum width of the paragraph block */
     color: white; 
     border: 2px solid rgba(90, 127, 248, 0.8);
-    transition: border-color 0.5s ease-in-out;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Transition for border color and box shadow */
 }
 
 .interactive-div:hover {
     border-color: #4CAF50; /* Border color when hovered */
+    box-shadow: 15px 15px 10px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
 }
 
 .hidden-content {
@@ -220,5 +221,6 @@ img.game-image {
 }
 
 .show-content {
-    max-height: 500px; /* Adjust as needed for your content */
+    max-height: 1000px; /* Expand up to 1000px */
+    overflow-y: auto; /* Scrollable if content exceeds 500px */
 }
