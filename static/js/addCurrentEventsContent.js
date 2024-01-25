@@ -68,22 +68,19 @@ function toggleContent(element, eventObject) {
                 <tr>
                     <th>Name</th>
                     <th><img src="${imageSrcAwayTeam}" alt="Image Away" class="game-image"></th>
-                    <th><img src="${imageSrcHomeTeam}" alt="Image Home" class="game-image"></th>
                     <th>Description</th>
                 </tr>
         `;
-        for (let i = 0; i < eventObject.predictor.homeTeam.statistics.length; i++) {
-            var statHome = eventObject.predictor.homeTeam.statistics[i]; // Access array elements
+        for (let i = 0; i < eventObject.predictor.awayTeam.statistics.length; i++) {
             var statAway = eventObject.predictor.awayTeam.statistics[i]; // Access array elements
-            if (statHome.description.length === 0)
-            {var description = statHome.displayName;}
+            if (statAway.description.length === 0)
+            {var description = statAway.displayName;}
             else
             {var description = statHome.description;}
             innerHTML = innerHTML + `
                 <tr>
-                    <td>${statHome.shortDisplayName}</td>
+                    <td>${statAway.abbreviation}</td>
                     <td>${statAway.displayValue}</td>
-                    <td>${statHome.displayValue}</td>
                     <td>${description}</td>
                 </tr>
             `;
