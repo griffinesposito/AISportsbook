@@ -6,8 +6,8 @@ function formatHumanReadableDate(dateString) {
 
 function toggleContent(element, eventObject) {
     const hiddenContent = element.querySelector('.hidden-content');
-    var homeTeamName    = eventObject.hometeamdata.displayName;
-    var awayTeamName    = eventObject.awayteamdata.displayName;
+    var imageSrcHomeTeam    = eventObject.hometeamdata.logos[0].href;
+    var imageSrcAwayTeam    = eventObject.awayteamdata.logos[0].href;
     var gameLink            = eventObject.link.href;
     var gameLinkTxt         = eventObject.link.text;
     if (typeof eventObject.weather !== 'undefined') {
@@ -62,25 +62,29 @@ function toggleContent(element, eventObject) {
         innerHTML = innerHTML + `
             <h2>Predictions:</h2>
             <table>
-                <tr colspan="4">
-                    <th>Predictions</th>
+                <tr>
+                    <th colspan="4">Predictions</th>
                 </tr>
                 <tr>
                     <th>Name</th>
-                    <th>${awayTeamName}</th>
-                    <th>${homeTeamName}</th>
+                    <th><img src="${imageSrcAwayTeam}" alt="Image Away" class="game-image"></th>
+                    <th><img src="${imageSrcHomeTeam}" alt="Image Home" class="game-image"></th>
                     <th>Description</th>
                 </tr>
         `;
         for (let i = 0; i < eventObject.predictor.homeTeam.statistics.length; i++) {
             var statHome = eventObject.predictor.homeTeam.statistics[i]; // Access array elements
             var statAway = eventObject.predictor.awayTeam.statistics[i]; // Access array elements
+            if (statHome.description.length === 0)
+            {var description = statHome.displayName;}
+            else
+            {var description = statHome.description;}
             innerHTML = innerHTML + `
                 <tr>
-                    <td>${statHome.displayName}</td>
+                    <td>${statHome.shortDisplayName}</td>
                     <td>${statAway.displayValue}</td>
                     <td>${statHome.displayValue}</td>
-                    <td>${statHome.description}</td>
+                    <td>${description}</td>
                 </tr>
             `;
         }
