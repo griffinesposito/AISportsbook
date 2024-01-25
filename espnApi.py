@@ -286,6 +286,8 @@ def get_current_events(sport, league, dates):
 
         if 'predictor' in event['competitions'][0]:
             add_links[event['id']].append(('predictor',event['competitions'][0]['predictor']['$ref']))
+        if 'status' in event['competitions'][0]:
+            add_links[event['id']].append(('status',event['competitions'][0]['status']['$ref']))
             
         data['events'][event['id']] = event_dict
 

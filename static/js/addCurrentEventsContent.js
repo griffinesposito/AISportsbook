@@ -6,12 +6,8 @@ function formatHumanReadableDate(dateString) {
 
 function toggleContent(element, eventObject) {
     const hiddenContent = element.querySelector('.hidden-content');
-    var imageSrcHomeTeam    = eventObject.hometeamdata.logos[0].href;
-    var imageSrcAwayTeam    = eventObject.awayteamdata.logos[0].href;
-    var dateStr             = formatHumanReadableDate(eventObject.date);
-    var name                = eventObject.name;
-    var homeTeamScore       = eventObject.hometeamscore.displayValue;
-    var awayTeamScore       = eventObject.awayteamscore.displayValue;
+    var homeTeamName    = eventObject.hometeamdata.displayName;
+    var awayTeamName    = eventObject.awayteamdata.displayName;
     var gameLink            = eventObject.link.href;
     var gameLinkTxt         = eventObject.link.text;
     if (typeof eventObject.weather !== 'undefined') {
@@ -62,6 +58,35 @@ function toggleContent(element, eventObject) {
 
 
     /*        <h2>Predictions:</h2> */
+    if (typeof eventObject.predictor !== 'undefined') {
+        innerHTML = innerHTML + `
+            <h2>Predictions:</h2>
+            <table>
+                <tr colspan="4">Predictions</tr>
+                <tr>
+                    <th>Name</th>
+                    <th>${awayTeamName}</th>
+                    <th>${homeTeamName}</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+        `;
+        for (let i = 0; i < eventObject.predictor.homeTeam.statistics.length; i++) {
+            var statHome = eventObject.predictor.homeTeam.statistics[i]; // Access array elements
+            var statAway = eventObject.predictor.awayTeam.statistics[i]; // Access array elements
+            innerHTML = innerHTML + `
+                    <td>${statHome.displayName}</td>
+                    <td>${statAway.displayValue}</td>
+                    <td>${statHome.displayValue}</td>
+                    <td>${statHome.description}</td>
+            `;
+        }
+        innerHTML = innerHTML + `
+                </tr>
+            </table>
+        `;
+    }
+
 
     /*        <h2>Game Leaders:</h2> */
 
