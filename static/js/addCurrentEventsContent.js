@@ -53,6 +53,7 @@ function addCurrentEventsContent(eventObject,container) {
             </tr>
         </table>
         <div class="hidden-content" style="display: block;">
+            <h2>Game Link</h2>
             <a href="${gameLink}">${gameLinkTxt}</a>
             <h2>Weather Forecast</h2>
             <table>
@@ -74,7 +75,7 @@ function addCurrentEventsContent(eventObject,container) {
                 </tr>
             </table>
             <h2>Venue: ${venue}</h2>
-            <img src="${venueImage}" alt="Image Venue">
+            <img src="${venueImage}" alt="Image Venue" class="venue-image">
 
             <h2>Predictions:</h2>
 
