@@ -76,8 +76,8 @@ body {
     background-color: rgba(10, 15, 32, 0.8); /* White background with 50% opacity */
     border-radius: 8px; /* Adjust the value for more or less rounding */
     box-shadow: 15px 15px 10px rgba(90, 127, 248, 0.8); /* Horizontal offset, vertical offset, blur radius, color */
-    padding: 15px; /* Space inside the box */
-    margin: 35px 10px; /* Space outside the box, only top, and bottom in this case */
+    padding: 3px; /* Space inside the box */
+    margin: 35px 3px; /* Space outside the box, only top, and bottom in this case */
     max-width: 100%; /* Maximum width of the paragraph block */
     color: white; 
     border: 2px solid rgba(90, 127, 248, 0.8);
@@ -244,4 +244,19 @@ img.venue-image {
     flex: 1; /* Each flex item will take up an equal amount of space */
     padding: 10px; /* Add some space inside the columns */
     border: none; /* Optional border for columns */
+}
+
+.live-div {
+  border-color: rgba(90, 127, 248, 0.8); 
+  background-color: rgba(255, 255, 255, 0.2); /* White background */
+}
+
+.recent-div {
+  border-color: rgba(90, 127, 248, 0.8); 
+  background-color: rgba(255, 255, 255, 0.2); /* White background */
+}
+
+.upcoming-div {
+  border-color: rgba(90, 127, 248, 0.8); 
+  background-color: rgba(255, 255, 255, 0.2); /* White background */
 }
