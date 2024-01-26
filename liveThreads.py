@@ -105,9 +105,9 @@ def handle_live_game(game, stop_thread_event, socketio):
       if '$ref' in value:
         update_links[key] = [(key, value['$ref'])]
 
+  data = game
   while not stop_thread_event.is_set():
     update_data = fetch_data(update_links)
-    data = dict()
     for dat in update_data:
       key_id = dat['key-request']
       data[key_id] = dat
