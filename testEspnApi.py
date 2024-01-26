@@ -9,6 +9,8 @@ team = 'KC'
 dates = get_time_range_str(0)
 #dates = '20240124-20240124'
 response = get_current_events(sport,league,dates)
+for key, event in response['events'].items():
+    if event["status"]["type"]["id"] == '2':
+        pprint.pprint(key)
 #response = get_team_events(sport, league, year, team)
 #response = get_sport_scores('americanfootball_nfl')
-pprint.pprint(response)
