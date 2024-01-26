@@ -183,6 +183,11 @@ th {
     color: white;
     font-weight: bold;
 }
+.th-game-status {
+    background-color: #00da1d;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+}
 
 tr:nth-child(even) {
     background-color: #05427779;

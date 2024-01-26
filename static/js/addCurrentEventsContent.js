@@ -157,7 +157,7 @@ function addCurrentEventsContent(eventObject,eventId,container) {
                 <th colspan="4">${dateStr}</th>
             </tr>
             <tr>
-                <th id="${eventId}-status" colspan="4">${gameStatus} -- Period: ${gamePeriod} -- Clock: ${gameClock}</th>
+                <th id="${eventId}-status" class="th-game-status" colspan="4">${gameStatus} -- Period: ${gamePeriod} -- Clock: ${gameClock}</th>
             </tr>
             <tr>
                 <th colspan="4">${name}</th>
