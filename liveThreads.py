@@ -1,6 +1,4 @@
-from flask_socketio import SocketIO
 import threading
-from main import socketio
 import time
 import random
 from espnApi import get_current_events
@@ -12,7 +10,7 @@ current_nba_events = {}  # Global data structure
 current_mlb_events = {}  # Global data structure
 data_lock = threading.Lock()  # Lock for thread-safe operations
 
-def fetch_and_emit():
+def fetch_and_emit(socketio):
   """ Fetch and process live data, then emit using SocketIO """
   while True:
     # Simulate data fetching and processing
