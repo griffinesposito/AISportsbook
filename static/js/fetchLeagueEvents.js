@@ -38,9 +38,9 @@ function fetchLeagueEvents(sport, league) {
             const recentContainer = document.getElementById("recent-" + league.toUpperCase() + "-events");
 
             // Clear the container
-            liveContainer.innerHTML = '';
-            upcomingContainer.innerHTML = '';
-            recentContainer.innerHTML = '';
+            liveContainer.innerHTML = `<h2>${league.toUpperCase()} Live Events</h2>`;
+            upcomingContainer.innerHTML = `<h2>${league.toUpperCase()} Upcoming Events</h2>`;
+            recentContainer.innerHTML = `<h2>${league.toUpperCase()} Recent Events</h2>`;
             let dateArray = [];
             // Loop through the elements and add new divs
             for (const key in data.events) {
