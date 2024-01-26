@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+/* document.addEventListener('DOMContentLoaded', function() {
     var socket = io.connect('https://' + document.domain + ':' + location.port);
     var ctx = document.getElementById('liveChart').getContext('2d');
     var liveChart = new Chart(ctx, {
@@ -38,4 +38,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         liveChart.update('none');
     });
-});
+}); */

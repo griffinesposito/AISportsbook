@@ -15,13 +15,13 @@ def convert_list_to_json(listTable):
     return json_output
 
 
-def get_time_range_str():
+def get_time_range_str(daysRange):
     # Get the current datetime
     current_time = datetime.now()
 
     # Calculate one week ago and one week in the future
-    one_week_ago = current_time - timedelta(weeks=1)
-    one_week_future = current_time + timedelta(weeks=1)
+    one_week_ago = current_time - timedelta(days=daysRange)
+    one_week_future = current_time + timedelta(days=daysRange)
 
     # Format dates as 'YYYYMMDD'
     formatted_one_week_ago = one_week_ago.strftime('%Y%m%d')
