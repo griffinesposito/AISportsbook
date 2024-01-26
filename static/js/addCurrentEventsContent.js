@@ -4,7 +4,7 @@ function formatHumanReadableDate(dateString) {
     return date.toLocaleDateString('en-US', options);
 }
 
-function toggleContent(element, eventObject) {
+function toggleContent(element, eventObject, eventId) {
     const hiddenContent = element.querySelector('.hidden-content');
     var imageSrcHomeTeam    = eventObject.hometeamdata.logos[0].href;
     var imageSrcAwayTeam    = eventObject.awayteamdata.logos[0].href;
@@ -139,7 +139,7 @@ function toggleContent(element, eventObject) {
     hiddenContent.classList.toggle('show-content');
 }
 
-function addCurrentEventsContent(eventObject,container) {
+function addCurrentEventsContent(eventObject,eventId,container) {
     // Define image source variables
     var imageSrcHomeTeam    = eventObject.hometeamdata.logos[0].href;
     var imageSrcAwayTeam    = eventObject.awayteamdata.logos[0].href;
@@ -147,6 +147,9 @@ function addCurrentEventsContent(eventObject,container) {
     var name                = eventObject.name;
     var homeTeamScore       = eventObject.hometeamscore.displayValue;
     var awayTeamScore       = eventObject.awayteamscore.displayValue;
+    var gameStatus          = eventObject.status.type.description;
+    var gamePeriod          = eventObject.status.period;
+    var gameClock           = eventObject.status.displayClock;
     // Define the table HTML using template literals and the image source variables
     var innerHTML = `
         <table>
@@ -154,12 +157,15 @@ function addCurrentEventsContent(eventObject,container) {
                 <th colspan="4">${dateStr}</th>
             </tr>
             <tr>
+                <th id="${eventId}-status" colspan="4">${gameStatus} -- Period: ${gamePeriod} -- Clock: ${gameClock}</th>
+            </tr>
+            <tr>
                 <th colspan="4">${name}</th>
             </tr>
             <tr>
                 <td><img src="${imageSrcAwayTeam}" alt="Image Away" class="game-image"></td>
-                <td>${awayTeamScore}</td>
-                <td>${homeTeamScore}</td>
+                <td id="${eventId}-awayTeamScore">${awayTeamScore}</td>
+                <td id="${eventId}-homeTeamScore">${homeTeamScore}</td>
                 <td><img src="${imageSrcHomeTeam}" alt="Image Home" class="game-image"></td>
             </tr>
         </table>

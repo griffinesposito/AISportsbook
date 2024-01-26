@@ -33,10 +33,14 @@ function fetchLeagueEvents(sport, league) {
             console.log('Data:', data);
             // Handle the data here
             // Get the container element
-            const container = document.getElementById("current-" + league.toUpperCase() + "-events");
+            const liveContainer = document.getElementById("live-" + league.toUpperCase() + "-events");
+            const upcomingContainer = document.getElementById("upcoming-" + league.toUpperCase() + "-events");
+            const recentContainer = document.getElementById("recent-" + league.toUpperCase() + "-events");
 
             // Clear the container
-            container.innerHTML = '';
+            liveContainer.innerHTML = '';
+            upcomingContainer.innerHTML = '';
+            recentContainer.innerHTML = '';
             let dateArray = [];
             // Loop through the elements and add new divs
             for (const key in data.events) {
@@ -44,26 +48,53 @@ function fetchLeagueEvents(sport, league) {
                     const item = data.events[key];
                     const newDiv = document.createElement('div');
                     newDiv.setAttribute('data-date', item.date);
+                    newDiv.setAttribute('data-event', key);
                     dateArray.push(item.date);
                     newDiv.className = 'interactive-div'; // Set the class
                     // Set the onclick event handler using an arrow function
                     newDiv.onclick = () => {
-                        toggleContent(newDiv, item);
+                        toggleContent(newDiv, item, key);
                     };
-                    addCurrentEventsContent(item,newDiv);
-                    container.appendChild(newDiv); // Append the new div to the container
+                    addCurrentEventsContent(item,key,newDiv);
+                    if (item.status.type.id === '1') // scheduled, upcoming
+                    {
+                        upcomingContainer.appendChild(newDiv); // Append the new div to the container
+                    }
+                    else if (item.status.type.id === '2') // current, live
+                    {
+                        liveContainer.appendChild(newDiv); // Append the new div to the container
+
+                    }
+                    else if (item.status.type.id === '3') //final, over
+                    {
+                        recentContainer.appendChild(newDiv); // Append the new div to the container
+                    }
+                    else
+                    {
+                        console.log("WARNING: game status undetermined: ", item.status.type.id)
+                    }
                 }
             }
             dateArray.sort((a, b) => new Date(b) - new Date(a));
             // Sort the divs based on the sorted date strings
             dateArray.forEach(date => {
                 // Find the div that has the matching data-date attribute
-                let divs = Array.from(container.children).filter(div => div.getAttribute('data-date') === date);
-                divs.forEach(div => {
+                let livedivs = Array.from(liveContainer.children).filter(div => div.getAttribute('data-date') === date);
+                livedivs.forEach(div => {
                     // Append the div to the container
-                    container.appendChild(div);
+                    liveContainer.appendChild(div);
                 });
-});
+                let upcomingdivs = Array.from(upcomingContainer.children).filter(div => div.getAttribute('data-date') === date);
+                upcomingdivs.forEach(div => {
+                    // Append the div to the container
+                    upcomingContainer.appendChild(div);
+                });
+                let recentdivs = Array.from(recentContainer.children).filter(div => div.getAttribute('data-date') === date);
+                recentdivs.forEach(div => {
+                    // Append the div to the container
+                    recentContainer.appendChild(div);
+                });
+            });
         })
         .catch(error => console.error('Error:', error));
 }

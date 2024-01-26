@@ -9,7 +9,7 @@ import time
 import random
 from databaseOperations import search_display_name, get_team_player_tables
 from liveThreads import current_nfl_events, current_nba_events, current_mlb_events
-from liveThreads import fetch_nfl_events, fetch_nba_events, fetch_mlb_events
+from liveThreads import fetch_nfl_events, fetch_nba_events, fetch_mlb_events, check_for_new_live_games
 
 
 # Initialize the Flask app
@@ -185,4 +185,6 @@ if __name__ == "__main__":
   nba_events_thread.start()
   mlb_events_thread = threading.Thread(target=fetch_mlb_events, daemon=True)
   mlb_events_thread.start()
+  check_live_games = threading.Thread(target=check_for_new_live_games, args=(socketio))
+  check_live_games.start()
   app.run(host='0.0.0.0', port=80)
