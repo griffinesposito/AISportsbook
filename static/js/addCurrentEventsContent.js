@@ -150,6 +150,11 @@ function addCurrentEventsContent(eventObject,eventId,container) {
     var gameStatus          = eventObject.status.type.description;
     var gamePeriod          = eventObject.status.period;
     var gameClock           = eventObject.status.displayClock;
+    var classStr            = 'th';
+    if (eventObject.status.type.id === '2')
+    {
+        classStr = 'th-game-status';
+    }
     // Define the table HTML using template literals and the image source variables
     var innerHTML = `
         <table>
@@ -157,7 +162,7 @@ function addCurrentEventsContent(eventObject,eventId,container) {
                 <th colspan="4">${dateStr}</th>
             </tr>
             <tr>
-                <th id="${eventId}-status" class="th-game-status" colspan="4">${gameStatus} -- Period: ${gamePeriod} -- Clock: ${gameClock}</th>
+                <th id="${eventId}-status" class="${classStr}" colspan="4">${gameStatus} -- Period: ${gamePeriod} -- Clock: ${gameClock}</th>
             </tr>
             <tr>
                 <th colspan="4">${name}</th>
