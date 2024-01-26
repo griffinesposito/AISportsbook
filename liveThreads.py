@@ -85,15 +85,16 @@ def get_live_games():
 
 def check_for_new_live_games(socketio):
   while True:
-    live_games = get_live_games()  # Your function to get live games
-    for game in live_games:
-      game_id = game["id"]
-      if game_id not in game_threads:
-        stop_thread_event = threading.Event()
-        thread = threading.Thread(target=handle_live_game,
-                                  args=(game, stop_thread_event, socketio))
-        thread.start()
-        game_threads[game_id] = stop_thread_event
+    with data_lock:
+      live_games = get_live_games()  # Your function to get live games
+      for game in live_games:
+        game_id = game["id"]
+        if game_id not in game_threads:
+          stop_thread_event = threading.Event()
+          thread = threading.Thread(target=handle_live_game,
+                                    args=(game, stop_thread_event, socketio))
+          thread.start()
+          game_threads[game_id] = stop_thread_event
     time.sleep(60)  # Check every 1 minutes
 
 
@@ -107,15 +108,16 @@ def handle_live_game(game, stop_thread_event, socketio):
 
   data = game
   while not stop_thread_event.is_set():
-    update_data = fetch_data(update_links)
-    for dat in update_data:
-      key_id = dat['key-request']
-      data[key_id] = dat
-
-    if data["status"]["type"]["id"] != 2:  # Check if the game is still live
-      stop_thread_event.set()
-
-    socketio.emit('live_game_data', {'game_id': game_id, 'data': data})
+    with data_lock:
+      update_data = fetch_data(update_links)
+      for dat in update_data:
+        key_id = dat['key-request']
+        data[key_id] = dat
+  
+      if data["status"]["type"]["id"] != 2:  # Check if the game is still live
+        stop_thread_event.set()
+  
+      socketio.emit('live_game_data', {'game_id': game_id, 'data': data})
     time.sleep(5)  # Update every 5 seconds
 
   # Once the game is over and the thread is stopping

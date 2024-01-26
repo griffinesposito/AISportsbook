@@ -185,6 +185,6 @@ if __name__ == "__main__":
   nba_events_thread.start()
   mlb_events_thread = threading.Thread(target=fetch_mlb_events, daemon=True)
   mlb_events_thread.start()
-  #check_live_games = threading.Thread(target=check_for_new_live_games, args=(socketio,))
-  #check_live_games.start()
+  check_live_games = threading.Thread(target=check_for_new_live_games, args=(socketio,))
+  check_live_games.start()
   app.run(host='0.0.0.0', port=80)
