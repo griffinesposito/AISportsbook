@@ -7,7 +7,7 @@ league = 'nba'
 year = '2023'
 team = 'KC'
 dates = get_time_range_str(0)
-#dates = '20240124-20240124'
+dates = '20240123-20240129'
 response = get_current_events(sport,league,dates)
 for key, event in response['events'].items():
     if event["status"]["type"]["id"] == '2':
