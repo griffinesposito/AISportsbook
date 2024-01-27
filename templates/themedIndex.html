@@ -125,6 +125,22 @@
     </script>
 
     <script type="module">
+
+        function isMobileDevice() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // Check for iOS and Android platforms
+            if (/android/i.test(userAgent)) {
+                return true; // Android-based device
+            }
+
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return true; // iOS-based device
+            }
+
+            return false; // Not a mobile device
+        }
+
         // Your existing Three.js code
         import * as THREE from 'three';
 
@@ -147,14 +163,14 @@
         let materialP;
         let textMesh;
         let originalWindowWidth;
+        let textScalar = 35;
         let translateAttribute;
         let envMap;
-        const maxParticleCount = 1000;
-        let particleCount = 1000;
         const r = 800;
         let font;
         const rHalf = r / 2;
-
+        let maxParticleCount = 1000;
+        let particleCount = 1000;
         const effectController = {
             showDots: true,
             showLines: true,
@@ -163,6 +179,15 @@
             maxConnections: 30,
             particleCount: 1000
         };
+        if (isMobileDevice())
+        {
+            textScalar = 70;
+            maxParticleCount = 100;
+            particleCount = 100;
+            effectController.minDistance= 100;
+            effectController.maxConnections=  40;
+            effectController.particleCount=  100;
+        }
 
         init();
         animate();
@@ -276,7 +301,7 @@
                 font = new Font(json);
                 const textGeometry = new TextGeometry('AI SPORTSBOOK', {
                     font: font,
-                    size: originalWindowWidth / 35,
+                    size: originalWindowWidth / textScalar,
                     height: 10,
                     curveSegments: 12,
                     // ... other parameters ...
