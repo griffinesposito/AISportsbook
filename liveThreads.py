@@ -2,7 +2,7 @@ import threading
 import time
 import random
 from espnApi import get_current_events
-from pythonUtils import get_time_range_str
+from pythonUtils import get_time_range_str, get_current_date_str
 from asyncRequests import fetch_data
 
 # Dictionary to keep track of game threads and their stop events
@@ -35,7 +35,9 @@ def fetch_nfl_events():
       sport = 'football'
       league = 'nfl'
       current_nfl_events["data"] = get_current_events(sport, league, dates)
-    time.sleep(60 * 5)  # Fetch data every 5 minutes
+      data = current_nfl_events["data"]
+      print(f"Emitting NFL data: {data}")
+    time.sleep(60)  # Fetch data every 5 minutes
 
 
 def fetch_nba_events():
@@ -47,7 +49,9 @@ def fetch_nba_events():
       sport = 'basketball'
       league = 'nba'
       current_nba_events["data"] = get_current_events(sport, league, dates)
-    time.sleep(60 * 5)  # Fetch data every 5 minutes
+      data = current_nba_events["data"]
+      print(f"Emitting NBA data: {data}")
+    time.sleep(60)  # Fetch data every 5 minutes
 
 
 def fetch_mlb_events():
@@ -64,15 +68,18 @@ def fetch_mlb_events():
 
 def get_live_games():
   liveGames = []
-  dates = get_time_range_str(0)
+  dates = get_current_date_str()
   nfl_games_today = get_current_events('football', 'nfl', dates)
   nba_games_today = get_current_events('basketball', 'nba', dates)
   mlb_games_today = get_current_events('baseball', 'mlb', dates)
+  print('Checking live games for:' + dates)
+  print('len(nba_games_today): ' + str(len(nba_games_today)))
   for key, event in nfl_games_today["events"].items():
     if event["status"]["type"]["id"] == '2':
       event["id"] = key
       liveGames.append(event)
   for key, event in nba_games_today["events"].items():
+    print(event["name"])
     if event["status"]["type"]["id"] == '2':
       event["id"] = key
       liveGames.append(event)
@@ -86,7 +93,10 @@ def get_live_games():
 def check_for_new_live_games(socketio):
   while True:
     with data_lock:
+      print('Checking for new live games...')
       live_games = get_live_games()  # Your function to get live games
+
+      print(f'Num live threads...' + str(len(game_threads.items())))
       for game in live_games:
         game_id = game["id"]
         if game_id not in game_threads:
@@ -101,7 +111,7 @@ def check_for_new_live_games(socketio):
 def handle_live_game(game, stop_thread_event, socketio):
   game_id = game["id"]
   update_links = dict()
-  for key, value in game:
+  for key, value in game.items():
     if isinstance(value, dict):
       if '$ref' in value:
         update_links[key] = [(key, value['$ref'])]
@@ -113,10 +123,10 @@ def handle_live_game(game, stop_thread_event, socketio):
       for dat in update_data:
         key_id = dat['key-request']
         data[key_id] = dat
-  
-      if data["status"]["type"]["id"] != 2:  # Check if the game is still live
+
+      if data["status"]["type"]["id"] != '2':  # Check if the game is still live
         stop_thread_event.set()
-  
+
       socketio.emit('live_game_data', {'game_id': game_id, 'data': data})
     time.sleep(5)  # Update every 5 seconds
 
