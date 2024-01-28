@@ -263,8 +263,15 @@ def get_current_events(sport, league, dates):
             event_dict['weather']['gust']           = event['weather']['gust']
             event_dict['weather']['precipitation']  = event['weather']['precipitation']
         event_dict['venue']                     = dict()
-        event_dict['venue']['fullName']         = event['competitions'][0]['venue']['fullName']
-        event_dict['venue']['image']            = event['competitions'][0]['venue']['images'][0]['href']
+        if 'venue' in event['competitions'][0] and 'fullName' in event['competitions'][0]['venue']:
+            event_dict['venue']['fullName']         = event['competitions'][0]['venue']['fullName']
+            if 'images' in event['competitions'][0]['venue']:
+                if len(event['competitions'][0]['venue']['images']) >= 1:
+                    if 'href' in event['competitions'][0]['venue']['images'][0]:
+                        event_dict['venue']['image']            = event['competitions'][0]['venue']['images'][0]['href']
+            else:
+                print('Venue Image Missing...')
+
         if not event['id'] in add_links:
             add_links[event['id']] = []
 
