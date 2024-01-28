@@ -30,3 +30,19 @@ def get_time_range_str(daysRange):
     # Concatenate the dates
     date_range = f"{formatted_one_week_ago}-{formatted_one_week_future}"
     return date_range
+
+def get_current_date_str():
+  # Get the current datetime
+  current_time = datetime.now()
+
+  # Calculate one week ago and one week in the future
+  ago = current_time - timedelta(days=1)
+  future = current_time
+
+  # Format dates as 'YYYYMMDD'
+  formatted_ago = ago.strftime('%Y%m%d')
+  formatted_future = future.strftime('%Y%m%d')
+
+  # Concatenate the dates
+  date_range = f"{formatted_ago}-{formatted_future}"
+  return date_range
