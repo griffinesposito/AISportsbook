@@ -1,6 +1,6 @@
 import { fetchLeagueEvents } from './fetchLeagueEvents.js'; // Adjust the path as needed
 
-function openLiveData(league) {
+export function openLiveData(league) {
     var i;
     var x = document.getElementsByClassName("tab-content");
     for (i = 0; i < x.length; i++) {
@@ -12,7 +12,7 @@ function openLiveData(league) {
     fetchLeagueEvents(sport,league.toLowerCase());
 }
 
-function openPlayersData(league) {
+export function openPlayersData(league) {
     var i;
     var x = document.getElementsByClassName("tab-content");
     for (i = 0; i < x.length; i++) {
@@ -22,7 +22,7 @@ function openPlayersData(league) {
     liveDataBlock.style.display = "block";  
 }
 
-function openTeamsData(league) {
+export function openTeamsData(league) {
     var i;
     var x = document.getElementsByClassName("tab-content");
     for (i = 0; i < x.length; i++) {

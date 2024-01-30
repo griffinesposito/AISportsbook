@@ -1,3 +1,18 @@
+import { openLiveData, openTeamsData, openPlayersData } from './openTabs.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('[data-action="openLiveDataNFL"]').addEventListener('click', () => openLiveData('NFL'));
+    document.querySelector('[data-action="openTeamsDataNFL"]').addEventListener('click', () => openTeamsData('NFL'));
+    document.querySelector('[data-action="openPlayersDataNFL"]').addEventListener('click', () => openPlayersData('NFL'));
+    document.querySelector('[data-action="openLiveDataNBA"]').addEventListener('click', () => openLiveData('NBA'));
+    document.querySelector('[data-action="openTeamsDataNBA"]').addEventListener('click', () => openTeamsData('NBA'));
+    document.querySelector('[data-action="openPlayersDataNBA"]').addEventListener('click', () => openPlayersData('NBA'));
+    document.querySelector('[data-action="openLiveDataMLB"]').addEventListener('click', () => openLiveData('MLB'));
+    document.querySelector('[data-action="openTeamsDataMLB"]').addEventListener('click', () => openTeamsData('MLB'));
+    document.querySelector('[data-action="openPlayersDataMLB"]').addEventListener('click', () => openPlayersData('MLB'));
+});
+
+
 
 
 function isMobileDevice() {
