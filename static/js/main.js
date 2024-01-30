@@ -77,7 +77,7 @@ function init() {
 
     scene = new THREE.Scene();
     renderer = new THREE.WebGLRenderer( { antialias: true  } ); //, alpha: true
-    css3DRenderer = new THREE.CSS3DRenderer();
+    css3DRenderer = new CSS3DRenderer();
     //renderer.setClearColor(0x000000, 0); // The second parameter is the alpha value (0 = fully transparent)
 
 
