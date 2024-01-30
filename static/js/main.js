@@ -83,11 +83,11 @@ if (isMobileDevice())
 }
 
 function hideTextMesh() {
-    new TWEEN.Tween(textMaterial)
+    new TWEEN.Tween({ opacity: 1 }) // Start with an object that has the opacity property
         .to({ opacity: 0 }, 1000) // Animate to transparent over 1000 milliseconds
-        .onUpdate(() => {
+        .onUpdate((obj) => {
             // Update the material opacity
-            textMaterial.opacity = this.opacity;
+            textMaterial.opacity = obj.opacity;
         })
         .start();
 }
