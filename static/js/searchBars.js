@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+/*document.addEventListener('DOMContentLoaded', function() {
     const searchBox = document.getElementById('searchBox');
     const league = searchBox.dataset.league;
     const category = searchBox.dataset.cat;
@@ -42,4 +42,4 @@ document.addEventListener('DOMContentLoaded', function() {
             resultsBox.style.display = 'none';
         }
     });
-});
+});*/
