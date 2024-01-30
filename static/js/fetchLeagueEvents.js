@@ -1,4 +1,5 @@
 let eventData = null;
+import { addCSSElements } from './main.js'; // Adjust the path as needed
 
 function fetchLeagueEvents(sport, league) {
     // Calculate dates for one week ago and one week in the future
@@ -31,9 +32,10 @@ function fetchLeagueEvents(sport, league) {
         .then(response => response.json())
         .then(data => {
             console.log('Data:', data);
+            addCSSElements();
             // Handle the data here
             // Get the container element
-            const liveContainer = document.getElementById("live-" + league.toUpperCase() + "-events");
+            /*const liveContainer = document.getElementById("live-" + league.toUpperCase() + "-events");
             const upcomingContainer = document.getElementById("upcoming-" + league.toUpperCase() + "-events");
             const recentContainer = document.getElementById("recent-" + league.toUpperCase() + "-events");
 
@@ -94,7 +96,7 @@ function fetchLeagueEvents(sport, league) {
                     // Append the div to the container
                     recentContainer.appendChild(div);
                 });
-            });
+            });*/
         })
         .catch(error => console.error('Error:', error));
 }
