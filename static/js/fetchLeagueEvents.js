@@ -1,7 +1,7 @@
 let eventData = null;
 import { addCSSElements } from './main.js'; // Adjust the path as needed
 
-function fetchLeagueEvents(sport, league) {
+export function fetchLeagueEvents(sport, league) {
     // Calculate dates for one week ago and one week in the future
     var interval = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
     if (sport === 'football')
