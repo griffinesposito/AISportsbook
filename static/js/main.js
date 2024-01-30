@@ -529,6 +529,7 @@ export function removeCSSElements() {
 export function addCSSElements() {
     // table
     removeCSSElements();
+    hideTextMesh();
 
     for ( let i = 0; i < table.length; i += 5 ) {
 
