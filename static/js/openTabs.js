@@ -1,3 +1,5 @@
+import { fetchLeagueEvents } from './fetchLeagueEvents.js'; // Adjust the path as needed
+
 function openLiveData(league) {
     var i;
     var x = document.getElementsByClassName("tab-content");
