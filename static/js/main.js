@@ -88,6 +88,7 @@ function hideTextMesh() {
         .onUpdate(() => {
             // Update the material opacity
             textMaterial.opacity = this.opacity;
+            render();
         })
         .start();
 }
