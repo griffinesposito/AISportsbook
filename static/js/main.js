@@ -53,6 +53,7 @@ let particlePositions;
 let linesMesh;
 let geometryB;
 let materialP;
+let textMaterial;
 let textMesh;
 let originalWindowWidth;
 let textScalar = 35;
@@ -79,6 +80,26 @@ if (isMobileDevice())
     effectController.minDistance= 100;
     effectController.maxConnections=  40;
     effectController.particleCount=  100;
+}
+
+function hideTextMesh() {
+    new TWEEN.Tween(textMaterial)
+        .to({ opacity: 0 }, 1000) // Animate to transparent over 1000 milliseconds
+        .onUpdate(() => {
+            // Update the material opacity
+            textMaterial.opacity = this.opacity;
+        })
+        .start();
+}
+
+function showText() {
+    new TWEEN.Tween(textMaterial)
+        .to({ opacity: 1 }, 1000) // Animate to transparent over 1000 milliseconds
+        .onUpdate(() => {
+            // Update the material opacity
+            textMaterial.opacity = this.opacity;
+        })
+        .start();
 }
 
 init();
@@ -199,8 +220,29 @@ function init() {
             curveSegments: 12,
             // ... other parameters ...
         });
-        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        textMesh = new THREE.Mesh(textGeometry, materialP);
+        textMaterial = new THREE.MeshPhysicalMaterial({
+            // Physical material properties
+            color: 0x1111FF,
+            metalness: 1.0,
+            roughness: 0.005,
+            clearcoat: 0.1,
+            transparent: true,
+            opacity: 1 // Start fully opaque
+        }); 
+        textMaterial.onBeforeCompile = function(shader) {
+            // Add the custom attribute for translation
+            shader.vertexShader = 'attribute vec3 translate;\n' + shader.vertexShader;
+    
+            // Replace the `#include <begin_vertex>` section with custom position translation
+            shader.vertexShader = shader.vertexShader.replace(
+                '#include <begin_vertex>',
+                [
+                    'vec3 transformed = vec3(position);', // Original begin_vertex logic
+                    'transformed += translate;'           // Add the translation
+                ].join('\n')
+            );
+        };
+        textMesh = new THREE.Mesh(textGeometry, textMaterial);
 
         textGeometry.computeBoundingBox();
         const centerOffsetX = - 0.5 * (textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x);
@@ -472,10 +514,21 @@ const table = [
     'Ts', 'Tennessine', '(294)', 17, 7,
     'Og', 'Oganesson', '(294)', 18, 7
 ];
+
+export function removeCSSElements() {
+    while (objects.length > 0) {
+        const objectCSS = objects.pop(); // Remove the last element from the array
+        scene.remove(objectCSS); // Remove it from the Three.js scene
+
+        if (objectCSS.element && objectCSS.element.parentElement) {
+            objectCSS.element.parentElement.removeChild(objectCSS.element); // Remove the DOM element
+        }
+    }
+}
+
 export function addCSSElements() {
-
-
     // table
+    removeCSSElements();
 
     for ( let i = 0; i < table.length; i += 5 ) {
 
@@ -511,6 +564,7 @@ export function addCSSElements() {
         const object = new THREE.Object3D();
         object.position.x = ( table[ i + 3 ] * 140 ) - 1330;
         object.position.y = - ( table[ i + 4 ] * 180 ) + 990;
+        object.position.z = - 500;
 
         targets.table.push( object );
 
