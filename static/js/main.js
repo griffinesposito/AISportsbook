@@ -24,11 +24,14 @@ import { TTFLoader } from '/static/jsm/loaders/TTFLoader.js';
 import { Font } from '/static/jsm/loaders/FontLoader.js';
 import { TextGeometry } from '/static/jsm/geometries/TextGeometry.js';
 
+import TWEEN from '/static/jsm/libs/tween.module.js';
+import { CSS3DRenderer, CSS3DObject } from '/static/jsm/renderers/CSS3DRenderer.js';
+
 
 let group;
 let container, stats;
 const particlesData = [];
-let camera, scene, renderer;
+let camera, scene, renderer, css3DRenderer;
 let positions, colors;
 let pointCloud;
 let particlePositions;
@@ -74,6 +77,7 @@ function init() {
 
     scene = new THREE.Scene();
     renderer = new THREE.WebGLRenderer( { antialias: true  } ); //, alpha: true
+    css3DRenderer = new THREE.CSS3DRenderer();
     //renderer.setClearColor(0x000000, 0); // The second parameter is the alpha value (0 = fully transparent)
 
 
@@ -199,8 +203,12 @@ function init() {
     //
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
+    css3DRenderer.setSize(window.innerWidth, window.innerHeight);
+    css3DRenderer.domElement.style.position = 'absolute';
+    css3DRenderer.domElement.style.top = 0;
 
     container.appendChild( renderer.domElement );
+    container.appendChild( css3DRenderer.domElement );
 
     //
     window.addEventListener( 'resize', onWindowResize );
@@ -319,9 +327,10 @@ function render() {
     const time = Date.now() * 0.001;
     group.rotation.y = time * 0.01;
     renderer.render( scene, camera );
+    css3DRenderer.render(scene, camera);
 
 }
 // ...
 // Make sure it appends the canvas to the '#container' div
-container.appendChild(renderer.domElement);
+//container.appendChild(renderer.domElement);
 // ...
