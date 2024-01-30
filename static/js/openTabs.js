@@ -6,7 +6,7 @@ export function openLiveData(league) {
     for (i = 0; i < x.length; i++) {
         x[i].style.display = "none";  
     }
-    liveDataBlock = document.getElementById(league + "-live");
+    var liveDataBlock = document.getElementById(league + "-live");
     liveDataBlock.style.display = "block"; 
     const sport = liveDataBlock.dataset.sport;
     fetchLeagueEvents(sport,league.toLowerCase());
@@ -18,7 +18,7 @@ export function openPlayersData(league) {
     for (i = 0; i < x.length; i++) {
         x[i].style.display = "none";  
     }
-    liveDataBlock = document.getElementById(league + "-players");
+    var liveDataBlock = document.getElementById(league + "-players");
     liveDataBlock.style.display = "block";  
 }
 
@@ -28,6 +28,6 @@ export function openTeamsData(league) {
     for (i = 0; i < x.length; i++) {
         x[i].style.display = "none";  
     }
-    liveDataBlock = document.getElementById(league + "-teams");
+    var liveDataBlock = document.getElementById(league + "-teams");
     liveDataBlock.style.display = "block";  
 }
