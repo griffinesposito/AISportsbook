@@ -88,7 +88,6 @@ function hideTextMesh() {
         .onUpdate(() => {
             // Update the material opacity
             textMaterial.opacity = this.opacity;
-            render();
         })
         .start();
 }
@@ -530,7 +529,6 @@ export function removeCSSElements() {
 export function addCSSElements() {
     // table
     removeCSSElements();
-    hideTextMesh();
 
     for ( let i = 0; i < table.length; i += 5 ) {
 
@@ -573,6 +571,7 @@ export function addCSSElements() {
     }
 
     transform( targets.table, 2000 );
+    hideTextMesh();
 
 }
 
