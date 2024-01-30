@@ -58,6 +58,8 @@ body {
 
 
 .header-bar {
+    position: relative;
+    z-index: 1; /* Make sure this is above the canvas */
     background-color: #0a0f20; /* This color should match the predominant color of your logo's background */
     display: flex;
     justify-content: space-between;
