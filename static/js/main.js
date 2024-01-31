@@ -61,8 +61,8 @@ const teamnewWidth = window.innerWidth * 1.1;
 const teamnewHeight = window.innerHeight * 1.1;
 // Recalculate cell sizes and grid positions
 // This may depend on how you want to scale or adapt the grid
-var teamcellWidth = newWidth / gridColumns;
-var teamcellHeight = newHeight / gridRows;
+var teamcellWidth = teamnewWidth / teamgridColumns;
+var teamcellHeight = teamnewHeight / teamgridRows;
 
 // ---------------------------------------------------------------------------------
 // ------------------------ Constant definitions -----------------------------------
