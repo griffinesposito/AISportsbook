@@ -193,6 +193,7 @@ function disableControlsOnHover(element){
     });
 }
 
+
 // ---------------------------------------------------------------------------------
 // ---------- ANIMATE CAMERA BACK TO ORIGINAL POSITION -------------
 // ---------------------------------------------------------------------------------
@@ -810,6 +811,32 @@ export function addTeamCards(data) {
         teamCardObjectCSS.position.y = Math.random() * 4000 - 2000;
         teamCardObjectCSS.rotation.y = -2*3.14159;
         teamCardObjectCSS.position.z = Math.random() * 4000 - 2000;
+
+        // Assume 'teamCardObjectCSS' is your CSS3DObject and 'newDiv' is the associated DOM element
+        newDiv.onmouseover = function() {
+            // Move the object forward on hover
+            new TWEEN.Tween(teamCardObjectCSS.position)
+                .to({ z: -850 }, 2000) // Move closer to the camera
+                .easing(TWEEN.Easing.Quadratic.Out) // Easing function for smooth animation
+                .onUpdate(() => {
+                    // You might need to manually re-render the scene in the update function
+                    // renderer.render(scene, camera);
+                })
+                .start(); // Start the tween animation
+        };
+
+        newDiv.onmouseout = function() {
+            // Move the object back to its original position when the mouse leaves
+            new TWEEN.Tween(teamCardObjectCSS.position)
+                .to({ z: -950 }, 2000) // Move away from the camera
+                .easing(TWEEN.Easing.Quadratic.Out) // Easing function for smooth animation
+                .onUpdate(() => {
+                    // You might need to manually re-render the scene in the update function
+                    // renderer.render(scene, camera);
+                })
+                .start(); // Start the tween animation
+        };
+
         scene.add( teamCardObjectCSS );
 
 
