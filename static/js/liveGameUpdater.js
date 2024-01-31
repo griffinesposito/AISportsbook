@@ -1,3 +1,15 @@
+function applyFlashEffect(element) {
+    if (element) {
+        element.classList.add('flash-effect');
+    
+        // Optional: Remove the class after the animation ends
+        element.addEventListener('animationend', () => {
+            element.classList.remove('flash-effect');
+        }, { once: true });
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     var socket = io.connect('https://' + document.domain + ':' + location.port);
     console.log('Connected to server');
@@ -19,12 +31,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if the element exists
         if (statusElement) {
             statusElement.innerHTML = `${gameStatus} -- Period: ${gamePeriod} -- Clock: ${gameClock}`;
+            applyFlashEffect(statusElement);
         } 
         if (homeScoreElement) {
             homeScoreElement.innerHTML = `${homeTeamScore}`;
+            applyFlashEffect(homeScoreElement);
         }
         if (awayScoreElement) {
             awayScoreElement.innerHTML = `${awayTeamScore}`;
+            applyFlashEffect(awayScoreElement);
         }
     });
 }); 

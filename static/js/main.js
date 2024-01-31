@@ -138,6 +138,41 @@ function showText() {
         .start();
 }
 
+
+// ---------------------------------------------------------------------------------
+// --------------------------- SHOW Loading Circle ---------------------------------
+// ---------------------------------------------------------------------------------
+function showLoader(parentElement) {
+    if (!document.getElementById('loader-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'loader-overlay';
+        overlay.id = 'loader-overlay'; // Adding an ID for easy removal
+
+        const loader = document.createElement('div');
+        loader.className = 'loader';
+
+        overlay.appendChild(loader);
+        parentElement.appendChild(overlay);
+
+        // Make sure newDiv is positioned relatively if it's not already
+        //if (getComputedStyle(parentElement).position === 'static') {
+            parentElement.style.position = 'relative';
+        //}
+    }
+}
+  
+
+// ---------------------------------------------------------------------------------
+// --------------------------- HIDE Loading Circle ---------------------------------
+// ---------------------------------------------------------------------------------
+function hideLoader() {
+    const overlay = document.getElementById('loader-overlay');
+    if (overlay) {
+        overlay.remove();
+    }
+}
+
+
 // ---------------------------------------------------------------------------------
 // ---------- DISABLE INTERFERENCE FROM CONTROLS ON HOVER OVER ELEMENT -------------
 // ---------------------------------------------------------------------------------
@@ -558,7 +593,7 @@ export function addCSSElements(data) {
     liveContainer.style.flexDirection = 'column'; // Change to column for vertical layout
     const liveHeader = document.createElement('div');
     liveHeader.textContent = 'Live Events'; // Set the header text
-    liveHeader.className = 'live-header'; // Apply the CSS class
+    liveHeader.className = 'live-events-header'; // Apply the CSS class
     liveContainer.appendChild(liveHeader);
     const liveHorizontalContainer = document.createElement('div');
     liveHorizontalContainer.className = 'live-events-flex';
@@ -576,7 +611,7 @@ export function addCSSElements(data) {
     upcomingContainer.style.flexDirection = 'column'; // Change to column for vertical layout
     const upcomingHeader = document.createElement('div');
     upcomingHeader.textContent = 'Upcoming Events'; // Set the header text
-    upcomingHeader.className = 'live-header'; // Apply the CSS class
+    upcomingHeader.className = 'live-events-header'; // Apply the CSS class
     upcomingContainer.appendChild(upcomingHeader);
     const upcomingHorizontalContainer = document.createElement('div');
     upcomingHorizontalContainer.className = 'live-events-flex';
@@ -594,7 +629,7 @@ export function addCSSElements(data) {
     recentContainer.style.flexDirection = 'column'; // Change to column for vertical layout
     const recentHeader = document.createElement('div');
     recentHeader.textContent = 'Recent Events'; // Set the header text
-    recentHeader.className = 'live-header'; // Apply the CSS class
+    recentHeader.className = 'live-events-header'; // Apply the CSS class
     recentContainer.appendChild(recentHeader);
     const recentHorizontalContainer = document.createElement('div');
     recentHorizontalContainer.className = 'live-events-flex';
@@ -622,10 +657,14 @@ export function addCSSElements(data) {
             newDiv.setAttribute('data-event', key);
             dateArray.push(item.date);
             newDiv.className = 'interactive-div'; // Set the class
-            // Set the onclick event handler using an arrow function
-            /*newDiv.onclick = () => {
-                toggleContent(newDiv, item, key);
-            };*/
+            // Add click event listener to newDiv
+            newDiv.addEventListener('click', function() {
+                // Show loader inside newDiv or another element
+                showLoader(newDiv);
+            
+                // Example: Hide loader after 3 seconds (replace this with your actual logic)
+                setTimeout(hideLoader, 3000);
+            });
             addCurrentEventsContent(item,key,newDiv);
             //newDiv.innerHTML = `<h>a;lsdkjfa;lskjdg;lakjsdgasdkgasda;lkdjg</h>`;
             if (item.status.type.id === '1') // scheduled, upcoming
