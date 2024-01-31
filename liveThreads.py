@@ -36,7 +36,7 @@ def fetch_nfl_events():
       league = 'nfl'
       current_nfl_events["data"] = get_current_events(sport, league, dates)
       data = current_nfl_events["data"]
-      print(f"Emitting NFL data: {data}")
+      print(f"Emitting NFL data:")
     time.sleep(60)  # Fetch data every 5 minutes
 
 
@@ -50,7 +50,7 @@ def fetch_nba_events():
       league = 'nba'
       current_nba_events["data"] = get_current_events(sport, league, dates)
       data = current_nba_events["data"]
-      print(f"Emitting NBA data: {data}")
+      print(f"Emitting NBA data:")
     time.sleep(60)  # Fetch data every 5 minutes
 
 
@@ -101,8 +101,6 @@ def check_for_new_live_games(socketio):
     with data_lock:
       print('Checking for new live games...')
       live_games = get_live_games()  # Your function to get live games
-
-      print(f'Num live threads...' + str(len(game_threads.items())))
       for game in live_games:
         game_id = game["id"]
         if game_id not in game_threads:
