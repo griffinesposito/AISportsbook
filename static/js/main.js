@@ -597,6 +597,7 @@ export function addCSSElements(data) {
     liveContainer.appendChild(liveHeader);
     const liveHorizontalContainer = document.createElement('div');
     liveHorizontalContainer.className = 'live-events-flex';
+    liveHorizontalContainer.setAttribute('data-event-type', "live");
     disableControlsOnHover(liveHorizontalContainer);
     liveContainer.appendChild(liveHorizontalContainer);
     const liveObjectCSS = new CSS3DObject( liveContainer );
@@ -615,6 +616,7 @@ export function addCSSElements(data) {
     upcomingContainer.appendChild(upcomingHeader);
     const upcomingHorizontalContainer = document.createElement('div');
     upcomingHorizontalContainer.className = 'live-events-flex';
+    upcomingHorizontalContainer.setAttribute('data-event-type', "upcoming");
     disableControlsOnHover(upcomingHorizontalContainer);
     upcomingContainer.appendChild(upcomingHorizontalContainer);
     const upcomingObjectCSS = new CSS3DObject( upcomingContainer );
@@ -633,6 +635,7 @@ export function addCSSElements(data) {
     recentContainer.appendChild(recentHeader);
     const recentHorizontalContainer = document.createElement('div');
     recentHorizontalContainer.className = 'live-events-flex';
+    recentHorizontalContainer.setAttribute('data-event-type', "recent");
     disableControlsOnHover(recentHorizontalContainer);
     recentContainer.appendChild(recentHorizontalContainer);
     const recentObjectCSS = new CSS3DObject( recentContainer );
@@ -668,7 +671,6 @@ export function addCSSElements(data) {
                 setTimeout(hideLoader, 3000);
             });
             addCurrentEventsContent(item,key,newDiv);
-            //newDiv.innerHTML = `<h>a;lsdkjfa;lskjdg;lakjsdgasdkgasda;lkdjg</h>`;
             if (item.status.type.id === '1') // scheduled, upcoming
             {
                 upcomingHorizontalContainer.appendChild(newDiv); // Append the new div to the container
