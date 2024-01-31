@@ -162,9 +162,9 @@ function showLoader(parentElement) {
         parentElement.appendChild(overlay);
 
         // Make sure newDiv is positioned relatively if it's not already
-        //if (getComputedStyle(parentElement).position === 'static') {
-            //parentElement.style.position = 'relative';
-        //}
+        if (getComputedStyle(parentElement).position === 'static') {
+            parentElement.style.position = 'relative';
+        }
     }
 }
   
