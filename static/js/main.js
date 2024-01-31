@@ -163,7 +163,7 @@ function showLoader(parentElement) {
 
         // Make sure newDiv is positioned relatively if it's not already
         //if (getComputedStyle(parentElement).position === 'static') {
-            parentElement.style.position = 'relative';
+            //parentElement.style.position = 'relative';
         //}
     }
 }
@@ -819,7 +819,7 @@ export function addTeamCards(data) {
             // Example: Hide loader after 3 seconds (replace this with your actual logic)
             setTimeout(hideLoader, 3000);
         });
-        
+
         // Assume 'teamCardObjectCSS' is your CSS3DObject and 'newDiv' is the associated DOM element
         newDiv.onmouseover = function() {
             // Move the object forward on hover
