@@ -231,11 +231,6 @@ def get_team_events(sport, league, year, team):
 
 def get_current_events(sport, league, dates):
     endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/events?dates={dates}&lang=en&region=us&limit=100"
-    #response = requests.get(endpoint,params={})
-    #if response.status_code != 200:
-    #    return response.status_code, response.reason  
-
-    #event_list = response.json()
     event_list = fetch_data([(endpoint,None)])   
     data = dict()  
     data['events'] = dict()
@@ -254,47 +249,16 @@ def get_current_events(sport, league, dates):
         event_dict['link']                      = dict()
         event_dict['link']['href']              = event['links'][0]['href']
         event_dict['link']['text']              = event['links'][0]['text']
-        #if 'weather' in event:
-        #    event_dict['weather']                   = dict()
-        #    event_dict['weather']['displayValue']   = event['weather']['displayValue']
-        #    event_dict['weather']['windSpeed']      = event['weather']['windSpeed']
-        #    event_dict['weather']['windDirection']  = event['weather']['windDirection']
-        #    event_dict['weather']['temperature']    = event['weather']['temperature']
-        #    event_dict['weather']['gust']           = event['weather']['gust']
-        #    event_dict['weather']['precipitation']  = event['weather']['precipitation']
-        #event_dict['venue']                     = dict()
-        #if 'venue' in event['competitions'][0] and 'fullName' in event['competitions'][0]['venue']:
-        #    event_dict['venue']['fullName']         = event['competitions'][0]['venue']['fullName']
-        #    if 'images' in event['competitions'][0]['venue']:
-        #        if len(event['competitions'][0]['venue']['images']) >= 1:
-        #            if 'href' in event['competitions'][0]['venue']['images'][0]:
-        #                event_dict['venue']['image']            = event['competitions'][0]['venue']['images'][0]['href']
-        #    else:
-        #        print('Venue Image Missing...')
 
         if not event['id'] in add_links:
             add_links[event['id']] = []
 
-        #if not 'leaders' in event['competitions'][0]:
-        #    for competitor in event['competitions'][0]['competitors']:
-        #        if 'leaders' in competitor:
-        #            add_links[event['id']].append((competitor['homeAway'] + 'teamleaders',competitor['leaders']['$ref']))
-        #        if 'score' in competitor:
-        #            add_links[event['id']].append((competitor['homeAway'] + 'teamscore',competitor['score']['$ref']))
-        #        if 'team' in competitor:
-        #            add_links[event['id']].append((competitor['homeAway'] + 'teamdata',competitor['team']['$ref']))
-        #else:
-        #    add_links[event['id']].append(('gameleaders',event['competitions'][0]['leaders']['$ref']))
         for competitor in event['competitions'][0]['competitors']:
-            #if 'leaders' in competitor:
-            #    add_links[event['id']].append((competitor['homeAway'] + 'teamleaders',competitor['leaders']['$ref']))
             if 'score' in competitor:
                 add_links[event['id']].append((competitor['homeAway'] + 'teamscore',competitor['score']['$ref']))
             if 'team' in competitor:
                 add_links[event['id']].append((competitor['homeAway'] + 'teamdata',competitor['team']['$ref']))
 
-        #if 'predictor' in event['competitions'][0]:
-        #    add_links[event['id']].append(('predictor',event['competitions'][0]['predictor']['$ref']))
         if 'status' in event['competitions'][0]:
             add_links[event['id']].append(('status',event['competitions'][0]['status']['$ref']))
             
@@ -309,3 +273,85 @@ def get_current_events(sport, league, dates):
         else:
             data['events'][event_id][key_id] = dat
     return data
+
+def get_detailed_event_data(sport, league, eventId, playRef=None):
+    endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/events/{eventId}?lang=en&region=us"
+    response = requests.get(endpoint,params={})
+    if response.status_code != 200:
+        return response.status_code, response.reason  
+
+    event = response.json()  
+    data = dict()  
+    data['event'] = dict()
+    add_links = dict()
+    event_dict = dict()
+    event_dict['name']                      = event['name']
+    event_dict['shortName']                 = event['shortName']
+    event_dict['date']                      = event['date']
+    event_dict['link']                      = dict()
+    event_dict['link']['href']              = event['links'][0]['href']
+    event_dict['link']['text']              = event['links'][0]['text']
+    if 'weather' in event:
+        event_dict['weather']                   = dict()
+        event_dict['weather']['displayValue']   = event['weather']['displayValue']
+        event_dict['weather']['windSpeed']      = event['weather']['windSpeed']
+        event_dict['weather']['windDirection']  = event['weather']['windDirection']
+        event_dict['weather']['temperature']    = event['weather']['temperature']
+        event_dict['weather']['gust']           = event['weather']['gust']
+        event_dict['weather']['precipitation']  = event['weather']['precipitation']
+    event_dict['venue']                     = dict()
+    if 'venue' in event['competitions'][0] and 'fullName' in event['competitions'][0]['venue']:
+        event_dict['venue']['fullName']         = event['competitions'][0]['venue']['fullName']
+        if 'images' in event['competitions'][0]['venue']:
+            if len(event['competitions'][0]['venue']['images']) >= 1:
+                if 'href' in event['competitions'][0]['venue']['images'][0]:
+                    event_dict['venue']['image']            = event['competitions'][0]['venue']['images'][0]['href']
+        else:
+            print('Venue Image Missing...')
+
+    if not event['id'] in add_links:
+        add_links[event['id']] = []
+
+    if not 'leaders' in event['competitions'][0]:
+        for competitor in event['competitions'][0]['competitors']:
+            if 'leaders' in competitor:
+                add_links[event['id']].append((competitor['homeAway'] + 'teamleaders',competitor['leaders']['$ref']))
+            if 'score' in competitor:
+                add_links[event['id']].append((competitor['homeAway'] + 'teamscore',competitor['score']['$ref']))
+            if 'team' in competitor:
+                add_links[event['id']].append((competitor['homeAway'] + 'teamdata',competitor['team']['$ref']))
+    else:
+        add_links[event['id']].append(('gameleaders',event['competitions'][0]['leaders']['$ref']))
+        for competitor in event['competitions'][0]['competitors']:
+            if 'leaders' in competitor:
+                add_links[event['id']].append((competitor['homeAway'] + 'teamleaders',competitor['leaders']['$ref']))
+            if 'score' in competitor:
+                add_links[event['id']].append((competitor['homeAway'] + 'teamscore',competitor['score']['$ref']))
+            if 'team' in competitor:
+                add_links[event['id']].append((competitor['homeAway'] + 'teamdata',competitor['team']['$ref']))
+
+    if 'predictor' in event['competitions'][0]:
+        add_links[event['id']].append(('predictor',event['competitions'][0]['predictor']['$ref']))
+    if 'status' in event['competitions'][0]:
+        add_links[event['id']].append(('status',event['competitions'][0]['status']['$ref']))
+    if 'details' in event['competitions'][0]:
+        if not playRef is None:
+            add_links[event['id']].append(('details',playRef))
+        else:
+            add_links[event['id']].append(('details', event['competitions'][0]['details']['$ref'] + '&limit=1'))
+        
+    data['event'] = event_dict
+
+    add_data = fetch_data(add_links)
+    for dat in add_data:
+        event_id = dat['id-request']
+        key_id   = dat['key-request']
+        if 'teamdata' in key_id:
+            data['event'][key_id] = dat['logos'][0]['href']
+        elif 'details' in key_id:
+            dat['newLink'] = dat['$ref'] + f'&limit=1&page={dat["pageCount"]}'
+            data['event'][key_id] = dat
+        else:
+            data['event'][key_id] = dat
+    return data
+

@@ -1,7 +1,7 @@
 import threading
 import time
 import random
-from espnApi import get_current_events
+from espnApi import get_current_events, get_detailed_event_data
 from pythonUtils import get_time_range_str, get_current_date_str
 from asyncRequests import fetch_data
 
@@ -77,15 +77,21 @@ def get_live_games():
   for key, event in nfl_games_today["events"].items():
     if event["status"]["type"]["id"] != '1' and event["status"]["type"]["id"] != '3':
       event["id"] = key
+      event["sport"] = 'football'
+      event["league"] = 'nfl'
       liveGames.append(event)
   for key, event in nba_games_today["events"].items():
     print(event["name"])
     if event["status"]["type"]["id"] != '1' and event["status"]["type"]["id"] != '3':
       event["id"] = key
+      event["sport"] = 'basketball'
+      event["league"] = 'nba'
       liveGames.append(event)
   for key, event in mlb_games_today["events"].items():
     if event["status"]["type"]["id"] != '1' and event["status"]["type"]["id"] != '3':
       event["id"] = key
+      event["sport"] = 'baseball'
+      event["league"] = 'mlb'
       liveGames.append(event)
   return liveGames
 
@@ -116,13 +122,18 @@ def handle_live_game(game, stop_thread_event, socketio):
       if '$ref' in value:
         update_links[key] = [(key, value['$ref'])]
 
-  data = game
+  data = None
   while not stop_thread_event.is_set():
     with data_lock:
       update_data = fetch_data(update_links)
       for dat in update_data:
         key_id = dat['key-request']
         data[key_id] = dat
+
+      if data is None:
+        data = get_detailed_event_data(game["sport"], game["league"], game_id)
+      else:
+        data = get_detailed_event_data(game["sport"], game["league"], game_id, data["event"]["details"]["newLink"])
 
       if data["status"]["type"]["id"] == '1' or data["status"]["type"]["id"] == '3':  # Check if the game is still live
         stop_thread_event.set()
