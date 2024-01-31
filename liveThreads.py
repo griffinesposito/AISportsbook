@@ -128,10 +128,10 @@ def handle_live_game(game, stop_thread_event, socketio):
       else:
         data = get_detailed_event_data(game["sport"], game["league"], game_id, data["event"]["details"]["newLink"])
 
-      if data["status"]["type"]["id"] == '1' or data["status"]["type"]["id"] == '3':  # Check if the game is still live
+      if data["event"]["status"]["type"]["id"] == '1' or data["event"]["status"]["type"]["id"] == '3':  # Check if the game is still live
         stop_thread_event.set()
 
-      socketio.emit('live_game_data', {'game_id': game_id, 'data': data})
+      socketio.emit('live_game_data', {'game_id': game_id, 'data': data["event"]})
     time.sleep(5)  # Update every 5 seconds
 
   # Once the game is over and the thread is stopping
