@@ -37,7 +37,7 @@ def fetch_nfl_events():
       current_nfl_events["data"] = get_current_events(sport, league, dates)
       data = current_nfl_events["data"]
       print(f"Emitting NFL data:")
-    time.sleep(60)  # Fetch data every 5 minutes
+    time.sleep(300)  # Fetch data every 5 minutes
 
 
 def fetch_nba_events():
@@ -51,7 +51,7 @@ def fetch_nba_events():
       current_nba_events["data"] = get_current_events(sport, league, dates)
       data = current_nba_events["data"]
       print(f"Emitting NBA data:")
-    time.sleep(60)  # Fetch data every 5 minutes
+    time.sleep(300)  # Fetch data every 5 minutes
 
 
 def fetch_mlb_events():
@@ -63,7 +63,7 @@ def fetch_mlb_events():
       sport = 'baseball'
       league = 'mlb'
       current_mlb_events["data"] = get_current_events(sport, league, dates)
-    time.sleep(60 * 5)  # Fetch data every 5 minutes
+    time.sleep(300)  # Fetch data every 5 minutes
 
 
 def get_live_games():
