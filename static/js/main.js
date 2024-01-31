@@ -47,21 +47,28 @@ import { CSS3DRenderer, CSS3DObject } from '/static/jsm/renderers/CSS3DRenderer.
 
 const gridRows = 3; // Number of rows in the grid
 const gridColumns = 1; // Number of columns in the grid
-var cellWidth = 200; // Width of each cell in the grid
-var cellHeight = 100; // Height of each cell in the grid
 const newWidth = window.innerWidth * 1.1;
 const newHeight = window.innerHeight * 1.1;
-
 // Recalculate cell sizes and grid positions
 // This may depend on how you want to scale or adapt the grid
-cellWidth = newWidth / gridColumns;
-cellHeight = newHeight / gridRows;
+var cellWidth = newWidth / gridColumns;
+var cellHeight = newHeight / gridRows;
+
+
+const teamgridRows = 4; // Number of rows in the grid
+const teamgridColumns = 8; // Number of columns in the grid
+const teamnewWidth = window.innerWidth * 1.1;
+const teamnewHeight = window.innerHeight * 1.1;
+// Recalculate cell sizes and grid positions
+// This may depend on how you want to scale or adapt the grid
+var teamcellWidth = newWidth / gridColumns;
+var teamcellHeight = newHeight / gridRows;
 
 // ---------------------------------------------------------------------------------
 // ------------------------ Constant definitions -----------------------------------
 // ---------------------------------------------------------------------------------
 const objects = [];
-const targets = { liveDataTargets: []};
+const targets = { liveDataTargets: [], teamCardTargets: []};
 const particlesData = [];
 const r = 800;
 const rHalf = r / 2;
@@ -391,6 +398,22 @@ function init() {
             object.position.z = -950;
     
             targets.liveDataTargets.push( object );
+        }
+    }
+
+
+    // Team and player card target positions
+    for (let i = 0; i < teamgridRows; i++) {
+        for (let j = 0; j < teamgridColumns; j++) {
+            // ... setup your target ...
+            const object = new THREE.Object3D();
+    
+            // Calculate position
+            object.position.x = (j - teamgridColumns / 2) * teamcellWidth + teamcellWidth / 2;
+            object.position.y = (i - teamgridRows / 2) * teamcellHeight + teamcellHeight / 2;
+            object.position.z = -950;
+    
+            targets.teamCardTargets.push( object );
         }
     }
 
@@ -749,5 +772,51 @@ function transform( targets, duration ) {
         .onUpdate( render )
         .start();
 
+}
+
+
+// ---------------------------------------------------------------------------------
+// ------------------- ADD CSS3DObjects FROM fetchTeams ---------------------
+// ---------------------------------------------------------------------------------
+export function addTeamCards(data) {
+    // table
+    removeCSSElements();
+
+    for (let i = 0; i < data.length; i ++ ) {
+        teamData = data[i];
+        var teamid = teamData.teamid;
+        var href   = teamData.href;
+        var teamname = teamData.teamname;
+
+        const newDiv = document.createElement( 'div' );
+        newDiv.setAttribute('data-team', teamData.teamid);
+        newDiv.className = 'team-card';
+
+        const teamName = document.createElement( 'div' );
+        teamName.className = 'team-name';
+        teamName.textContent = teamname;
+        newDiv.appendChild( teamName );
+
+        const teamLogo = document.createElement('img'); // Change this to 'img' element
+        teamLogo.className = 'team-logo';
+        teamLogo.src = href; // 
+        newDiv.appendChild(teamLogo);
+
+
+
+        disableControlsOnHover(newDiv);
+        const teamCardObjectCSS = new CSS3DObject( newDiv );
+        teamCardObjectCSS.position.x = Math.random() * 4000 - 2000;
+        teamCardObjectCSS.position.y = Math.random() * 4000 - 2000;
+        teamCardObjectCSS.rotation.y = -2*3.14159;
+        teamCardObjectCSS.position.z = Math.random() * 4000 - 2000;
+        scene.add( teamCardObjectCSS );
+
+
+        objects.push( teamCardObjectCSS );
+    }
+    transform( targets.teamCardTargets , 2000 );
+    hideTextMesh();
+    animateCameraToOriginalPosition();
 }
 

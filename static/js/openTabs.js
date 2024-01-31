@@ -1,5 +1,5 @@
 import { fetchLeagueEvents } from './fetchLeagueEvents.js'; // Adjust the path as needed
-
+import { addTeamCards } from './main.js'; // Adjust the path as needed
 function fetchTeams(league) {
     // Construct the URL with the query parameter for the league
     const url = new URL('/get_all_teams', window.location.origin);
@@ -56,5 +56,6 @@ export function openTeamsData(league) {
     fetchTeams(league).then(teamDict => {
         // Do something with the teamDict here
         console.log(teamDict);
+        addTeamCards(teamDict);
     });
 }
