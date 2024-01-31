@@ -30,16 +30,28 @@ document.addEventListener('DOMContentLoaded', function() {
         var awayScoreElement = document.getElementById(eventId + "-awayTeamScore");
         // Check if the element exists
         if (statusElement) {
+            const previousStatus = statusElement.innerHTML;
             statusElement.innerHTML = `${gameStatus} -- Period: ${gamePeriod} -- Clock: ${gameClock}`;
-            applyFlashEffect(statusElement);
+            if (previousStatus != statusElement.innerHTML)
+            {
+                applyFlashEffect(statusElement);
+            }
         } 
         if (homeScoreElement) {
+            const previousHomeScore = homeScoreElement.innerHTML;
             homeScoreElement.innerHTML = `${homeTeamScore}`;
-            applyFlashEffect(homeScoreElement);
+            if (previousHomeScore != homeScoreElement.innerHTML)
+            {
+                applyFlashEffect(homeScoreElement);
+            }
         }
         if (awayScoreElement) {
+            const previousAwayScore = awayScoreElement.innerHTML;
             awayScoreElement.innerHTML = `${awayTeamScore}`;
-            applyFlashEffect(awayScoreElement);
+            if (previousAwayScore != awayScoreElement.innerHTML)
+            {
+                applyFlashEffect(awayScoreElement);
+            }
         }
     });
 }); 
