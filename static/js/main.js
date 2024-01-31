@@ -648,6 +648,7 @@ export function addCSSElements(data) {
     objects.push( liveObjectCSS );
 
     let dateArray = [];
+    let dateArrayReverse = [];
     // Loop through the elements and add new divs
     for (const key in data.events) {
         if (data.events.hasOwnProperty(key)) {
@@ -656,6 +657,7 @@ export function addCSSElements(data) {
             newDiv.setAttribute('data-date', item.date);
             newDiv.setAttribute('data-event', key);
             dateArray.push(item.date);
+            dateArrayReverse.push(item.date);
             newDiv.className = 'interactive-div'; // Set the class
             // Add click event listener to newDiv
             newDiv.addEventListener('click', function() {
@@ -683,6 +685,7 @@ export function addCSSElements(data) {
         }
     }
     dateArray.sort((a, b) => new Date(b) - new Date(a));
+    dateArrayReverse.sort((a, b) => new Date(a) - new Date(b));
     // Sort the divs based on the sorted date strings
     dateArray.forEach(date => {
         // Find the div that has the matching data-date attribute
@@ -691,15 +694,19 @@ export function addCSSElements(data) {
             // Append the div to the container
             liveHorizontalContainer.appendChild(div);
         });
-        let upcomingdivs = Array.from(upcomingHorizontalContainer.children).filter(div => div.getAttribute('data-date') === date);
-        upcomingdivs.forEach(div => {
-            // Append the div to the container
-            upcomingHorizontalContainer.appendChild(div);
-        });
         let recentdivs = Array.from(recentHorizontalContainer.children).filter(div => div.getAttribute('data-date') === date);
         recentdivs.forEach(div => {
             // Append the div to the container
             recentHorizontalContainer.appendChild(div);
+        });
+    });
+    // Sort the divs based on the sorted date strings
+    dateArrayReverse.forEach(date => {
+        // Find the div that has the matching data-date attribute
+        let upcomingdivs = Array.from(upcomingHorizontalContainer.children).filter(div => div.getAttribute('data-date') === date);
+        upcomingdivs.forEach(div => {
+            // Append the div to the container
+            upcomingHorizontalContainer.appendChild(div);
         });
     });
 
