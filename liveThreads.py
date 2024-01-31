@@ -125,11 +125,6 @@ def handle_live_game(game, stop_thread_event, socketio):
   data = None
   while not stop_thread_event.is_set():
     with data_lock:
-      update_data = fetch_data(update_links)
-      for dat in update_data:
-        key_id = dat['key-request']
-        data[key_id] = dat
-
       if data is None:
         data = get_detailed_event_data(game["sport"], game["league"], game_id)
       else:
