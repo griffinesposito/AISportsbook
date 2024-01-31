@@ -1,5 +1,5 @@
-from databaseOperations import search_display_name, get_team_player_tables
-
+from databaseOperations import search_display_name, get_team_player_tables, get_all_teams
+import pprint
 # Database connection parameters
 db_params = {
     'dbname': "neondb",
@@ -23,6 +23,9 @@ matching_rows = search_display_name(table_names, search_string, db_params)
 for row in matching_rows:
     print(row)
 
+
+all_teams = get_all_teams(league, db_params)
+pprint.pprint(all_teams)
 
 
 

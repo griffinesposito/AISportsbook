@@ -56,7 +56,8 @@ def create_team_table(cursor,conn,tableName):
         id SERIAL PRIMARY KEY,
         teamName VARCHAR(255),
         fullName VARCHAR(255),
-        teamId   VARCHAR(255)
+        teamId   VARCHAR(255),
+        href     VARCHAR(255)
         -- Add more columns as needed
     );
     """

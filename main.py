@@ -7,7 +7,7 @@ from flask_socketio import SocketIO
 import threading
 import time
 import random
-from databaseOperations import search_display_name, get_team_player_tables
+from databaseOperations import search_display_name, get_team_player_tables, get_all_teams
 from liveThreads import current_nfl_events, current_nba_events, current_mlb_events
 from liveThreads import fetch_nfl_events, fetch_nba_events, fetch_mlb_events, check_for_new_live_games
 
@@ -148,10 +148,13 @@ def search():
     player_tables = get_team_player_tables('nfl')
     list = search_display_name(player_tables,query)
     print(f"Search results: {list}")
-    # Connect to your PostgreSQL database and search
-    # Return a list of matching results
-    # For example:
     return jsonify(list)
+
+@app.route('/get_all_teams')
+def get_teams():
+    league = request.args.get('league')
+    team_dict = get_all_teams(league)
+    return jsonify(team_dict)
 
 #################### CHATGPT FUNCTIONS ######################
 # ChatGPT will use this route to find our manifest file, ai-plugin.json; it will look in the "".well-known" folder
