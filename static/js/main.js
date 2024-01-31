@@ -783,7 +783,7 @@ export function addTeamCards(data) {
     removeCSSElements();
 
     for (let i = 0; i < data.length; i ++ ) {
-        teamData = data[i];
+        var teamData = data[i];
         var teamid = teamData.teamid;
         var href   = teamData.href;
         var teamname = teamData.teamname;
