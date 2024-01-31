@@ -812,6 +812,14 @@ export function addTeamCards(data) {
         teamCardObjectCSS.rotation.y = -2*3.14159;
         teamCardObjectCSS.position.z = Math.random() * 4000 - 2000;
 
+        newDiv.addEventListener('click', function() {
+            // Show loader inside newDiv or another element
+            showLoader(newDiv);
+        
+            // Example: Hide loader after 3 seconds (replace this with your actual logic)
+            setTimeout(hideLoader, 3000);
+        });
+        
         // Assume 'teamCardObjectCSS' is your CSS3DObject and 'newDiv' is the associated DOM element
         newDiv.onmouseover = function() {
             // Move the object forward on hover
