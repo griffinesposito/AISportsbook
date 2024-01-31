@@ -816,7 +816,7 @@ export function addTeamCards(data) {
         newDiv.onmouseover = function() {
             // Move the object forward on hover
             new TWEEN.Tween(teamCardObjectCSS.position)
-                .to({ z: -850 }, 2000) // Move closer to the camera
+                .to({ z: -850 }, 500) // Move closer to the camera
                 .easing(TWEEN.Easing.Quadratic.Out) // Easing function for smooth animation
                 .onUpdate(() => {
                     // You might need to manually re-render the scene in the update function
@@ -828,7 +828,7 @@ export function addTeamCards(data) {
         newDiv.onmouseout = function() {
             // Move the object back to its original position when the mouse leaves
             new TWEEN.Tween(teamCardObjectCSS.position)
-                .to({ z: -950 }, 2000) // Move away from the camera
+                .to({ z: -950 }, 500) // Move away from the camera
                 .easing(TWEEN.Easing.Quadratic.Out) // Easing function for smooth animation
                 .onUpdate(() => {
                     // You might need to manually re-render the scene in the update function
