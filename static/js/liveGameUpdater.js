@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (statusElement) {
             const previousStatus = statusElement.innerHTML;
             statusElement.innerHTML = `${gameStatus} -- Period: ${gamePeriod} -- Clock: ${gameClock}`;
-            if (previousStatus != statusElement.innerHTML)
+            if (previousStatus !== statusElement.innerHTML)
             {
                 applyFlashEffect(statusElement);
             }
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (homeScoreElement) {
             const previousHomeScore = homeScoreElement.innerHTML;
             homeScoreElement.innerHTML = `${homeTeamScore}`;
-            if (previousHomeScore != homeScoreElement.innerHTML)
+            if (previousHomeScore !== homeScoreElement.innerHTML)
             {
                 applyFlashEffect(homeScoreElement);
             }
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (awayScoreElement) {
             const previousAwayScore = awayScoreElement.innerHTML;
             awayScoreElement.innerHTML = `${awayTeamScore}`;
-            if (previousAwayScore != awayScoreElement.innerHTML)
+            if (previousAwayScore !== awayScoreElement.innerHTML)
             {
                 applyFlashEffect(awayScoreElement);
             }
