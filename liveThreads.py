@@ -75,16 +75,16 @@ def get_live_games():
   print('Checking live games for:' + dates)
   print('len(nba_games_today): ' + str(len(nba_games_today)))
   for key, event in nfl_games_today["events"].items():
-    if event["status"]["type"]["id"] == '2':
+    if event["status"]["type"]["id"] != '1' and event["status"]["type"]["id"] != '3':
       event["id"] = key
       liveGames.append(event)
   for key, event in nba_games_today["events"].items():
     print(event["name"])
-    if event["status"]["type"]["id"] == '2':
+    if event["status"]["type"]["id"] != '1' and event["status"]["type"]["id"] != '3':
       event["id"] = key
       liveGames.append(event)
   for key, event in mlb_games_today["events"].items():
-    if event["status"]["type"]["id"] == '2':
+    if event["status"]["type"]["id"] != '1' and event["status"]["type"]["id"] != '3':
       event["id"] = key
       liveGames.append(event)
   return liveGames
@@ -124,7 +124,7 @@ def handle_live_game(game, stop_thread_event, socketio):
         key_id = dat['key-request']
         data[key_id] = dat
 
-      if data["status"]["type"]["id"] != '2':  # Check if the game is still live
+      if data["status"]["type"]["id"] == '1' or data["status"]["type"]["id"] == '3':  # Check if the game is still live
         stop_thread_event.set()
 
       socketio.emit('live_game_data', {'game_id': game_id, 'data': data})

@@ -1,28 +1,13 @@
-body::before {
-    content: '';
-    position: fixed; /* or absolute */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('../images/background2.png') no-repeat center center;
-    background-size: cover;
-    opacity: 0.15; /* Adjust the opacity as needed */
-    z-index: -1; /* Ensures the image stays behind the content */
-}
 
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #000000;
-    margin: 0;
-    padding: 0;
-}
+
 
 body, html {
     margin: 0;
     padding: 0;
     /* overflow: hidden; */
     height: 100%;
+    font-family: 'Arial', sans-serif;
+    background-color: #000000;
 }
 
 #container {
@@ -33,28 +18,6 @@ body, html {
     height: 100%;
     z-index: 1; /* Send the canvas to the back */
 }
-
-.content {
-    position: relative;
-    z-index: 1; /* Make sure this is above the canvas */
-    /* Add more styling for your content here */
-}
-
-/* Animation for the background */
-/*@keyframes gradientBackground {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(-45deg, #0a0f20, #204969, #7F8C8D, #95a5a6);
-    background-size: 400% 400%;
-    animation: gradientBackground 15s ease infinite;
-}*/
 
 
 .header-bar {
@@ -68,9 +31,6 @@ body {
     box-shadow: 0px 15px 4px rgba(10, 15, 32, 0.8); /* Horizontal offset, vertical offset, blur radius, color */
 }
 
-.header-logo {
-    height: 100px; /* Adjust the height of the logo as needed */
-}
 
 .tab-buttons {
     display: flex;
@@ -96,39 +56,12 @@ body {
     color: black;
 }
 
-.paragraph-block {
-    background-color: rgba(10, 15, 32, 0.8); /* White background with 50% opacity */
-    border-radius: 8px; /* Adjust the value for more or less rounding */
-    /* box-shadow: 15px 15px 10px rgba(223, 230, 255, 0.8); Horizontal offset, vertical offset, blur radius, color */
-    padding: 4px; /* Space inside the box */
-    margin: 35px 4px; /* Space outside the box, only top, and bottom in this case */
-    max-width: 100%; /* Maximum width of the paragraph block */
-    color: white; 
-    border: 4px solid rgba(220, 228, 255, 0.8);
-}
-
 .search-box {
     background-color: rgba(10, 15, 32, 0.8); /* White background with 50% opacity */
     border-radius: 4px; /* Adjust the value for more or less rounding */
     max-width: 800px; /* Maximum width of the paragraph block */
     color: white; 
     border: 2px solid rgba(90, 127, 248, 0.8);
-}
-
-.tab-content {
-    display: none;
-    padding: 20px;
-    border: 0px solid #ccc;
-    border-top: none;
-    animation: fadeInAnimation ease 1.0s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-    background: none; /* White background with 50% opacity */
-}
-
-@keyframes fadeInAnimation {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
 
 .active-tab {
@@ -176,6 +109,7 @@ body {
     border: 1px solid #dedede;
     display: none;
 }
+
 .result-item {
     padding: 10px;
     cursor: pointer;
@@ -188,11 +122,11 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin: 0px 0;
     font-family: Arial, sans-serif;
     color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #05427779;
+    background-color: none;
     font-size: 22px; /* Increase font size */
 }
 
@@ -203,12 +137,12 @@ th, td {
 }
 
 th {
-    background-color: #000000;
+    background-color: none;
     color: white;
     font-weight: bold;
 }
 .th-game-status {
-    background-color: #00da1d;
+    background-color: #00da1d6c;
     color: rgb(0, 0, 0);
     font-weight: bold;
 }
@@ -238,18 +172,22 @@ img.venue-image {
 .interactive-div {
     background-color: rgba(10, 15, 32, 0.8); /* White background with 50% opacity */
     border-radius: 8px; /* Adjust the value for more or less rounding */
-    box-shadow: 15px 15px 10px rgba(90, 127, 248, 0.8); /* Horizontal offset, vertical offset, blur radius, color */
-    padding: 15px; /* Space inside the box */
-    margin: 35px 10px; /* Space outside the box, only top, and bottom in this case */
-    max-width: 100%; /* Maximum width of the paragraph block */
+    box-shadow: 0px 0px 20px rgba(90, 127, 248, 0.8); /* Horizontal offset, vertical offset, blur radius, color */
+    padding: 0px; /* Space inside the box */
+    margin: 5px 30px; /* Space outside the box, only top, and bottom in this case */
+    max-width: 600px; /* Maximum width of the paragraph block */
     color: white; 
     border: 2px solid rgba(90, 127, 248, 0.8);
     transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Transition for border color and box shadow */
+    display: inline-block; /* Ensure they are inline-block elements */
+    width: 500px; /* Set a fixed width */
+    flex-shrink: 0; /* Prevent the item from shrinking */
+    flex-grow: 0; /* Prevent the item from growing */
 }
 
 .interactive-div:hover {
     border-color: #4CAF50; /* Border color when hovered */
-    box-shadow: 15px 15px 10px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
+    box-shadow: 0px 0px 20px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
 }
 
 .hidden-content {
@@ -275,17 +213,25 @@ img.venue-image {
     border: none; /* Optional border for columns */
 }
 
-.live-div {
-  border-color: rgba(90, 127, 248, 0.8); 
-  background-color: rgba(255, 255, 255, 0.2); /* White background */
+.live-events-header {
+    font-size: 24px; /* Example font size */
+    font-weight: bold; /* Example font weight */
+    padding: 0px; /* Example padding */
+    background-color: transparent; /* Use 'transparent' instead of 'none' for background color */
+    color: white; /* Example text color */
+    width: 100%; /* Full width */
+    text-align: center; /* Center the text horizontally */
+    display: flex; /* Make the header a flex container */
+    justify-content: center; /* Center content horizontally in the header */
+    align-items: center; /* Center content vertically in the header */
 }
 
-.recent-div {
-  border-color: rgba(90, 127, 248, 0.8); 
-  background-color: rgba(255, 255, 255, 0.2); /* White background */
-}
-
-.upcoming-div {
-  border-color: rgba(90, 127, 248, 0.8); 
-  background-color: rgba(255, 255, 255, 0.2); /* White background */
+.live-events-flex {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    overflow-x: scroll;
+    max-width: 1700px;
+    white-space: nowrap;
+    flex-wrap: nowrap;
 }

@@ -1,10 +1,10 @@
-function formatHumanReadableDate(dateString) {
+export function formatHumanReadableDate(dateString) {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' };
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', options);
 }
 
-function toggleContent(element, eventObject, eventId) {
+export function toggleContent(element, eventObject, eventId) {
     const hiddenContent = element.querySelector('.hidden-content');
     var imageSrcHomeTeam    = eventObject.hometeamdata.logos[0].href;
     var imageSrcAwayTeam    = eventObject.awayteamdata.logos[0].href;
@@ -139,10 +139,10 @@ function toggleContent(element, eventObject, eventId) {
     hiddenContent.classList.toggle('show-content');
 }
 
-function addCurrentEventsContent(eventObject,eventId,container) {
+export function addCurrentEventsContent(eventObject,eventId,container) {
     // Define image source variables
-    var imageSrcHomeTeam    = eventObject.hometeamdata.logos[0].href;
-    var imageSrcAwayTeam    = eventObject.awayteamdata.logos[0].href;
+    var imageSrcHomeTeam    = eventObject.hometeamdata;
+    var imageSrcAwayTeam    = eventObject.awayteamdata;
     var dateStr             = formatHumanReadableDate(eventObject.date);
     var name                = eventObject.name;
     var homeTeamScore       = eventObject.hometeamscore.displayValue;

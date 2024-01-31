@@ -32,7 +32,7 @@ export function fetchLeagueEvents(sport, league) {
         .then(response => response.json())
         .then(data => {
             console.log('Data:', data);
-            addCSSElements();
+            addCSSElements(data);
             // Handle the data here
             // Get the container element
             /*const liveContainer = document.getElementById("live-" + league.toUpperCase() + "-events");
