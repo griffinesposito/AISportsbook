@@ -550,7 +550,7 @@ function init() {
     //Search bar target
     const object = new THREE.Object3D();
     object.position.x = 0;
-    object.position.y = -12;
+    object.position.y = -20;
     object.position.z = -800;
     targets.searchBarTarget.push( object );
 
@@ -1092,7 +1092,7 @@ export function addPlayerCards(data) {
     // table
     removeCSSElements();
     addSearchBar();
-    for (let i = 0; i < data.length; i ++ ) {
+    for (let i = 0; i < data.length && i < targets.playerCardTargets.length; i ++ ) {
         var playerData = data[i];
         var teamName    = playerData.teamName;
         var href        = playerData.href;
