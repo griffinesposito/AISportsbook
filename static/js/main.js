@@ -96,6 +96,11 @@ let geometryB;
 let materialP;
 let textMaterial;
 let textMesh;
+let outlineMaterial;
+let outlineMesh;
+let cameraDirection;
+let minXCoordinateOfMesh = -100;
+let maxXCoordinateOfMesh = 1000;
 let originalWindowWidth;
 let textScalar = 35;
 let translateAttribute;
@@ -104,6 +109,54 @@ let controls;
 let font;
 let maxParticleCount = 1000;
 let particleCount = 1000;
+
+
+// ---------------------------------------------------------------------------------
+// ------------------------------- vertexShader ------------------------------------
+// ---------------------------------------------------------------------------------
+const vertexShader = `
+varying float vWavePosition;
+varying vec3 vNormal;
+varying vec3 vPosition;
+
+void main() {
+    vNormal = normal;
+    vPosition = position;
+    vWavePosition = position.x; // 
+
+    vec3 transformed = position;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
+}
+`;
+
+// ---------------------------------------------------------------------------------
+// ------------------------------- fragmentShader ----------------------------------
+// ---------------------------------------------------------------------------------
+const fragmentShader = `
+varying vec3 vNormal;
+varying vec3 vPosition;
+uniform vec3 viewDirection;
+uniform float lightWaveProgress;
+uniform float darkWaveProgress;
+varying float vWavePosition; // Represents the x-coordinate of each vertex
+
+void main() {
+    float edgeFactor = dot(normalize(vNormal), viewDirection);
+    float edgeIntensity = 1.0 - smoothstep(0.8, 1.0, edgeFactor);
+
+    // Light wave effect
+    float lightEffect = smoothstep(lightWaveProgress - 100.0, lightWaveProgress, vWavePosition);
+
+    // Dark wave effect
+    float darkEffect = smoothstep(darkWaveProgress - 100.0, darkWaveProgress, vWavePosition);
+
+    // Combine light and dark effects
+    float combinedEffect = 0.5*lightEffect + 0.5*(1.0 - darkEffect) + 0.5;
+
+    vec3 glowColor = vec3(0.0, 1.0, 0.0); // Green color for the edges
+    gl_FragColor = vec4(glowColor * edgeIntensity * combinedEffect, edgeIntensity * combinedEffect);
+}
+`;
 
 // ---------------------------------------------------------------------------------
 // ----------- Customize for mobile devices (performance reasons) ------------------
@@ -122,7 +175,7 @@ if (isMobileDevice())
 // ---------------------------------------------------------------------------------
 // --------------------- HIDE BACKGROUND TEXT FUNCTION -----------------------------
 // ---------------------------------------------------------------------------------
-function hideTextMesh() {
+export function hideTextMesh() {
     new TWEEN.Tween({ opacity: 1 }) // Start with an object that has the opacity property
         .to({ opacity: 0 }, 1000) // Animate to transparent over 1000 milliseconds
         .onUpdate((obj) => {
@@ -135,12 +188,38 @@ function hideTextMesh() {
 // ---------------------------------------------------------------------------------
 // --------------------- SHOW BACKGROUND TEXT FUNCTION -----------------------------
 // ---------------------------------------------------------------------------------
-function showText() {
+export function showText() {
     new TWEEN.Tween(textMaterial)
         .to({ opacity: 1 }, 1000) // Animate to transparent over 1000 milliseconds
         .onUpdate(() => {
             // Update the material opacity
             textMaterial.opacity = this.opacity;
+        })
+        .start();
+}
+
+// ---------------------------------------------------------------------------------
+// --------------------- HIDE LOADER OUTLINE TEXT FUNCTION -----------------------------
+// ---------------------------------------------------------------------------------
+export function hideOutlineTextMesh() {
+    new TWEEN.Tween({ opacity: 1 }) // Start with an object that has the opacity property
+        .to({ opacity: 0 }, 500) // Animate to transparent over 1000 milliseconds
+        .onUpdate((obj) => {
+            // Update the material opacity
+            outlineMaterial.opacity = obj.opacity;
+        })
+        .start();
+}
+
+// ---------------------------------------------------------------------------------
+// --------------------- SHOW LOADER OUTLINE TEXT FUNCTION -----------------------------
+// ---------------------------------------------------------------------------------
+export function showOutlineText() {
+    new TWEEN.Tween(textMaterial)
+        .to({ opacity: 1 }, 500) // Animate to transparent over 1000 milliseconds
+        .onUpdate(() => {
+            // Update the material opacity
+            outlineMaterial.opacity = this.opacity;
         })
         .start();
 }
@@ -342,7 +421,22 @@ function init() {
     linesMesh = new THREE.LineSegments( geometry, material );
     group.add( linesMesh );
 
-    // Add background logo text mesh
+    cameraDirection = new THREE.Vector3();
+    camera.getWorldDirection(cameraDirection);
+
+    outlineMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            time: { value: 0 },
+            viewDirection: { value: new THREE.Vector3() },
+            lightWaveProgress: { value: -1.0 },
+            darkWaveProgress: { value: 1.0 } // Start a bit later than light wave
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        side: THREE.BackSide,
+        transparent: true
+    });
+
     originalWindowWidth = window.innerWidth;
     const loader = new TTFLoader();
     loader.load('/static/images/AquireBold.ttf', function (json) {
@@ -377,14 +471,21 @@ function init() {
             );
         };
         textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        // Create outline text mesh
+        outlineMesh = new THREE.Mesh(textGeometry.clone(), outlineMaterial);
+        outlineMesh.scale.multiplyScalar(1.015); // Slightly larger to create an outline
 
         textGeometry.computeBoundingBox();
         const centerOffsetX = - 0.5 * (textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x);
         const centerOffsetY = - 0.5 * (textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y);
+        outlineMesh.position.set(centerOffsetX*1.015, centerOffsetY*1.015, -1); // Slightly behind the original text
+
+        
 
         textMesh.position.x = centerOffsetX;
         textMesh.position.y = centerOffsetY;
         scene.add(textMesh);
+        scene.add(outlineMesh);
     });
 
     // Live, Upcoming, Recent events target pos
@@ -417,6 +518,11 @@ function init() {
             targets.teamCardTargets.push( object );
         }
     }
+
+    // Set outlineMaterialprogress
+    outlineMaterial.uniforms.lightWaveProgress.value = 500;
+    outlineMaterial.uniforms.darkWaveProgress.value  = 300;
+    hideOutlineTextMesh();
 
     // Set renderer attributes
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -471,11 +577,13 @@ function onWindowResize() {
     // Calculate the scale factor
     const scaleFactor = window.innerWidth / originalWindowWidth;
     textMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    outlineMesh.scale.set(scaleFactor*1.015, scaleFactor*1.015, scaleFactor*1.015); // Slightly larger to create an outline
     // Recompute the bounding box and adjust the position
     textMesh.geometry.computeBoundingBox();
     const boundingBox = textMesh.geometry.boundingBox;
     const centerOffsetX = -0.5 * (boundingBox.max.x - boundingBox.min.x) * scaleFactor;
     const centerOffsetY = -0.5 * (boundingBox.max.y - boundingBox.min.y) * scaleFactor;
+    outlineMesh.position.set(centerOffsetX*1.015, centerOffsetY*1.015, -1); // Slightly behind the original text
     textMesh.position.x = centerOffsetX;
     textMesh.position.y = centerOffsetY;
     // Apply the scale factor to the text mesh
@@ -565,6 +673,23 @@ function animate() {
     linesMesh.geometry.setDrawRange( 0, numConnected * 2 );
     linesMesh.geometry.attributes.position.needsUpdate = true;
     linesMesh.geometry.attributes.color.needsUpdate = true;
+
+    // Increment the light wave progress
+    outlineMaterial.uniforms.lightWaveProgress.value += 5;
+
+    // Ensure the dark wave follows the light wave at a set distance
+    const waveSeparation = 200; // Distance between light and dark waves
+    outlineMaterial.uniforms.darkWaveProgress.value = outlineMaterial.uniforms.lightWaveProgress.value - waveSeparation;
+
+    // Reset the wave progress if necessary
+    if (outlineMaterial.uniforms.lightWaveProgress.value > maxXCoordinateOfMesh) {
+        outlineMaterial.uniforms.lightWaveProgress.value = minXCoordinateOfMesh;
+        outlineMaterial.uniforms.darkWaveProgress.value = minXCoordinateOfMesh - waveSeparation;
+    }
+    // Update the camera direction
+    camera.getWorldDirection(cameraDirection);
+    outlineMaterial.uniforms.viewDirection.value = cameraDirection;
+    outlineMaterial.uniforms.time.value += 0.05; // Update time for animation
 
     // Mark the attribute as needing an update
     translateAttribute.needsUpdate = true;
@@ -852,6 +977,7 @@ export function addTeamCards(data) {
     }
     transform( targets.teamCardTargets , 2000 );
     hideTextMesh();
+    hideOutlineTextMesh();
     animateCameraToOriginalPosition();
 }
 
