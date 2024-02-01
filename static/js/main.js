@@ -136,6 +136,7 @@ const fragmentShader = `
 varying vec3 vNormal;
 varying vec3 vPosition;
 uniform vec3 viewDirection;
+uniform float opacity;
 uniform float lightWaveProgress;
 uniform float darkWaveProgress;
 varying float vWavePosition; // Represents the x-coordinate of each vertex
@@ -154,7 +155,7 @@ void main() {
     float combinedEffect = 0.5*lightEffect + 0.5*(1.0 - darkEffect) + 0.5;
 
     vec3 glowColor = vec3(0.0, 1.0, 0.0); // Green color for the edges
-    gl_FragColor = vec4(glowColor * edgeIntensity * combinedEffect, edgeIntensity * combinedEffect);
+    gl_FragColor = vec4(glowColor * edgeIntensity * combinedEffect, edgeIntensity * combinedEffect * opacity);
 }
 `;
 
@@ -203,10 +204,10 @@ export function showText() {
 // ---------------------------------------------------------------------------------
 export function hideOutlineTextMesh() {
     new TWEEN.Tween({ opacity: 1 }) // Start with an object that has the opacity property
-        .to({ opacity: 0 }, 500) // Animate to transparent over 1000 milliseconds
+        .to({ opacity: 0 }, 500) // Animate to transparent over 500 milliseconds
         .onUpdate((obj) => {
-            // Update the material opacity
-            outlineMaterial.opacity = obj.opacity;
+            // Update the shader material's opacity uniform
+            outlineMaterial.uniforms.opacity.value = obj.opacity;
         })
         .start();
 }
@@ -215,11 +216,11 @@ export function hideOutlineTextMesh() {
 // --------------------- SHOW LOADER OUTLINE TEXT FUNCTION -----------------------------
 // ---------------------------------------------------------------------------------
 export function showOutlineText() {
-    new TWEEN.Tween(textMaterial)
-        .to({ opacity: 1 }, 500) // Animate to transparent over 1000 milliseconds
-        .onUpdate(() => {
-            // Update the material opacity
-            outlineMaterial.opacity = this.opacity;
+    new TWEEN.Tween({ opacity: 0 }) // Start with an object that has the opacity property
+        .to({ opacity: 1 }, 500) // Animate to transparent over 500 milliseconds
+        .onUpdate((obj) => {
+            // Update the shader material's opacity uniform
+            outlineMaterial.uniforms.opacity.value = obj.opacity;
         })
         .start();
 }
@@ -429,7 +430,8 @@ function init() {
             time: { value: 0 },
             viewDirection: { value: new THREE.Vector3() },
             lightWaveProgress: { value: -1.0 },
-            darkWaveProgress: { value: 1.0 } // Start a bit later than light wave
+            darkWaveProgress: { value: 1.0 }, // Start a bit later than light wave
+            opacity: {vvalue: 0.0 }
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
