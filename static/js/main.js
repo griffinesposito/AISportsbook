@@ -190,11 +190,11 @@ export function hideTextMesh() {
 // --------------------- SHOW BACKGROUND TEXT FUNCTION -----------------------------
 // ---------------------------------------------------------------------------------
 export function showText() {
-    new TWEEN.Tween(textMaterial)
+    new TWEEN.Tween({ opacity: 0 })
         .to({ opacity: 1 }, 1000) // Animate to transparent over 1000 milliseconds
-        .onUpdate(() => {
+        .onUpdate((obj) => {
             // Update the material opacity
-            textMaterial.opacity = this.opacity;
+            textMaterial.opacity = obj.opacity;
         })
         .start();
 }
