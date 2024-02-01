@@ -908,13 +908,13 @@ export function addCSSElements(data) {
 // ---------------------------------------------------------------------------------
 // ----------- TRANSFORM THE OBJECTS TO THE TARGET POSITIONS IN THE SCENE ----------
 // ---------------------------------------------------------------------------------
-function transform( targets, duration ) {
+function transform( targets, duration, objectsOpt=objects ) {
 
     TWEEN.removeAll();
 
-    for ( let i = 0; i < objects.length && i < targets.length; i ++ ) {
+    for ( let i = 0; i < objectsOpt.length && i < targets.length; i ++ ) {
 
-        const object = objects[ i ];
+        const object = objectsOpt[ i ];
         const target = targets[ i ];
         var randDuration = Math.random();
         new TWEEN.Tween( object.position )
@@ -1092,6 +1092,7 @@ export function addPlayerCards(data) {
     // table
     removeCSSElements();
     addSearchBar();
+    transform( targets.searchBarTarget , 2000 );
     for (let i = 0; i < data.length; i ++ ) {
         var playerData = data[i];
         var teamName    = playerData.teamName;
@@ -1169,7 +1170,7 @@ export function addPlayerCards(data) {
 
         objects.push( playerCardObjectCSS );
     }
-    transform( targets.playerCardTargets , 2000 );
+    transform( targets.playerCardTargets , 2000, objects.slice(1) );
     hideTextMesh();
     hideOutlineTextMesh();
     animateCameraToOriginalPosition();
