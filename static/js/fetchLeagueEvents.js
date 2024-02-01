@@ -1,4 +1,4 @@
-import { addCSSElements,removeCSSElements,showOutlineText,showText,addSearchBar } from './main.js'; // Adjust the path as needed
+import { addCSSElements, addPlayerCards, removeCSSElements,showOutlineText,showText,addSearchBar } from './main.js'; // Adjust the path as needed
 
 export function fetchLeagueEvents(league) {
     removeCSSElements();
@@ -37,8 +37,8 @@ export function fetchSearchResults(query, league) {
             return response.json(); // Parse the JSON response body
         })
         .then(data => {
-            addSearchBar();
             console.log('Search results:', data);
+            addPlayerCards(data);
             // Handle the data (e.g., update the UI)
         })
         .catch(error => {

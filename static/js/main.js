@@ -1058,3 +1058,93 @@ export function addSearchBar(league) {
     hideOutlineTextMesh();
     animateCameraToOriginalPosition();
 }
+
+// ---------------------------------------------------------------------------------
+// ------------------- ADD CSS3DObjects FROM fetchSearchResults ---------------------
+// ---------------------------------------------------------------------------------
+export function addPlayerCards(data) {
+    // table
+    removeCSSElements();
+
+    for (let i = 0; i < data.length; i ++ ) {
+        var playerData = data[i];
+        var teamName    = playerData.teamName;
+        var href        = playerData.href;
+        var position    = playerData.position;
+        var displayName = playerData.displayName;
+
+        const newDiv = document.createElement( 'div' );
+        newDiv.setAttribute('data-player', playerData.playerId);
+        newDiv.className = 'team-card';
+
+        const playerName = document.createElement( 'div' );
+        playerName.className = 'team-name';
+        playerName.textContent = displayName;
+        newDiv.appendChild( playerName );
+
+        const playerPos = document.createElement( 'div' );
+        playerPos.className = 'team-name';
+        playerPos.textContent = position;
+        newDiv.appendChild( playerPos );
+
+        const playerHeadshot = document.createElement('img'); // Change this to 'img' element
+        playerHeadshot.className = 'team-logo';
+        playerHeadshot.src = href; // 
+        newDiv.appendChild(playerHeadshot);
+
+        const playerTeam = document.createElement( 'div' );
+        playerTeam.className = 'team-name';
+        playerTeam.textContent = teamName;
+        newDiv.appendChild( playerTeam );
+
+
+        disableControlsOnHover(newDiv);
+        const playerCardObjectCSS = new CSS3DObject( newDiv );
+        playerCardObjectCSS.position.x = Math.random() * 4000 - 2000;
+        playerCardObjectCSS.position.y = Math.random() * 4000 - 2000;
+        playerCardObjectCSS.rotation.y = -2*3.14159;
+        playerCardObjectCSS.position.z = Math.random() * 4000 - 2000;
+
+        newDiv.addEventListener('click', function() {
+            // Show loader inside newDiv or another element
+            showLoader(newDiv);
+        
+            // Example: Hide loader after 3 seconds (replace this with your actual logic)
+            setTimeout(hideLoader, 3000);
+        });
+
+        // Assume 'teamCardObjectCSS' is your CSS3DObject and 'newDiv' is the associated DOM element
+        newDiv.onmouseover = function() {
+            // Move the object forward on hover
+            new TWEEN.Tween(playerCardObjectCSS.position)
+                .to({ z: -850 }, 500) // Move closer to the camera
+                .easing(TWEEN.Easing.Quadratic.Out) // Easing function for smooth animation
+                .onUpdate(() => {
+                    // You might need to manually re-render the scene in the update function
+                    // renderer.render(scene, camera);
+                })
+                .start(); // Start the tween animation
+        };
+
+        newDiv.onmouseout = function() {
+            // Move the object back to its original position when the mouse leaves
+            new TWEEN.Tween(playerCardObjectCSS.position)
+                .to({ z: -950 }, 500) // Move away from the camera
+                .easing(TWEEN.Easing.Quadratic.Out) // Easing function for smooth animation
+                .onUpdate(() => {
+                    // You might need to manually re-render the scene in the update function
+                    // renderer.render(scene, camera);
+                })
+                .start(); // Start the tween animation
+        };
+
+        scene.add( playerCardObjectCSS );
+
+
+        objects.push( playerCardObjectCSS );
+    }
+    transform( targets.teamCardTargets , 2000 );
+    hideTextMesh();
+    hideOutlineTextMesh();
+    animateCameraToOriginalPosition();
+}
