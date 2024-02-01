@@ -17,7 +17,7 @@ export function fetchLeagueEvents(league) {
         .catch(error => console.error('Error:', error));
 }
 
-function fetchSearchResults(query, league) {
+export function fetchSearchResults(query, league) {
     removeCSSElements();
     showOutlineText();
     showText();

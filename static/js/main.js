@@ -1,6 +1,6 @@
 import { openLiveData, openTeamsData, openPlayersData } from './openTabs.js';
 import { addCurrentEventsContent, toggleContent, formatHumanReadableDate } from './addCurrentEventsContent.js';
-
+import { fetchSearchResults } from './fetchLeagueEvents.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('[data-action="openLiveDataNFL"]').addEventListener('click', () => openLiveData('NFL'));
@@ -1021,7 +1021,7 @@ export function addSearchBar(league) {
             // Example callback function
         }
     });
-    
+
     const button = document.createElement('button');
     
     // Set the text content of the button
