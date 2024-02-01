@@ -535,7 +535,7 @@ function init() {
             // ... setup your target ...
             const object = new THREE.Object3D();
             var offsetRowSpace = 0;
-            if (j > 1){
+            if (i > 1){
                 offsetRowSpace = 20;
             }
             // Calculate position
@@ -550,7 +550,7 @@ function init() {
     //Search bar target
     const object = new THREE.Object3D();
     object.position.x = 0;
-    object.position.y = 0;
+    object.position.y = -100;
     object.position.z = -800;
     targets.searchBarTarget.push( object );
 
