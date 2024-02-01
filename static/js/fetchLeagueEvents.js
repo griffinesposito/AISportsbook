@@ -38,7 +38,7 @@ export function fetchSearchResults(query, league) {
         })
         .then(data => {
             console.log('Search results:', data);
-            addPlayerCards(data);
+            addPlayerCards(data,league);
             // Handle the data (e.g., update the UI)
         })
         .catch(error => {

@@ -1088,10 +1088,10 @@ export function addSearchBar(league) {
 // ---------------------------------------------------------------------------------
 // ------------------- ADD CSS3DObjects FROM fetchSearchResults ---------------------
 // ---------------------------------------------------------------------------------
-export function addPlayerCards(data) {
+export function addPlayerCards(data,league) {
     // table
     removeCSSElements();
-    addSearchBar();
+    addSearchBar(league);
     for (let i = 0; i < data.length && i < targets.playerCardTargets.length; i ++ ) {
         var playerData = data[i];
         var teamName    = playerData.teamName;
