@@ -64,11 +64,19 @@ const teamnewHeight = window.innerHeight * 1.1;
 var teamcellWidth = teamnewWidth / teamgridColumns;
 var teamcellHeight = teamnewHeight / teamgridRows;
 
+const playergridRows = 4; // Number of rows in the grid
+const playergridColumns = 6; // Number of columns in the grid
+const playernewWidth = window.innerWidth * 1.1;
+const playernewHeight = window.innerHeight * 1.1;
+// Recalculate cell sizes and grid positions
+// This may depend on how you want to scale or adapt the grid
+var playercellWidth = playernewWidth / playergridColumns;
+var playercellHeight = playernewHeight / playergridRows;
 // ---------------------------------------------------------------------------------
 // ------------------------ Constant definitions -----------------------------------
 // ---------------------------------------------------------------------------------
 const objects = [];
-const targets = { liveDataTargets: [], teamCardTargets: [], searchBarTarget: []};
+const targets = { liveDataTargets: [], teamCardTargets: [], playerCardTargets: [], searchBarTarget: []};
 const particlesData = [];
 const r = 800;
 const rHalf = r / 2;
@@ -506,7 +514,7 @@ function init() {
     }
 
 
-    // Team and player card target positions
+    // Team card target positions
     for (let i = 0; i < teamgridRows; i++) {
         for (let j = 0; j < teamgridColumns; j++) {
             // ... setup your target ...
@@ -514,10 +522,25 @@ function init() {
     
             // Calculate position
             object.position.x = (j - teamgridColumns / 2) * teamcellWidth + teamcellWidth / 2;
-            object.position.y = (i - teamgridRows / 2) * teamcellHeight + teamcellHeight / 2;
+            object.position.y = (teamgridRows / 2 - i) * teamcellHeight + teamcellHeight / 2;
             object.position.z = -950;
     
             targets.teamCardTargets.push( object );
+        }
+    }
+
+    // Player card target positions
+    for (let i = 0; i < playergridRows; i++) {
+        for (let j = 0; j < playergridColumns; j++) {
+            // ... setup your target ...
+            const object = new THREE.Object3D();
+    
+            // Calculate position
+            object.position.x = (j - playergridColumns / 2) * playercellWidth + playercellWidth / 2;
+            object.position.y = (playergridRows / 2 - i) * playercellHeight + playercellHeight / 2;
+            object.position.z = -950;
+    
+            targets.playerCardTargets.push( object );
         }
     }
 
@@ -886,7 +909,7 @@ function transform( targets, duration ) {
 
     TWEEN.removeAll();
 
-    for ( let i = 0; i < objects.length; i ++ ) {
+    for ( let i = 0; i < objects.length && i < targets.length; i ++ ) {
 
         const object = objects[ i ];
         const target = targets[ i ];
@@ -1075,25 +1098,25 @@ export function addPlayerCards(data) {
 
         const newDiv = document.createElement( 'div' );
         newDiv.setAttribute('data-player', playerData.playerId);
-        newDiv.className = 'team-card';
+        newDiv.className = 'player-card';
 
         const playerName = document.createElement( 'div' );
-        playerName.className = 'team-name';
+        playerName.className = 'player-name';
         playerName.textContent = displayName;
         newDiv.appendChild( playerName );
 
         const playerPos = document.createElement( 'div' );
-        playerPos.className = 'team-name';
+        playerPos.className = 'player-position';
         playerPos.textContent = position;
         newDiv.appendChild( playerPos );
 
         const playerHeadshot = document.createElement('img'); // Change this to 'img' element
-        playerHeadshot.className = 'team-logo';
+        playerHeadshot.className = 'player-headshot';
         playerHeadshot.src = href; // 
         newDiv.appendChild(playerHeadshot);
 
         const playerTeam = document.createElement( 'div' );
-        playerTeam.className = 'team-name';
+        playerTeam.className = 'player-team';
         playerTeam.textContent = teamName;
         newDiv.appendChild( playerTeam );
 
@@ -1143,7 +1166,7 @@ export function addPlayerCards(data) {
 
         objects.push( playerCardObjectCSS );
     }
-    transform( targets.teamCardTargets , 2000 );
+    transform( targets.playerCardTargets , 2000 );
     hideTextMesh();
     hideOutlineTextMesh();
     animateCameraToOriginalPosition();

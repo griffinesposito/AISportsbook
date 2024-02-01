@@ -321,7 +321,24 @@ img.venue-image {
     cursor: default;
 }
 
-.team-card:hover {
+.player-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 240px;
+    box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
+    border: 1px solid rgba(127,255,255,0.25);
+    border-radius: 4px; /* Adjust the value for more or less rounding */
+    background-color: rgba(35, 35, 35, 0.546);
+    font-family: Helvetica, sans-serif;
+    text-align: center;
+    line-height: normal;
+    cursor: default;
+}
+
+.team-card:hover, .player-card:hover {
     box-shadow: 0px 0px 20px rgba(0, 255, 149, 0.75);
     background-color: rgba(0, 209, 122, 0.75); /* Corrected line */
     border: 1px solid rgba(0, 255, 149, 1.0);
@@ -335,6 +352,30 @@ img.venue-image {
 
     .team-card .team-logo {
         width: 100px; /* Adjust as needed */
+        height: auto;
+        vertical-align: middle;
+    }
+
+
+    .player-card .player-name {
+        font-size: 24px;
+        font-weight: bolder;
+        color: rgb(255, 255, 255);
+    }
+    .player-card .player-position {
+        font-size: 22px;
+        font-weight: normal;
+        color: rgb(255, 255, 255);
+    }
+
+    .player-card .player-team {
+        font-size: 22px;
+        font-weight: bold;
+        color: rgb(192, 192, 192);
+    }
+
+    .player-card .player-headshot {
+        width: 150px; /* Adjust as needed */
         height: auto;
         vertical-align: middle;
     }
