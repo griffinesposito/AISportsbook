@@ -534,10 +534,13 @@ function init() {
         for (let j = 0; j < playergridColumns; j++) {
             // ... setup your target ...
             const object = new THREE.Object3D();
-    
+            var offsetRowSpace = 0;
+            if (j > 1){
+                offsetRowSpace = 20;
+            }
             // Calculate position
             object.position.x = (j - playergridColumns / 2) * playercellWidth + playercellWidth / 2;
-            object.position.y = (playergridRows / 2 - i - 1) * playercellHeight + playercellHeight / 2;
+            object.position.y = (playergridRows / 2 - i - 1) * playercellHeight + playercellHeight / 2 - offsetRowSpace;
             object.position.z = -950;
     
             targets.playerCardTargets.push( object );
@@ -1169,5 +1172,6 @@ export function addPlayerCards(data) {
     transform( targets.playerCardTargets , 2000 );
     hideTextMesh();
     hideOutlineTextMesh();
+    addSearchBar();
     animateCameraToOriginalPosition();
 }
