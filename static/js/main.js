@@ -536,7 +536,7 @@ function init() {
             const object = new THREE.Object3D();
             var offsetRowSpace = 0;
             if (i > 1){
-                offsetRowSpace = 20;
+                offsetRowSpace = 40;
             }
             // Calculate position
             object.position.x = (j - playergridColumns / 2) * playercellWidth + playercellWidth / 2;
@@ -550,7 +550,7 @@ function init() {
     //Search bar target
     const object = new THREE.Object3D();
     object.position.x = 0;
-    object.position.y = -100;
+    object.position.y = -10;
     object.position.z = -800;
     targets.searchBarTarget.push( object );
 
