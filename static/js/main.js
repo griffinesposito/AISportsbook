@@ -522,7 +522,7 @@ function init() {
     
             // Calculate position
             object.position.x = (j - teamgridColumns / 2) * teamcellWidth + teamcellWidth / 2;
-            object.position.y = (teamgridRows / 2 - i + 1) * teamcellHeight + teamcellHeight / 2;
+            object.position.y = (teamgridRows / 2 - i - 1) * teamcellHeight + teamcellHeight / 2;
             object.position.z = -950;
     
             targets.teamCardTargets.push( object );
@@ -537,7 +537,7 @@ function init() {
     
             // Calculate position
             object.position.x = (j - playergridColumns / 2) * playercellWidth + playercellWidth / 2;
-            object.position.y = (playergridRows / 2 - i + 1) * playercellHeight + playercellHeight / 2;
+            object.position.y = (playergridRows / 2 - i - 1) * playercellHeight + playercellHeight / 2;
             object.position.z = -950;
     
             targets.playerCardTargets.push( object );
