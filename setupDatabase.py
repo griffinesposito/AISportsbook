@@ -44,6 +44,9 @@ def configureNBAPlayerTables(teamId,playerTable):
         position    = athData['position']['displayName']
         teamId      = teamId
         playerId    = athData['id']
+        if not 'headshot' in athData:
+            continue
+        href        = athData['headshot']['href']
         # Execute the check query
         check_query = f"""
         SELECT 1 FROM {playerTable} WHERE playerId = %s;
@@ -54,17 +57,17 @@ def configureNBAPlayerTables(teamId,playerTable):
         if result is None:
             # Row does not exist, safe to insert
             insert_query = f"""
-            INSERT INTO {playerTable} (firstName, lastName, displayName, position, teamId, playerId) 
-            VALUES (%s, %s, %s, %s, %s, %s);
+            INSERT INTO {playerTable} (firstName, lastName, displayName, position, teamId, playerId, href) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s);
             """
-            cursor.execute(insert_query, (firstName, lastName, displayName, position, teamId, playerId))
+            cursor.execute(insert_query, (firstName, lastName, displayName, position, teamId, playerId, href))
             conn.commit()
             print("Row inserted.")
         else: # Player exists, but info might have changed
             check_query = f"""
-            SELECT 1 FROM {playerTable} WHERE firstName = %s AND lastName = %s AND displayName = %s AND position = %s AND teamId = %s AND playerId = %s;
+            SELECT 1 FROM {playerTable} WHERE firstName = %s AND lastName = %s AND displayName = %s AND position = %s AND teamId = %s AND playerId = %s AND href = %s;
             """
-            cursor.execute(check_query, (firstName, lastName, displayName, position, teamId, playerId))
+            cursor.execute(check_query, (firstName, lastName, displayName, position, teamId, playerId, href))
             result = cursor.fetchone()
             if result is None:
                 # SQL query to delete the row
@@ -74,10 +77,10 @@ def configureNBAPlayerTables(teamId,playerTable):
                 cursor.execute(delete_query, (playerId))
                 # Row does not exist, safe to insert
                 insert_query = f"""
-                INSERT INTO {playerTable} (firstName, lastName, displayName, position, teamId, playerId) 
-                VALUES (%s, %s, %s, %s, %s, %s);
+                INSERT INTO {playerTable} (firstName, lastName, displayName, position, teamId, playerId, href) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s);
                 """
-                cursor.execute(insert_query, (firstName, lastName, displayName, position, teamId, playerId))
+                cursor.execute(insert_query, (firstName, lastName, displayName, position, teamId, playerId, href))
                 conn.commit()
                 print("Row changed.")
             print("Row already exists.")
@@ -125,7 +128,7 @@ def configureNBATables():
         else:
             print("Row already exists.")
         
-        #configureNBAPlayerTables(teamId,playerTable)
+        configureNBAPlayerTables(teamId,playerTable)
 
         
 
@@ -148,6 +151,9 @@ def configureNFLPlayerTables(teamId,playerTable):
         lastName    = athData['lastName']
         displayName = athData['displayName']
         position    = athData['position']['displayName']
+        if not 'headshot' in athData:
+            continue
+        href        = athData['headshot']['href']
         teamId      = teamId
         playerId    = athData['id']
         # Execute the check query
@@ -160,17 +166,17 @@ def configureNFLPlayerTables(teamId,playerTable):
         if result is None:
             # Row does not exist, safe to insert
             insert_query = f"""
-            INSERT INTO {playerTable} (firstName, lastName, displayName, position, teamId, playerId) 
-            VALUES (%s, %s, %s, %s, %s, %s);
+            INSERT INTO {playerTable} (firstName, lastName, displayName, position, teamId, playerId, href) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s);
             """
-            cursor.execute(insert_query, (firstName, lastName, displayName, position, teamId, playerId))
+            cursor.execute(insert_query, (firstName, lastName, displayName, position, teamId, playerId, href))
             conn.commit()
             print("Row inserted.")
         else: # Player exists, but info might have changed
             check_query = f"""
-            SELECT 1 FROM {playerTable} WHERE firstName = %s AND lastName = %s AND displayName = %s AND position = %s AND teamId = %s AND playerId = %s;
+            SELECT 1 FROM {playerTable} WHERE firstName = %s AND lastName = %s AND displayName = %s AND position = %s AND teamId = %s AND playerId = %s AND href = %s;
             """
-            cursor.execute(check_query, (firstName, lastName, displayName, position, teamId, playerId))
+            cursor.execute(check_query, (firstName, lastName, displayName, position, teamId, playerId, href))
             result = cursor.fetchone()
             if result is None:
                 # SQL query to delete the row
@@ -180,10 +186,10 @@ def configureNFLPlayerTables(teamId,playerTable):
                 cursor.execute(delete_query, (playerId))
                 # Row does not exist, safe to insert
                 insert_query = f"""
-                INSERT INTO {playerTable} (firstName, lastName, displayName, position, teamId, playerId) 
-                VALUES (%s, %s, %s, %s, %s, %s);
+                INSERT INTO {playerTable} (firstName, lastName, displayName, position, teamId, playerId, href) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s);
                 """
-                cursor.execute(insert_query, (firstName, lastName, displayName, position, teamId, playerId))
+                cursor.execute(insert_query, (firstName, lastName, displayName, position, teamId, playerId, href))
                 conn.commit()
                 print("Row changed.")
             print("Row already exists.")
@@ -232,7 +238,7 @@ def configureNFLTables():
         else:
             print("Row already exists.")
         
-        #configureNFLPlayerTables(teamId,playerTable)
+        configureNFLPlayerTables(teamId,playerTable)
 
         
 
@@ -240,7 +246,7 @@ def configureNFLTables():
 
 
 
-configureNBATables()
+#configureNBATables()
 configureNFLTables()
 
 cursor.close()

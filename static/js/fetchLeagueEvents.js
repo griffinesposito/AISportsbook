@@ -1,31 +1,11 @@
-let eventData = null;
-import { addCSSElements } from './main.js'; // Adjust the path as needed
+import { addCSSElements,removeCSSElements,showOutlineText,showText,addSearchBar } from './main.js'; // Adjust the path as needed
 
-export function fetchLeagueEvents(sport, league) {
-    // Calculate dates for one week ago and one week in the future
-    var interval = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
-    if (sport === 'football')
-    {
-        interval = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
-    }
-    else
-    {
-        interval = 3 * 24 * 60 * 60 * 1000; // One week in milliseconds
-    }
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set time to midnight
-    const intervalAgo = new Date(today.getTime() - interval);
-    const intervalFuture = new Date(today.getTime() + interval);
-  
-    // Format dates as 'YYYYMMDD'
-    function formatDate(date) {
-        return date.toISOString().split('T')[0].replace(/-/g, '');
-    }
-  
-    const dates = `${formatDate(intervalAgo)}-${formatDate(intervalFuture)}`;
-    console.log(dates);
+export function fetchLeagueEvents(league) {
+    removeCSSElements();
+    showOutlineText();
+    showText();
     // Construct the URL with query parameters
-    const url = `/sports/leagueevents?sport=${encodeURIComponent(sport)}&league=${encodeURIComponent(league)}&dates=${dates}`;
+    const url = `/sports/leagueevents?league=${encodeURIComponent(league)}`;
 
     // Fetch data from the server
     fetch(url)
@@ -35,4 +15,35 @@ export function fetchLeagueEvents(sport, league) {
             addCSSElements(data);
         })
         .catch(error => console.error('Error:', error));
+}
+
+function fetchSearchResults(query, league) {
+    removeCSSElements();
+    showOutlineText();
+    showText();
+    // Encode the parameters to ensure they are safely included in the URL
+    const params = new URLSearchParams({ query, league });
+
+    // Construct the full URL with query parameters
+    const url = `/search?${params.toString()}`;
+
+    // Use the fetch API to send the GET request
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                addSearchBar();
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Parse the JSON response body
+        })
+        .then(data => {
+            addSearchBar();
+            console.log('Search results:', data);
+            // Handle the data (e.g., update the UI)
+        })
+        .catch(error => {
+            addSearchBar();
+            console.error('There was a problem with the fetch operation:', error);
+            // Handle the error (e.g., show an error message)
+        });
 }

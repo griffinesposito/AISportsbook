@@ -1,6 +1,6 @@
 import psycopg2.pool
 import os
-from databaseOperations import create_player_table, create_team_table
+from databaseMaintenance import create_player_table, create_team_table
 import requests, json, pprint
 from asyncRequests import fetch_data
 from pprint import pprint

@@ -7,9 +7,10 @@ import json
 # It is included in your Replit environment automatically (no need to set it up)
 database_url = os.getenv('DATABASE_URL')
 pool = psycopg2.pool.SimpleConnectionPool(0, 80, database_url)
+valid_nfl_player_tables = ['nfl_ATL_players', 'nfl_BUF_players', 'nfl_CHI_players', 'nfl_CIN_players', 'nfl_CLE_players', 'nfl_DAL_players', 'nfl_DEN_players', 'nfl_DET_players', 'nfl_GB_players', 'nfl_TEN_players', 'nfl_IND_players', 'nfl_KC_players', 'nfl_LV_players', 'nfl_LAR_players', 'nfl_MIA_players', 'nfl_MIN_players', 'nfl_NE_players', 'nfl_NO_players', 'nfl_NYG_players', 'nfl_NYJ_players', 'nfl_PHI_players', 'nfl_ARI_players', 'nfl_PIT_players', 'nfl_LAC_players', 'nfl_SF_players', 'nfl_SEA_players', 'nfl_TB_players', 'nfl_WSH_players', 'nfl_CAR_players', 'nfl_JAX_players', 'nfl_BAL_players', 'nfl_HOU_players']
+valid_nba_player_tables = ['nba_ATL_players', 'nba_BOS_players', 'nba_NO_players', 'nba_CHI_players', 'nba_CLE_players', 'nba_DAL_players', 'nba_DEN_players', 'nba_DET_players', 'nba_GS_players', 'nba_HOU_players', 'nba_IND_players', 'nba_LAC_players', 'nba_LAL_players', 'nba_MIA_players', 'nba_MIL_players', 'nba_MIN_players', 'nba_BKN_players', 'nba_NY_players', 'nba_ORL_players', 'nba_PHI_players', 'nba_PHX_players', 'nba_POR_players', 'nba_SAC_players', 'nba_SA_players', 'nba_OKC_players', 'nba_UTAH_players', 'nba_WSH_players', 'nba_TOR_players', 'nba_MEM_players', 'nba_CHA_players']
 
-
-def search_display_name(table_names, search_string, db_params=None):
+def search_display_name(league, search_string, db_params=None):
     """
     Searches for rows in joined tables where the displayName contains the search string.
 
@@ -18,6 +19,10 @@ def search_display_name(table_names, search_string, db_params=None):
     :param search_string: The string to search for in the displayName column.
     :return: A list of tuples containing the rows that match the search criteria.
     """
+    if league.lower() == 'nfl':
+        table_names = valid_nfl_player_tables
+    elif league.lower() == 'nba':
+        table_names = valid_nba_player_tables
     # Connect to the database
     if db_params is None:
         # Get a connection from the pool
@@ -43,11 +48,31 @@ def search_display_name(table_names, search_string, db_params=None):
     # Fetch the results
     results = cursor.fetchall()
     
+     # Example conversion to a list of dictionaries (assuming you know the column names)
+    column_names = ["id", "firstName", "lastName", "displayName", "position","teamId","playerId","href"]
+    entries_list = [dict(zip(column_names, row)) for row in results]
+
+    # Convert the list of dictionaries to a JSON string
+    json_data = json.dumps(entries_list)
+
+    # If you need the JSON in a dictionary format (not as a string), use json.loads
+    json_dict = json.loads(json_data)
+    response = []
+    for playerDict in json_dict:
+        tableName = league + '_teams'
+        sql_query = f"SELECT * FROM {tableName} WHERE teamid = %s"
+        cursor.execute(sql_query, (playerDict['teamId'],))
+        # Fetch all rows that match the condition
+        row = cursor.fetchone()
+        teamAbbreviation = row[1]
+        playerDict["teamName"] = teamAbbreviation
+        response.append(playerDict)
+
+
     # Close the cursor and connection
     cursor.close()
     conn.close()
-    
-    return results
+    return response
 
 def get_team_player_tables(league,db_params=None):
     """

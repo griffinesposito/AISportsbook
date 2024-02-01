@@ -1,5 +1,5 @@
 import { fetchLeagueEvents } from './fetchLeagueEvents.js'; // Adjust the path as needed
-import { addTeamCards, showOutlineText, showText } from './main.js'; // Adjust the path as needed
+import { addTeamCards, addSearchBar, showOutlineText, showText } from './main.js'; // Adjust the path as needed
 function fetchTeams(league) {
     // Construct the URL with the query parameter for the league
     const url = new URL('/get_all_teams', window.location.origin);
@@ -29,25 +29,11 @@ function fetchTeams(league) {
 
 
 export function openLiveData(league) {
-    var i;
-    var x = document.getElementsByClassName("tab-content");
-    for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";  
-    }
-    //var liveDataBlock = document.getElementById(league + "-live");
-    //liveDataBlock.style.display = "block"; 
-    //const sport = liveDataBlock.dataset.sport;
-    fetchLeagueEvents('football',league.toLowerCase());
+    fetchLeagueEvents(league.toLowerCase());
 }
 
 export function openPlayersData(league) {
-    var i;
-    var x = document.getElementsByClassName("tab-content");
-    for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";  
-    }
-    //var liveDataBlock = document.getElementById(league + "-players");
-    //liveDataBlock.style.display = "block";  
+    addSearchBar(league) ;
 }
 
 export function openTeamsData(league) {

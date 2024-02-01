@@ -59,9 +59,39 @@ body, html {
 .search-box {
     background-color: rgba(10, 15, 32, 0.8); /* White background with 50% opacity */
     border-radius: 4px; /* Adjust the value for more or less rounding */
-    max-width: 800px; /* Maximum width of the paragraph block */
+    max-width: 300px; /* Maximum width of the paragraph block */
+    margin: 0px 0px; /* Space outside the box, only top, and bottom in this case */
     color: white; 
+    font-size: 24px;
+    font-weight: bold;
     border: 2px solid rgba(90, 127, 248, 0.8);
+    box-shadow: 0px 0px 20px rgba(90, 127, 248, 0.8); /* Horizontal offset, vertical offset, blur radius, color */
+}
+
+.search-bar-flex {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    overflow-x: scroll;
+    max-width: 1700px;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+}
+
+.search-button {
+    background-color: rgba(90, 127, 248, 0.8);
+    border-radius: 4px; /* Adjust the value for more or less rounding */
+    max-width: 300px; /* Maximum width of the paragraph block */
+    color: rgba(10, 15, 32, 0.8);
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0px 30px; /* Space outside the box, only top, and bottom in this case */
+    border: 2px solid rgba(216, 224, 250, 0.8);
+    box-shadow: 0px 0px 20px rgba(90, 127, 248, 0.8); /* Horizontal offset, vertical offset, blur radius, color */
+}
+.search-button:hover {
+    border-color: #4CAF50; /* Border color when hovered */
+    box-shadow: 0px 0px 20px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
 }
 
 .active-tab {

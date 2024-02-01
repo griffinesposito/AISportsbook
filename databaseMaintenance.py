@@ -24,7 +24,8 @@ def create_player_table(cursor,conn,tableName):
         displayName VARCHAR(255),
         position VARCHAR(255),
         teamId   VARCHAR(255),
-        playerId VARCHAR(255)
+        playerId VARCHAR(255),
+        href     VARCHAR(255)
         -- Add more columns as needed
     );
     """

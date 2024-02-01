@@ -129,25 +129,24 @@ def team_events():
 
 @app.route('/sports/leagueevents', methods=['GET'])
 def league_events():
-  #sport   = request.args.get('sport')
+  
   league = request.args.get('league')
-  #dates    = request.args.get('dates')
+  
   if league.lower() == 'nfl':
     result = current_nfl_events["data"]
   elif league.lower() == 'nba':
     result = current_nba_events["data"]
   elif league.lower() == 'mlb':
     result = current_mlb_events["data"]
-  #result = get_current_events(sport, league, dates)
+    
   return jsonify(result)
 
 
 @app.route('/search')
 def search():
     query = request.args.get('query')
-    player_tables = get_team_player_tables('nfl')
-    list = search_display_name(player_tables,query)
-    print(f"Search results: {list}")
+    league = request.args.get('league')
+    list = search_display_name(league,query)
     return jsonify(list)
 
 @app.route('/get_all_teams')

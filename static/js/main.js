@@ -68,7 +68,7 @@ var teamcellHeight = teamnewHeight / teamgridRows;
 // ------------------------ Constant definitions -----------------------------------
 // ---------------------------------------------------------------------------------
 const objects = [];
-const targets = { liveDataTargets: [], teamCardTargets: []};
+const targets = { liveDataTargets: [], teamCardTargets: [], searchBarTarget: []};
 const particlesData = [];
 const r = 800;
 const rHalf = r / 2;
@@ -521,6 +521,13 @@ function init() {
         }
     }
 
+    //Search bar target
+    const object = new THREE.Object3D();
+    object.position.x = 0;
+    object.position.y = 0;
+    object.position.z = -800;
+    targets.searchBarTarget.push( object );
+
     // Set outlineMaterialprogress
     outlineMaterial.uniforms.lightWaveProgress.value = 500;
     outlineMaterial.uniforms.darkWaveProgress.value  = 300;
@@ -865,6 +872,7 @@ export function addCSSElements(data) {
 
     transform( targets.liveDataTargets, 2000 );
     hideTextMesh();
+    hideOutlineTextMesh();
     animateCameraToOriginalPosition();
 
 }
@@ -983,3 +991,70 @@ export function addTeamCards(data) {
     animateCameraToOriginalPosition();
 }
 
+
+// ---------------------------------------------------------------------------------
+// ----------- ADD A Search Bar for players of a certain League --------------------
+// ---------------------------------------------------------------------------------
+export function addSearchBar(league) {
+    // table
+    removeCSSElements();
+
+    const newDiv = document.createElement( 'div' );
+    newDiv.className = 'search-bar-flex';
+    // Create the input element
+    
+    const input = document.createElement('input');
+    // Set the attributes
+    input.type = 'text';
+    input.id = 'searchBox';
+    input.placeholder = 'Search for Player...';
+    input.className = 'search-box';
+    input.setAttribute('data-league', 'nfl');
+    input.setAttribute('data-cat', 'teams');
+    // Assuming 'input' is your input element
+    input.addEventListener('keypress', function(event) {
+        // Check if the key pressed is 'Enter'
+        if (event.key === 'Enter') {
+            fetchSearchResults(input.value, league);
+            // Call the desired function or execute your callback code here
+            console.log('Enter key pressed!');
+            // Example callback function
+        }
+    });
+    
+    const button = document.createElement('button');
+    
+    // Set the text content of the button
+    button.textContent = 'Search';
+    
+    // Optionally, add a class or id to the button
+    button.className = 'search-button'; // Add a class
+    
+    // Add an event listener for the click event
+    button.addEventListener('click', function() {
+        fetchSearchResults(input.value, league);
+        console.log('Button was clicked!');
+    });
+    
+
+    
+    newDiv.appendChild(button);
+    newDiv.appendChild(input);
+
+    disableControlsOnHover(newDiv);
+    const searchBarObjectCSS = new CSS3DObject( newDiv );
+    searchBarObjectCSS.position.x = 0;
+    searchBarObjectCSS.position.y = 250;
+    searchBarObjectCSS.rotation.x = -2*3.14159;
+    searchBarObjectCSS.position.z = 500;
+
+
+    scene.add( searchBarObjectCSS );
+
+
+    objects.push( searchBarObjectCSS );
+    transform( targets.searchBarTarget , 2000 );
+    hideTextMesh();
+    hideOutlineTextMesh();
+    animateCameraToOriginalPosition();
+}
