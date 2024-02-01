@@ -1092,7 +1092,6 @@ export function addPlayerCards(data) {
     // table
     removeCSSElements();
     addSearchBar();
-    transform( targets.searchBarTarget , 2000 );
     for (let i = 0; i < data.length; i ++ ) {
         var playerData = data[i];
         var teamName    = playerData.teamName;
@@ -1170,7 +1169,7 @@ export function addPlayerCards(data) {
 
         objects.push( playerCardObjectCSS );
     }
-    transform( targets.playerCardTargets , 2000, objects.slice(1) );
+    transform( targets.searchBarTarget.concat(targets.playerCardTargets) , 2000, objects);
     hideTextMesh();
     hideOutlineTextMesh();
     animateCameraToOriginalPosition();
