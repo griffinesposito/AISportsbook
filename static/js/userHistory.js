@@ -66,10 +66,11 @@ export function replayAndRemoveNextCall() {
     const funcToCall = functionMap[nextCall.functionName];
 
     if (funcToCall) {
+        recordCall(curCall.functionName,curCall.args);
         // Call the function with the original arguments
         funcToCall(...nextCall.args);
     } else {
         console.error(`Function ${nextCall.functionName} not found.`);
     }
-    recordCall(curCall.functionName,curCall.args);
+    
 }
