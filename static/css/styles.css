@@ -62,8 +62,12 @@ body, html {
     height: 50px; /* Set the height of the button */
     cursor: pointer;
   }
+.return-button-image:hover {
+    border-color: #4CAF50; /* Border color when hovered */
+    box-shadow: 0px 0px 20px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
+}
 
-  .forward-button-image {
+.forward-button-image {
     background-image: url('/static/images/forward-button.png');
     background-repeat: no-repeat;
     background-position: center;
@@ -73,7 +77,11 @@ body, html {
     width: 50px; /* Set the width of the button */
     height: 50px; /* Set the height of the button */
     cursor: pointer;
-  }
+}
+.forward-button-image:hover {
+    border-color: #4CAF50; /* Border color when hovered */
+    box-shadow: 0px 0px 20px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
+}
 
 .tab-button:hover {
     background-color: #ddd;
