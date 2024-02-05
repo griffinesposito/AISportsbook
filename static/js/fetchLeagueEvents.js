@@ -1,16 +1,26 @@
 import { addCSSElements, addPlayerCards, removeCSSElements,showOutlineText,showText,addSearchBar } from './main.js'; // Adjust the path as needed
 // Define an array to hold the history of function calls
 const callHistory = [];
-
+const callFuture  = [];
 
 // Function to record a call
-function recordCall(functionName, args) {
+export function recordCall(functionName, args) {
     callHistory.push({ functionName, args: Array.from(args) });
+}
+
+// Function to record a call
+export function recordFuture(functionName, args) {
+    callFuture.push({ functionName, args: Array.from(args) });
 }
 
 // Exported function to get the call history
 export function getCallHistory() {
     return callHistory;
+}
+
+// Exported function to get the call history
+export function getCallFuture() {
+    return callFuture;
 }
 
 
