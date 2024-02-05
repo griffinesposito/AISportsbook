@@ -5,12 +5,12 @@ const callFuture  = [];
 
 // Function to record a call
 export function recordCall(functionName, args) {
-    callHistory.push({ functionName, args: Array.from(args) });
+    callHistory.push({ functionName: functionName, args: Array.from(args) });
 }
 
 // Function to record a call
 export function recordFuture(functionName, args) {
-    callFuture.push({ functionName, args: Array.from(args) });
+    callFuture.push({ functionName: functionName, args: Array.from(args) });
 }
 
 // Exported function to get the call history

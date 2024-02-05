@@ -1,6 +1,7 @@
 import { openLiveData, openTeamsData, openPlayersData } from './openTabs.js';
 import { addCurrentEventsContent, toggleContent, formatHumanReadableDate } from './addCurrentEventsContent.js';
 import { wrappedFetchSearchResults } from './fetchLeagueEvents.js';
+import { replayAndRemoveLastCall, replayAndRemoveNextCall } from './userHistory.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('[data-action="openLiveDataNFL"]').addEventListener('click', () => openLiveData('NFL'));
@@ -12,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('[data-action="openLiveDataMLB"]').addEventListener('click', () => openLiveData('MLB'));
     document.querySelector('[data-action="openTeamsDataMLB"]').addEventListener('click', () => openTeamsData('MLB'));
     document.querySelector('[data-action="openPlayersDataMLB"]').addEventListener('click', () => openPlayersData('MLB'));
+    document.querySelector('[data-action="executeCallHistory"]').addEventListener('click', () => replayAndRemoveLastCall());
+    document.querySelector('[data-action="executeCallFuture"]').addEventListener('click', () => replayAndRemoveNextCall());
 });
 
 
