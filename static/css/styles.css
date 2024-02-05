@@ -56,9 +56,10 @@ body, html {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+    background-color: transparent;
     border: none;
     width: 50px; /* Set the width of the button */
-    height: auto; /* Set the height of the button */
+    height: 50px; /* Set the height of the button */
     cursor: pointer;
   }
 
@@ -67,9 +68,10 @@ body, html {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+    background-color: transparent;
     border: none;
     width: 50px; /* Set the width of the button */
-    height: auto; /* Set the height of the button */
+    height: 50px; /* Set the height of the button */
     cursor: pointer;
   }
 
