@@ -1,4 +1,4 @@
-import { addCSSElements, addPlayerCards, removeCSSElements,showOutlineText,showText,addSearchBar } from './main.js'; // Adjust the path as needed
+import { addCSSElements, addPlayerCards, addTeamCards, removeCSSElements, showOutlineText, showText, addSearchBar } from './main.js'; // Adjust the path as needed
 import { getCallFuture, getCallHistory, recordCall, recordFuture } from './userHistory.js'
 
 function fetchLeagueEvents(league) {
@@ -61,6 +61,9 @@ export function wrappedFetchSearchResults(...args) {
 
 
 function fetchTeams(league) {
+    removeCSSElements();
+    showOutlineText();
+    showText();
     // Construct the URL with the query parameter for the league
     const url = new URL('/get_all_teams', window.location.origin);
     url.searchParams.append('league', league);
@@ -78,7 +81,7 @@ function fetchTeams(league) {
     .then(data => {
         // Here you have your data which is the team_dict from Flask
         console.log(data);
-        return data; // This is the team_dict
+        addTeamCards(data);
     })
     .catch(error => {
         // Handle any errors

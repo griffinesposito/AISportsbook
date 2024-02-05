@@ -51,6 +51,28 @@ body, html {
     text-decoration: none; /* If you choose to use <a> tags instead of <button> */
 }
 
+.return-button-image {
+    background-image: url('/static/images/return-button.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    width: 50px; /* Set the width of the button */
+    height: auto; /* Set the height of the button */
+    cursor: pointer;
+  }
+
+  .forward-button-image {
+    background-image: url('/static/images/forward-button.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    width: 50px; /* Set the width of the button */
+    height: auto; /* Set the height of the button */
+    cursor: pointer;
+  }
+
 .tab-button:hover {
     background-color: #ddd;
     color: black;

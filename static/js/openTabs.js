@@ -9,17 +9,10 @@ export function openLiveData(league) {
 }
 
 export function openPlayersData(league) {
-    addSearchBar(league) ;
+    addSearchBar(league);
 }
 
 export function openTeamsData(league) {
-    // Example usage:
-    showOutlineText();
-    showText();
     // Call this function with the desired league as a string
-    wrappedFetchTeams(league).then(teamDict => {
-        // Do something with the teamDict here
-        console.log(teamDict);
-        addTeamCards(teamDict);
-    });
+    wrappedFetchTeams(league);
 }
