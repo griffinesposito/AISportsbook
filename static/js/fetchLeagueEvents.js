@@ -1,6 +1,21 @@
 import { addCSSElements, addPlayerCards, removeCSSElements,showOutlineText,showText,addSearchBar } from './main.js'; // Adjust the path as needed
+// Define an array to hold the history of function calls
+const callHistory = [];
 
-export function fetchLeagueEvents(league) {
+
+// Function to record a call
+function recordCall(functionName, args) {
+    callHistory.push({ functionName, args: Array.from(args) });
+}
+
+// Exported function to get the call history
+export function getCallHistory() {
+    return callHistory;
+}
+
+
+function fetchLeagueEvents(league) {
+    recordCall('fetchLeagueEvents', args);
     removeCSSElements();
     showOutlineText();
     showText();
@@ -16,8 +31,13 @@ export function fetchLeagueEvents(league) {
         })
         .catch(error => console.error('Error:', error));
 }
+// Wrapper function
+export function wrappedFetchLeagueEvents(...args) {
+    recordCall('wrappedFetchLeagueEvents', args);
+    return fetchLeagueEvents(...args);
+}
 
-export function fetchSearchResults(query, league) {
+function fetchSearchResults(query, league) {
     removeCSSElements();
     showOutlineText();
     showText();
@@ -31,7 +51,7 @@ export function fetchSearchResults(query, league) {
     fetch(url)
         .then(response => {
             if (!response.ok) {
-                addSearchBar();
+                addSearchBar(league);
                 throw new Error('Network response was not ok');
             }
             return response.json(); // Parse the JSON response body
@@ -42,8 +62,45 @@ export function fetchSearchResults(query, league) {
             // Handle the data (e.g., update the UI)
         })
         .catch(error => {
-            addSearchBar();
+            addSearchBar(league);
             console.error('There was a problem with the fetch operation:', error);
             // Handle the error (e.g., show an error message)
         });
+}
+// Wrapper function
+export function wrappedFetchSearchResults(...args) {
+    recordCall('wrappedFetchSearchResults', args);
+    return fetchSearchResults(...args);
+}
+
+
+function fetchTeams(league) {
+    // Construct the URL with the query parameter for the league
+    const url = new URL('/get_all_teams', window.location.origin);
+    url.searchParams.append('league', league);
+  
+    // Return the fetch promise
+    return fetch(url)
+    .then(response => {
+        // Check if the request was successful
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        // Parse the JSON in the response
+        return response.json();
+    })
+    .then(data => {
+        // Here you have your data which is the team_dict from Flask
+        console.log(data);
+        return data; // This is the team_dict
+    })
+    .catch(error => {
+        // Handle any errors
+        console.error('There has been a problem with your fetch operation:', error);
+    });
+}
+// Wrapper function
+export function wrappedFetchTeams(...args) {
+    recordCall('wrappedFetchTeams', args);
+    return fetchTeams(...args);
 }

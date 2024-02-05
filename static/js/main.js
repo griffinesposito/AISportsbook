@@ -1,6 +1,6 @@
 import { openLiveData, openTeamsData, openPlayersData } from './openTabs.js';
 import { addCurrentEventsContent, toggleContent, formatHumanReadableDate } from './addCurrentEventsContent.js';
-import { fetchSearchResults } from './fetchLeagueEvents.js';
+import { wrappedFetchSearchResults } from './fetchLeagueEvents.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('[data-action="openLiveDataNFL"]').addEventListener('click', () => openLiveData('NFL'));
@@ -1041,7 +1041,7 @@ export function addSearchBar(league) {
     input.addEventListener('keypress', function(event) {
         // Check if the key pressed is 'Enter'
         if (event.key === 'Enter') {
-            fetchSearchResults(input.value, league);
+            wrappedFetchSearchResults(input.value, league);
             // Call the desired function or execute your callback code here
             console.log('Enter key pressed!');
             // Example callback function
@@ -1058,7 +1058,7 @@ export function addSearchBar(league) {
     
     // Add an event listener for the click event
     button.addEventListener('click', function() {
-        fetchSearchResults(input.value, league);
+        wrappedFetchSearchResults(input.value, league);
         console.log('Button was clicked!');
     });
     
