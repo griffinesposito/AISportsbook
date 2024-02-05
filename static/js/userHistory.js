@@ -43,6 +43,7 @@ export function replayAndRemoveLastCall() {
     if (funcToCall) {
         // Call the function with the original arguments
         funcToCall(...lastCall.args);
+        console.log("Call History", callHistory);
     } else {
         console.error(`Function ${lastCall.functionName} not found.`);
     }
