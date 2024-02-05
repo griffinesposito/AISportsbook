@@ -24,7 +24,7 @@ export function getCallFuture() {
 }
 
 
-function fetchLeagueEvents(league) {\
+function fetchLeagueEvents(league) {
     removeCSSElements();
     showOutlineText();
     showText();
