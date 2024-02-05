@@ -1,13 +1,34 @@
-import { wrappedFetchLeagueEvents, wrappedFetchTeams, wrappedFetchSearchResults, getCallFuture, getCallHistory, recordCall, recordFuture } from './fetchLeagueEvents.js';
+import { wrappedFetchLeagueEvents, wrappedFetchTeams, wrappedFetchSearchResults } from './fetchLeagueEvents.js';
 // Assume this map exists and maps string identifiers to actual function references
 const functionMap = {
     wrappedFetchLeagueEvents  : wrappedFetchLeagueEvents, 
     wrappedFetchTeams         : wrappedFetchTeams, 
     wrappedFetchSearchResults : wrappedFetchSearchResults, 
 };
+// Define an array to hold the history of function calls
+const callHistory = [];
+const callFuture  = [];
 
+// Function to record a call
+export function recordCall(functionName, args) {
+    callHistory.push({ functionName: functionName, args: Array.from(args) });
+}
+
+// Function to record a call
+export function recordFuture(functionName, args) {
+    callFuture.push({ functionName: functionName, args: Array.from(args) });
+}
+
+// Exported function to get the call history
+export function getCallHistory() {
+    return callHistory;
+}
+
+// Exported function to get the call history
+export function getCallFuture() {
+    return callFuture;
+}
 export function replayAndRemoveLastCall() {
-    const callHistory = getCallHistory();
     if (callHistory.length === 0) {
         console.log("No calls in history to replay.");
         return;
@@ -29,7 +50,6 @@ export function replayAndRemoveLastCall() {
 }
 
 export function replayAndRemoveNextCall() {
-    const callFuture = getCallFuture();
     if (callFuture.length === 0) {
         console.log("No calls in history to replay.");
         return;
