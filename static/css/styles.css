@@ -60,11 +60,13 @@ body, html {
     border: none;
     width: 50px; /* Set the width of the button */
     height: 50px; /* Set the height of the button */
+    border-radius: 30px;
     cursor: pointer;
   }
 .return-button-image:hover {
     border-color: #4CAF50; /* Border color when hovered */
-    box-shadow: 0px 0px 20px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
+    box-shadow: 0px 0px 15px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
+    background-color: rgba(76, 175, 80, 0.5);
 }
 
 .forward-button-image {
@@ -76,8 +78,15 @@ body, html {
     border: none;
     width: 50px; /* Set the width of the button */
     height: 50px; /* Set the height of the button */
+    border-radius: 30px;
     cursor: pointer;
 }
+.forward-button-image:hover {
+    border-color: #4CAF50; /* Border color when hovered */
+    box-shadow: 0px 0px 15px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
+    background-color: rgba(76, 175, 80, 0.5);
+}
+
 .forward-button-image:hover {
     border-color: #4CAF50; /* Border color when hovered */
     box-shadow: 0px 0px 20px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
