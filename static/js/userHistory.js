@@ -35,7 +35,8 @@ export function replayAndRemoveLastCall() {
     }
 
     // Retrieve the last call
-    const lastCall = callHistory.pop(); // This removes the last element from the array
+    const curCall   = callHistory.pop(); // This removes the last element from the array
+    const lastCall  = callHistory.pop(); // This removes the last element from the array
 
     // Get the function reference from the functionMap
     const funcToCall = functionMap[lastCall.functionName];
@@ -47,7 +48,7 @@ export function replayAndRemoveLastCall() {
     } else {
         console.error(`Function ${lastCall.functionName} not found.`);
     }
-    recordFuture(lastCall.functionName,lastCall.args);
+    recordFuture(curCall.functionName,curCall.args);
 }
 
 export function replayAndRemoveNextCall() {
@@ -68,5 +69,4 @@ export function replayAndRemoveNextCall() {
     } else {
         console.error(`Function ${nextCall.functionName} not found.`);
     }
-    recordCall(nextCall.functionName,nextCall.args);
 }
