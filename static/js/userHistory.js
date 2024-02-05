@@ -48,8 +48,8 @@ export function replayAndRemoveLastCall() {
     } else {
         console.error(`Function ${lastCall.functionName} not found.`);
     }
-    recordFuture(lastCall.functionName,lastCall.args);
     recordFuture(curCall.functionName,curCall.args);
+    recordFuture(lastCall.functionName,lastCall.args);
 }
 
 export function replayAndRemoveNextCall() {
