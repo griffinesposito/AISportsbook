@@ -115,10 +115,8 @@ def get_all_teams(league,db_params=None):
     if db_params is None:
         # Get a connection from the pool
         conn = pool.getconn()
-        cursor = conn.cursor()
     else:
         conn = psycopg2.connect(**db_params)
-        cursor = conn.cursor()
 
     # Create a cursor object
     cur = conn.cursor()
@@ -146,7 +144,36 @@ def get_all_teams(league,db_params=None):
 
     return json_dict
 
+def get_players(league, team, db_params=None):
+    tableName = league.lower() + '_' + team.upper() + '_players'
+    # Connect to the database
+    if db_params is None:
+        # Get a connection from the pool
+        conn = pool.getconn()
+    else:
+        conn = psycopg2.connect(**db_params)
 
+    cur = conn.cursor()
+
+    # SQL query to select all rows from the table
+    cur.execute(f"SELECT * FROM {tableName}")
+
+    # Fetch all rows from the cursor
+    rows = cur.fetchall()
+    column_names = ["id", "firstName", "lastName", "displayName", "position", "teamId", "playerId", "href"]
+    
+    # Convert the rows to a list of dictionaries
+    entries_list = [dict(zip(column_names, row)) for row in rows]
+    
+    # Convert the list of dictionaries to a single dictionary with playerId's as keys
+    players_dict = {entry['playerId']: entry for entry in entries_list}
+    
+    # Close the cursor and connection
+    cur.close()
+    conn.close()
+
+    return players_dict
+    
 def get_player_data(league, team, playerId, db_params=None, conn=None, cursor=None):
     tableName = league.lower() + '_' + team.upper() + '_players'
     # Connect to the database
@@ -178,27 +205,22 @@ def get_player_data(league, team, playerId, db_params=None, conn=None, cursor=No
     return json_dict
 
 def convertLeadersDict(leadersDict,competitorsDict, db_params=None):
-    if db_params is None:
-        # Get a connection from the pool
-        conn = pool.getconn()
-        cursor = conn.cursor()
-    else:
-        conn = psycopg2.connect(**db_params)
-        cursor = conn.cursor()
-
+    players_dict = dict()
+    league = extract_league(leadersDict['categories'][0]['leaders'][0]['team']['$ref'])
+    for teamId, team in competitorsDict.items():
+        players_dict[teamId] = get_players(league=league,team=team,db_params=db_params)
     for category in leadersDict['categories']:
         for leader in category['leaders']:
             athleteId = extract_athlete_id(leader['athlete']['$ref'])
             teamId    = extract_team_id(leader['team']['$ref'])
-            league    = extract_league(leader['team']['$ref'])
             teamName  = competitorsDict[teamId]
-            playerData= get_player_data(league, teamName, athleteId, conn=conn, cursor=cursor)
-            leader['playerName']    = playerData[0]['displayName']
-            leader['position']      = playerData[0]['position']
-            leader['playerHref']    = playerData[0]['href']
+            playerData = players_dict[teamId][athleteId]
+            leader['playerName']    = playerData['displayName']
+            leader['position']      = playerData['position']
+            leader['playerHref']    = playerData['href']
             leader['teamName']      = teamName
   
-    cursor.close()
-    conn.close()
+    #cursor.close()
+    #conn.close()
     
 
