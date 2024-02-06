@@ -1,7 +1,7 @@
 # Import the libraries we need
 from flask import Flask, request, send_from_directory, jsonify, render_template
 from oddsApi import get_in_season_sports, get_sports_odds, get_event_odds, get_sport_scores
-from espnApi import get_team_data, get_team_record, get_team_injuries, get_team_events, get_current_events
+from espnApi import get_team_data, get_team_record, get_team_injuries, get_team_events, get_current_events, get_detailed_event_data
 from pythonUtils import get_time_range_str
 from flask_socketio import SocketIO
 import threading
@@ -133,12 +133,20 @@ def league_events():
   league = request.args.get('league')
   
   if league.lower() == 'nfl':
-    result = current_nfl_events["data"]
+    result = current_nfl_events
   elif league.lower() == 'nba':
-    result = current_nba_events["data"]
+    result = current_nba_events
   elif league.lower() == 'mlb':
-    result = current_mlb_events["data"]
+    result = current_mlb_events
     
+  return jsonify(result)
+
+@app.route('/sports/detailedevent', methods=['GET'])
+def detailed_event():
+  league  = request.args.get('league')
+  sport   = request.args.get('sport')
+  eventId = request.args.get('eventId')
+  result = get_detailed_event_data(sport, league, eventId)
   return jsonify(result)
 
 

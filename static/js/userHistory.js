@@ -1,9 +1,10 @@
-import { wrappedFetchLeagueEvents, wrappedFetchTeams, wrappedFetchSearchResults } from './fetchLeagueEvents.js';
+import { wrappedFetchLeagueEvents, wrappedFetchTeams, wrappedFetchSearchResults, wrappedFetchDetailedEventData } from './fetchLeagueEvents.js';
 // Assume this map exists and maps string identifiers to actual function references
 const functionMap = {
     wrappedFetchLeagueEvents  : wrappedFetchLeagueEvents, 
     wrappedFetchTeams         : wrappedFetchTeams, 
     wrappedFetchSearchResults : wrappedFetchSearchResults, 
+    wrappedFetchDetailedEventData : wrappedFetchDetailedEventData
 };
 // Define an array to hold the history of function calls
 const callHistory = [];

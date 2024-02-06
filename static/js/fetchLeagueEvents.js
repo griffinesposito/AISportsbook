@@ -1,4 +1,4 @@
-import { addCSSElements, addPlayerCards, addTeamCards, removeCSSElements, showOutlineText, showText, addSearchBar } from './main.js'; // Adjust the path as needed
+import { addCSSElements, addDetailedEventData, addPlayerCards, addTeamCards, removeCSSElements, showOutlineText, showText, addSearchBar } from './main.js'; // Adjust the path as needed
 import { getCallFuture, getCallHistory, recordCall, recordFuture } from './userHistory.js'
 
 function fetchLeagueEvents(league) {
@@ -13,7 +13,7 @@ function fetchLeagueEvents(league) {
         .then(response => response.json())
         .then(data => {
             console.log('Data:', data);
-            addCSSElements(data);
+            addCSSElements(data.data,data.sport,data.league);
         })
         .catch(error => console.error('Error:', error));
 }
@@ -92,4 +92,26 @@ function fetchTeams(league) {
 export function wrappedFetchTeams(...args) {
     recordCall('wrappedFetchTeams', args);
     return fetchTeams(...args);
+}
+
+function fetchDetailedEventData(sport, league, eventId) {
+    removeCSSElements();
+    showOutlineText();
+    showText();
+    // Construct the URL with query parameters
+    const url = `/sports/detailedevent?sport=${encodeURIComponent(sport)}league=${encodeURIComponent(league)}&eventId=${encodeURIComponent(eventId)}`;
+
+    // Fetch data from the server
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Data:', data);
+            //addDetailedEventData(data.data,data.sport,data.league);
+        })
+        .catch(error => console.error('Error:', error));
+}
+// Wrapper function
+export function wrappedFetchDetailedEventData(...args) {
+    recordCall('wrappedFetchDetailedEventData', args);
+    return fetchDetailedEventData(...args);
 }
