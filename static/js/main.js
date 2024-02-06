@@ -858,7 +858,7 @@ export function addCSSElements(data, sport, league) {
                 const eventId   = newDiv.getAttribute('data-event');
                 const sport     = newDiv.getAttribute('data-sport');
                 const league    = newDiv.getAttribute('data-league');
-                wrappedFetchDetailedEventData(eventId,sport,league);
+                wrappedFetchDetailedEventData(sport,league, eventId);
                 // Example: Hide loader after 3 seconds (replace this with your actual logic)
                 // setTimeout(hideLoader, 3000);
             });

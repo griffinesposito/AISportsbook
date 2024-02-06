@@ -99,7 +99,7 @@ function fetchDetailedEventData(sport, league, eventId) {
     showOutlineText();
     showText();
     // Construct the URL with query parameters
-    const url = `/sports/detailedevent?sport=${encodeURIComponent(sport)}league=${encodeURIComponent(league)}&eventId=${encodeURIComponent(eventId)}`;
+    const url = `/sports/detailedevent?sport=${encodeURIComponent(sport)}&league=${encodeURIComponent(league)}&eventId=${encodeURIComponent(eventId)}`;
 
     // Fetch data from the server
     fetch(url)
