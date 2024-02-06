@@ -214,11 +214,12 @@ def convertLeadersDict(leadersDict,competitorsDict, db_params=None):
             athleteId = extract_athlete_id(leader['athlete']['$ref'])
             teamId    = extract_team_id(leader['team']['$ref'])
             teamName  = competitorsDict[teamId]
-            playerData = players_dict[teamId][athleteId]
-            leader['playerName']    = playerData['displayName']
-            leader['position']      = playerData['position']
-            leader['playerHref']    = playerData['href']
-            leader['teamName']      = teamName
+            if athleteId in players_dict[teamId]:
+                playerData = players_dict[teamId][athleteId]
+                leader['playerName']    = playerData['displayName']
+                leader['position']      = playerData['position']
+                leader['playerHref']    = playerData['href']
+                leader['teamName']      = teamName
   
     #cursor.close()
     #conn.close()

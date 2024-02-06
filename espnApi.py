@@ -344,17 +344,27 @@ def get_detailed_event_data(sport, league, eventId, playRef=None, db_params=None
 
     add_data = fetch_data(add_links)
     competitorsDict = dict()
+    add_links[event['id']] = []
     for dat in add_data:
         event_id = dat['id-request']
         key_id   = dat['key-request']
         if 'teamdata' in key_id:
             data['event'][key_id] = dat['logos'][0]['href']
             competitorsDict[dat['id']] = dat['abbreviation']
+            add_links[event['id']].append((key_id[:-4] + 'leaders',dat['leaders']['$ref']))
         elif 'details' in key_id:
             dat['newLink'] = dat['$ref'] + f'&limit=1&page={dat["pageCount"]}'
             data['event'][key_id] = dat
         else:
             data['event'][key_id] = dat
+
+    if 'hometeamleaders' not in data['event'] or 'awayteamleaders' not in data['event']:
+        add_data = fetch_data(add_links)
+        for dat in add_data:
+            key_id   = dat['key-request']
+            data['event'][key_id] = dat
+
+
 
     if 'gameleaders' in data['event']:
         # convert gameleaders to include more athlete info

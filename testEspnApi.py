@@ -9,7 +9,7 @@ year = '2023'
 team = 'KC'
 dates = get_time_range_str(0)
 dates = '20240123-20240129'
-eventId = '401585301'
+eventId = '401585349'
 db_params = {
     'dbname': "neondb",
     'user': "neon",
