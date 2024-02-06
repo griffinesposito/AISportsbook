@@ -1,6 +1,6 @@
 import { openLiveData, openTeamsData, openPlayersData } from './openTabs.js';
 import { addCurrentEventsContent, toggleContent, formatHumanReadableDate } from './addCurrentEventsContent.js';
-import { wrappedFetchSearchResults } from './fetchLeagueEvents.js';
+import { wrappedFetchSearchResults, wrappedFetchDetailedEventData } from './fetchLeagueEvents.js';
 import { replayAndRemoveLastCall, replayAndRemoveNextCall } from './userHistory.js';
 
 document.addEventListener('DOMContentLoaded', () => {
