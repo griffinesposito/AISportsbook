@@ -1,6 +1,6 @@
 import requests, json, pprint
 from asyncRequests import fetch_data
-
+from databaseOperations import convertLeadersDict
 base_url    = "https://sports.core.api.espn.com/v2/sports"
 max_events  = 25
 football_stats_to_include = ['fumblesLost','fumblesForced',
@@ -274,7 +274,7 @@ def get_current_events(sport, league, dates):
             data['events'][event_id][key_id] = dat
     return data
 
-def get_detailed_event_data(sport, league, eventId, playRef=None):
+def get_detailed_event_data(sport, league, eventId, playRef=None, db_params=None):
     endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/events/{eventId}?lang=en&region=us"
     response = requests.get(endpoint,params={})
     if response.status_code != 200:
@@ -343,15 +343,28 @@ def get_detailed_event_data(sport, league, eventId, playRef=None):
     data['event'] = event_dict
 
     add_data = fetch_data(add_links)
+    competitorsDict = dict()
     for dat in add_data:
         event_id = dat['id-request']
         key_id   = dat['key-request']
         if 'teamdata' in key_id:
             data['event'][key_id] = dat['logos'][0]['href']
+            competitorsDict[dat['id']] = dat['abbreviation']
         elif 'details' in key_id:
             dat['newLink'] = dat['$ref'] + f'&limit=1&page={dat["pageCount"]}'
             data['event'][key_id] = dat
         else:
             data['event'][key_id] = dat
+
+    if 'gameleaders' in data['event']:
+        # convert gameleaders to include more athlete info
+        convertLeadersDict(data['event']['gameleaders'],competitorsDict,db_params)
+    if 'hometeamleaders' in data['event']:
+        # convert hometeamleaders to include more athlete info
+        convertLeadersDict(data['event']['hometeamleaders'],competitorsDict,db_params)
+    if 'awayteamleaders' in data['event']:
+        # convert hometeamleaders to include more athlete info
+        convertLeadersDict(data['event']['awayteamleaders'],competitorsDict,db_params)
+
     return data
 

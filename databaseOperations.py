@@ -2,6 +2,7 @@
 import psycopg2.pool
 import os
 import json
+from regExpressions import extract_athlete_id, extract_league, extract_team_id
 # Create a connection pool with a min_size of 0 and a max_size of 80
 # Use the `DATABASE_URL` environment variable we provide to connect to the Database
 # It is included in your Replit environment automatically (no need to set it up)
@@ -144,3 +145,60 @@ def get_all_teams(league,db_params=None):
     conn.close()
 
     return json_dict
+
+
+def get_player_data(league, team, playerId, db_params=None, conn=None, cursor=None):
+    tableName = league.lower() + '_' + team.upper() + '_players'
+    # Connect to the database
+    closeConnection = False
+    if db_params is None and conn is None and cursor is None:
+        # Get a connection from the pool
+        conn = pool.getconn()
+        cursor = conn.cursor()
+        closeConnection = True
+    elif conn is None and cursor is None:
+        conn = psycopg2.connect(**db_params)
+        cursor = conn.cursor()
+        closeConnection = True
+
+    sql_query = f"SELECT * FROM {tableName} WHERE playerId = %s"
+    # SQL query to select all rows from the table
+    cursor.execute(sql_query, (playerId,))
+    player = cursor.fetchall()
+    column_names = ["id", "firstName", "lastName", "displayName", "position","teamId","playerId","href"]
+    entries_list = [dict(zip(column_names, row)) for row in player]
+
+    # Convert the list of dictionaries to a JSON string
+    json_data = json.dumps(entries_list)
+    json_dict = json.loads(json_data)
+
+    if closeConnection:
+        cursor.close()
+        conn.close()
+    return json_dict
+
+def convertLeadersDict(leadersDict,competitorsDict, db_params=None):
+    if db_params is None:
+        # Get a connection from the pool
+        conn = pool.getconn()
+        cursor = conn.cursor()
+    else:
+        conn = psycopg2.connect(**db_params)
+        cursor = conn.cursor()
+
+    for category in leadersDict['categories']:
+        for leader in category['leaders']:
+            athleteId = extract_athlete_id(leader['athlete']['$ref'])
+            teamId    = extract_team_id(leader['team']['$ref'])
+            league    = extract_league(leader['team']['$ref'])
+            teamName  = competitorsDict[teamId]
+            playerData= get_player_data(league, teamName, athleteId, conn=conn, cursor=cursor)
+            leader['playerName']    = playerData[0]['displayName']
+            leader['position']      = playerData[0]['position']
+            leader['playerHref']    = playerData[0]['href']
+            leader['teamName']      = teamName
+  
+    cursor.close()
+    conn.close()
+    
+
