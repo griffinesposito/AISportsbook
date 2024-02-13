@@ -72,7 +72,11 @@ def search_display_name(league, search_string, db_params=None):
 
     # Close the cursor and connection
     cursor.close()
-    conn.close()
+    if db_params is None:
+        # Get a connection from the pool
+        pool.putconn(conn)
+    else:
+        conn.close()
     return response
 
 def get_team_player_tables(league,db_params=None):
@@ -104,7 +108,11 @@ def get_team_player_tables(league,db_params=None):
 
     # Close the cursor and connection
     cursor.close()
-    conn.close()
+    if db_params is None:
+        # Get a connection from the pool
+        pool.putconn(conn)
+    else:
+        conn.close()
 
     return modified_team_names
 
@@ -140,7 +148,11 @@ def get_all_teams(league,db_params=None):
 
     # Close the cursor and connection
     cur.close()
-    conn.close()
+    if db_params is None:
+        # Get a connection from the pool
+        pool.putconn(conn)
+    else:
+        conn.close()
 
     return json_dict
 
@@ -170,7 +182,12 @@ def get_players(league, team, db_params=None):
     
     # Close the cursor and connection
     cur.close()
-    conn.close()
+
+    if db_params is None:
+        # Get a connection from the pool
+        pool.putconn(conn)
+    else:
+        conn.close()
 
     return players_dict
     
