@@ -174,7 +174,6 @@ export function addCurrentEventsContent(eventObject,eventId,container) {
                 <td><img src="${imageSrcHomeTeam}" alt="Image Home" class="game-image"></td>
             </tr>
         </table>
-        <div class="hidden-content" style="display: block;"></div>
             
     `;
 
@@ -184,6 +183,10 @@ export function addCurrentEventsContent(eventObject,eventId,container) {
 
 export function addRecentPlayContent(eventObject,eventId,container) {
     // Define image source variables
+    if (eventObject.details === undefined){
+        container.innerHTML = `<div> Game Upcoming, No Plays Recorded</div>`;
+        return;
+    }
     var lastPlayText        = eventObject.details.items[0].text;
     var lastPlayType        = eventObject.details.items[0].type.text;
     var gamePeriod          = eventObject.details.items[0].period.displayValue;
@@ -200,7 +203,6 @@ export function addRecentPlayContent(eventObject,eventId,container) {
                 <td colspan="3" id="${eventId}-detailPlayText">${lastPlayText}</td>
             </tr>
         </table>
-        <div class="hidden-content" style="display: block;"></div>
             
     `;
 
