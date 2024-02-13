@@ -420,3 +420,15 @@ img.venue-image {
         height: auto;
         vertical-align: middle;
     }
+
+.horz-detailed-flex {
+    display: flex;
+    width: 100%;
+}
+
+.horz-detailed-item {
+    flex-grow: 1; /* Allows each item to grow and fill the container */
+    display: flex;
+    justify-content: center; /* Centers content horizontally */
+    align-items: center; /* Centers content vertically */
+}

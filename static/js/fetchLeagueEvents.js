@@ -106,7 +106,7 @@ function fetchDetailedEventData(sport, league, eventId) {
         .then(response => response.json())
         .then(data => {
             console.log('Data:', data);
-            //addDetailedEventData(data.data,data.sport,data.league);
+            addDetailedEventData(data.data,data.sport,data.league);
         })
         .catch(error => console.error('Error:', error));
 }

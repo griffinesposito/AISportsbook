@@ -181,3 +181,31 @@ export function addCurrentEventsContent(eventObject,eventId,container) {
     // Add the table HTML to the container
     container.innerHTML = innerHTML;
 }
+
+export function addRecentPlayContent(eventObject,eventId,container) {
+    // Define image source variables
+    var lastPlayText        = eventObject.details.items[0].text;
+    var lastPlayType        = eventObject.details.items[0].type.text;
+    var gamePeriod          = eventObject.details.items[0].period.displayValue;
+    var gameClock           = eventObject.details.items[0].clock.displayValue;
+    var awayTeamScore       = eventObject.awayteamscore.displayValue;
+    var gameStatus          = eventObject.status.type.description;
+    var classStr            = 'th';
+    // Define the table HTML using template literals and the image source variables
+    var innerHTML = `
+        <table>
+            <tr>
+                <th id="${eventId}-play-status" class="${classStr}" colspan="4">${gameStatus} -- Period: ${gamePeriod} -- Clock: ${gameClock}</th>
+            </tr>
+            <tr>
+                <td colspan="1" id="${eventId}-detailPlayType">${lastPlayType}</td>
+                <td colspan="3" id="${eventId}-detailPlayText">${lastPlayText}</td>
+            </tr>
+        </table>
+        <div class="hidden-content" style="display: block;"></div>
+            
+    `;
+
+    // Add the table HTML to the container
+    container.innerHTML = innerHTML;
+}

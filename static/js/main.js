@@ -1,5 +1,5 @@
 import { openLiveData, openTeamsData, openPlayersData } from './openTabs.js';
-import { addCurrentEventsContent, toggleContent, formatHumanReadableDate } from './addCurrentEventsContent.js';
+import { addCurrentEventsContent, addRecentPlayContent, toggleContent, formatHumanReadableDate } from './addCurrentEventsContent.js';
 import { wrappedFetchSearchResults, wrappedFetchDetailedEventData } from './fetchLeagueEvents.js';
 import { replayAndRemoveLastCall, replayAndRemoveNextCall } from './userHistory.js';
 
@@ -79,7 +79,7 @@ var playercellHeight = playernewHeight / playergridRows;
 // ------------------------ Constant definitions -----------------------------------
 // ---------------------------------------------------------------------------------
 const objects = [];
-const targets = { liveDataTargets: [], teamCardTargets: [], playerCardTargets: [], searchBarTarget: []};
+const targets = { liveDataTargets: [], detailedDataTargets: [], teamCardTargets: [], playerCardTargets: [], searchBarTarget: []};
 const particlesData = [];
 const r = 800;
 const rHalf = r / 2;
@@ -549,6 +549,16 @@ function init() {
             targets.playerCardTargets.push( object );
         }
     }
+
+    // Detailed Events Target
+    // ... setup your target ...
+    const detailobject = new THREE.Object3D();
+    // Calculate position
+    detailobject.position.x = 0;
+    detailobject.position.y = 0;
+    detailobject.position.z = -950;
+
+    targets.detailedDataTargets.push( detailobject );
 
     //Search bar target
     const object = new THREE.Object3D();
@@ -1198,8 +1208,8 @@ export function addDetailedEventData(data, sport, league) {
     eventHeader.className = 'live-events-header'; // Apply the CSS class
     eventContainer.appendChild(eventHeader);
     const eventHorizontalContainer = document.createElement('div');
-    eventHorizontalContainer.className = 'live-events-flex';
-    eventHorizontalContainer.setAttribute('data-event-type', "upcoming");
+    eventHorizontalContainer.className = 'horz-detailed-flex';
+    eventHorizontalContainer.setAttribute('data-event-type', "detailed");
     disableControlsOnHover(eventHorizontalContainer);
     eventContainer.appendChild(eventHorizontalContainer);
     const eventObjectCSS = new CSS3DObject( eventContainer );
@@ -1210,37 +1220,39 @@ export function addDetailedEventData(data, sport, league) {
 
     objects.push( eventObjectCSS );
 
-    let dateArray = [];
-    let dateArrayReverse = [];
     // Loop through the elements and add new divs
-    for (const key in data.event) {
-        if (data.events.hasOwnProperty(key)) {
-            const item = data.events[key];
-            const newDiv = document.createElement('div');
-            newDiv.setAttribute('data-date', item.date);
-            newDiv.setAttribute('data-event', key);
-            newDiv.setAttribute('data-sport', sport);
-            newDiv.setAttribute('data-league', league);
-            dateArray.push(item.date);
-            dateArrayReverse.push(item.date);
-            newDiv.className = 'interactive-div'; // Set the class
-            // Add click event listener to newDiv
-            newDiv.addEventListener('click', function() {
-                // Show loader inside newDiv or another element
-                showLoader(newDiv);
-                const eventId   = newDiv.getAttribute('data-event');
-                const sport     = newDiv.getAttribute('data-sport');
-                const league    = newDiv.getAttribute('data-league');
-                wrappedFetchDetailedEventData(eventId,sport,league);
-                // Example: Hide loader after 3 seconds (replace this with your actual logic)
-                // setTimeout(hideLoader, 3000);
-            });
-            addCurrentEventsContent(item,key,newDiv);
-            eventHorizontalContainer.appendChild(newDiv); // Append the new div to the container
-        }
-    }
+    const item = data.event;
+    const key = item.details["id-request"];
+    const newDiv = document.createElement('div');
+    newDiv.setAttribute('data-date', item.date);
+    newDiv.setAttribute('data-event', key);
+    newDiv.setAttribute('data-sport', sport);
+    newDiv.setAttribute('data-league', league);
+    newDiv.className = 'interactive-div'; // Set the class
+    // Add click event listener to newDiv
+    newDiv.addEventListener('click', function() {
+        // Show loader inside newDiv or another element
+        showLoader(newDiv);
+        const eventId   = newDiv.getAttribute('data-event');
+        const sport     = newDiv.getAttribute('data-sport');
+        const league    = newDiv.getAttribute('data-league');
+        wrappedFetchDetailedEventData(eventId,sport,league);
+        // Example: Hide loader after 3 seconds (replace this with your actual logic)
+        // setTimeout(hideLoader, 3000);
+    });
+    addCurrentEventsContent(item,key,newDiv);
+    eventHorizontalContainer.appendChild(newDiv); // Append the new div to the container
 
-    transform( targets.liveDataTargets, 2000 );
+    const recentPlayDiv = document.createElement('div');
+    recentPlayDiv.setAttribute('data-date', item.date);
+    recentPlayDiv.setAttribute('data-event', key);
+    recentPlayDiv.setAttribute('data-sport', sport);
+    recentPlayDiv.setAttribute('data-league', league);
+    recentPlayDiv.setAttribute('data-type', "recentPlays");
+    recentPlayDiv.className = 'interactive-div'; // Set the class
+    addRecentPlayContent(item,key,newDiv);
+
+    transform( targets.detailedDataTargets, 2000 );
     hideTextMesh();
     hideOutlineTextMesh();
     animateCameraToOriginalPosition();
