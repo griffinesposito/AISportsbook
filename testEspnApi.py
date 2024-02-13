@@ -16,6 +16,13 @@ db_params = {
     'password': "3BwHa8VGfovZ",
     'host': "ep-solitary-meadow-09767890.us-east-2.aws.neon.tech"
 }
+
+db_params = {
+    'user': "espositogriffin",
+    'password': "xqjY0Udl4aFf",
+    'host': "ep-old-sky-a5vq08oi-pooler.us-east-2.aws.neon.tech",
+    'dbname': "ai-sportsbook-db"
+}
 #response = get_current_events(sport,league,dates)
 response = get_detailed_event_data(sport,league,eventId,db_params=db_params)
 

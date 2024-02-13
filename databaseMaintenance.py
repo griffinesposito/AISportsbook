@@ -1,71 +1,74 @@
 
 
-def create_player_table(cursor,conn,tableName):
-    # SQL query to check for the existence of the table
-    check_table_query = f"""
-    SELECT EXISTS (
-        SELECT FROM 
-            pg_catalog.pg_class c
-        JOIN 
-            pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-        WHERE 
-            n.nspname = 'public' AND 
-            c.relname = '{tableName}' AND 
-            c.relkind = 'r'
+def create_team_table(cursor, conn, tableName):
+    """
+    Creates a team table.
+    """
+    # SQL query to create the team table
+    create_table_query = f"""
+    CREATE TABLE IF NOT EXISTS {tableName} (
+        id SERIAL PRIMARY KEY,
+        teamName VARCHAR(255),
+        fullName VARCHAR(255),
+        teamId VARCHAR(255) UNIQUE,
+        href VARCHAR(255)
+        -- Add more columns as needed
     );
     """
+    cursor.execute(create_table_query)
+    conn.commit()
 
-    # SQL query to create the table
+def create_player_table(cursor, conn, tableName, teamTableName):
+    """
+    Creates a player table with a foreign key linking to the team table.
+    """
+    # SQL query to create the player table
     create_table_query = f"""
-    CREATE TABLE {tableName} (
+    CREATE TABLE IF NOT EXISTS {tableName} (
         id SERIAL PRIMARY KEY,
         firstName VARCHAR(255),
         lastName VARCHAR(255),
         displayName VARCHAR(255),
         position VARCHAR(255),
-        teamId   VARCHAR(255),
-        playerId VARCHAR(255),
-        href     VARCHAR(255)
+        teamId VARCHAR(255),
+        playerId VARCHAR(255) UNIQUE,
+        href VARCHAR(255),
+        FOREIGN KEY (teamId) REFERENCES {teamTableName}(teamId)
         -- Add more columns as needed
     );
     """
-    # Check if the table exists
-    cursor.execute(check_table_query)
-    if not cursor.fetchone()[0]:
-        # If the table does not exist, create it
-        cursor.execute(create_table_query)
-        conn.commit()
+    cursor.execute(create_table_query)
+    conn.commit()
 
-def create_team_table(cursor,conn,tableName):
-    # SQL query to check for the existence of the table
-    check_table_query = f"""
-    SELECT EXISTS (
-        SELECT FROM 
-            pg_catalog.pg_class c
-        JOIN 
-            pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-        WHERE 
-            n.nspname = 'public' AND 
-            c.relname = '{tableName}' AND 
-            c.relkind = 'r'
-    );
-    """
+def openConnectionPool():
+    import psycopg2
+    from psycopg2 import pool
 
-    # SQL query to create the table
-    create_table_query = f"""
-    CREATE TABLE {tableName} (
-        id SERIAL PRIMARY KEY,
-        teamName VARCHAR(255),
-        fullName VARCHAR(255),
-        teamId   VARCHAR(255),
-        href     VARCHAR(255)
-        -- Add more columns as needed
-    );
-    """
-    # Check if the table exists
-    cursor.execute(check_table_query)
-    if not cursor.fetchone()[0]:
-        # If the table does not exist, create it
-        cursor.execute(create_table_query)
-        conn.commit()
+    # Define the connection pool
+    connection_pool = psycopg2.pool.SimpleConnectionPool(
+        1, # Minimum number of connections
+        800, # Maximum number of connections
+        user="espositogriffin",
+        password="xqjY0Udl4aFf",
+        host="ep-old-sky-a5vq08oi-pooler.us-east-2.aws.neon.tech",
+        port="5432",
+        database="ai-sportsbook-db",
+        sslmode="require"
+    )
+
+    try:
+        # Get a connection from the pool
+        conn = connection_pool.getconn()
+        if conn:
+            print("Successfully received a connection from the connection pool ")
+            cur = conn.cursor()
+            cur.execute("SELECT version();")
+            version = cur.fetchone()
+            print("Database version:", version)
+            cur.close()
+            # Put the connection back in the pool
+            connection_pool.putconn(conn)
+            return connection_pool
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error while connecting to PostgreSQL", error)
         

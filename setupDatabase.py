@@ -1,20 +1,24 @@
 import psycopg2.pool
 import os
-from databaseMaintenance import create_player_table, create_team_table
+from databaseMaintenance import create_player_table, create_team_table, openConnectionPool
 import requests, json, pprint
 from asyncRequests import fetch_data
 from pprint import pprint
 # Database connection parameters
-dbname = "neondb"
-user = "neon"
-password = "3BwHa8VGfovZ"
-host = "ep-solitary-meadow-09767890.us-east-2.aws.neon.tech"
+#dbname = "neondb"
+#user = "neon"
+#password = "3BwHa8VGfovZ"
+#host = "ep-solitary-meadow-09767890.us-east-2.aws.neon.tech"
 
 
 
 
 # Connect to the database
-conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host)
+#conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host)
+#cursor = conn.cursor()
+
+connection_pool = openConnectionPool()
+conn = connection_pool.getconn()
 cursor = conn.cursor()
 
 # Create tables
@@ -27,9 +31,9 @@ create_team_table(cursor,conn,"nba_teams")
 
 # Fill team tables
 #NBA
-def configureNBAPlayerTables(teamId,playerTable):
+def configureNBAPlayerTables(teamId,playerTable,teamTableName):
 
-    create_player_table(cursor,conn,playerTable)
+    create_player_table(cursor,conn,playerTable,teamTableName)
     athletesEndpoint = f"https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/seasons/2024/teams/{teamId}/athletes?lang=en&region=us&limit=500"
     athletesArray = fetch_data([(athletesEndpoint,None)])
     athletesLinks = []
@@ -98,15 +102,15 @@ def configureNBATables():
         team_links.append((link['$ref'],None))
     teamArray = fetch_data(team_links)
 
+    tableName = "nba_teams"
     for team in teamArray:
         # Example data to insert
         teamName = team['abbreviation']
         fullName = team['displayName']
         teamId = team['id']
         href   = team['logos'][0]['href']
-        tableName = "nba_teams"
-        playerTable = f"nba_{teamName}_players"
-        
+        #playerTable = f"nba_{teamName}_players"
+        playerTable = "nba_players"
         # SQL query to check if the row already exists
         check_query = f"""
         SELECT 1 FROM {tableName} WHERE teamName = %s AND teamId = %s;
@@ -128,7 +132,7 @@ def configureNBATables():
         else:
             print("Row already exists.")
         
-        configureNBAPlayerTables(teamId,playerTable)
+        configureNBAPlayerTables(teamId,playerTable,tableName)
 
         
 
@@ -137,8 +141,9 @@ def configureNBATables():
 
 
 #NFL
-def configureNFLPlayerTables(teamId,playerTable):
-    create_player_table(cursor,conn,playerTable)
+def configureNFLPlayerTables(teamId,playerTable,teamTable):
+    #create_player_table(cursor,conn,playerTable)
+    create_player_table(cursor,conn,playerTable,teamTable)
     athletesEndpoint = f"https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2023/teams/{teamId}/athletes?lang=en&region=us&limit=500"
     athletesArray = fetch_data([(athletesEndpoint,None)])
     athletesLinks = []
@@ -206,15 +211,15 @@ def configureNFLTables():
         team_links.append((link['$ref'],None))
     teamArray = fetch_data(team_links)
 
+    tableName = "nfl_teams"
     for team in teamArray:
         # Example data to insert
         teamName = team['abbreviation']
         fullName = team['displayName']
         teamId = team['id']
         href   = team['logos'][0]['href']
-        tableName = "nfl_teams"
-        playerTable = f"nfl_{teamName}_players"
-
+        #playerTable = f"nfl_{teamName}_players"
+        playerTable = f"nfl_players"
 
         
         # SQL query to check if the row already exists
@@ -238,7 +243,7 @@ def configureNFLTables():
         else:
             print("Row already exists.")
         
-        configureNFLPlayerTables(teamId,playerTable)
+        configureNFLPlayerTables(teamId,playerTable,tableName)
 
         
 
