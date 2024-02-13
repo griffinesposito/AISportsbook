@@ -1239,17 +1239,17 @@ export function addDetailedEventData(data, sport, league, eventId) {
         // Example: Hide loader after 3 seconds (replace this with your actual logic)
         // setTimeout(hideLoader, 3000);
     });
-    addCurrentEventsContent(item,key,newDiv);
+    addCurrentEventsContent(item,eventId,newDiv);
     eventHorizontalContainer.appendChild(newDiv); // Append the new div to the container
 
     const recentPlayDiv = document.createElement('div');
     recentPlayDiv.setAttribute('data-date', item.date);
-    recentPlayDiv.setAttribute('data-event', key);
+    recentPlayDiv.setAttribute('data-event', eventId);
     recentPlayDiv.setAttribute('data-sport', sport);
     recentPlayDiv.setAttribute('data-league', league);
     recentPlayDiv.setAttribute('data-type', "recentPlays");
     recentPlayDiv.className = 'horz-detailed-item'; // Set the class
-    addRecentPlayContent(item,key,recentPlayDiv);
+    addRecentPlayContent(item,eventId,recentPlayDiv);
     eventHorizontalContainer.appendChild(recentPlayDiv); // Append the new div to the container
 
     transform( targets.detailedDataTargets, 2000 );
