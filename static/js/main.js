@@ -1228,7 +1228,7 @@ export function addDetailedEventData(data, sport, league) {
     newDiv.setAttribute('data-event', key);
     newDiv.setAttribute('data-sport', sport);
     newDiv.setAttribute('data-league', league);
-    newDiv.className = 'interactive-div'; // Set the class
+    newDiv.className = 'horz-detailed-item'; // Set the class
     // Add click event listener to newDiv
     newDiv.addEventListener('click', function() {
         // Show loader inside newDiv or another element
@@ -1249,8 +1249,9 @@ export function addDetailedEventData(data, sport, league) {
     recentPlayDiv.setAttribute('data-sport', sport);
     recentPlayDiv.setAttribute('data-league', league);
     recentPlayDiv.setAttribute('data-type', "recentPlays");
-    recentPlayDiv.className = 'interactive-div'; // Set the class
-    addRecentPlayContent(item,key,newDiv);
+    recentPlayDiv.className = 'horz-detailed-item'; // Set the class
+    addRecentPlayContent(item,key,recentPlayDiv);
+    eventHorizontalContainer.appendChild(recentPlayDiv); // Append the new div to the container
 
     transform( targets.detailedDataTargets, 2000 );
     hideTextMesh();

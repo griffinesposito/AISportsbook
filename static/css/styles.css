@@ -431,4 +431,17 @@ img.venue-image {
     display: flex;
     justify-content: center; /* Centers content horizontally */
     align-items: center; /* Centers content vertically */
+    background-color: rgba(10, 15, 32, 0.8); /* White background with 50% opacity */
+    border-radius: 8px; /* Adjust the value for more or less rounding */
+    box-shadow: 0px 0px 20px rgba(90, 127, 248, 0.8); /* Horizontal offset, vertical offset, blur radius, color */
+    padding: 0px; /* Space inside the box */
+    margin: 5px 30px; /* Space outside the box, only top, and bottom in this case */
+    color: white; 
+    border: 2px solid rgba(90, 127, 248, 0.8);
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Transition for border color and box shadow */
+}
+
+.horz-detailed-item:hover {
+    border-color: #4CAF50; /* Border color when hovered */
+    box-shadow: 0px 0px 20px #4CAF50; /* Horizontal offset, vertical offset, blur radius, color */
 }
