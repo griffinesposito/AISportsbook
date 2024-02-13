@@ -357,6 +357,7 @@ def get_detailed_event_data(sport, league, eventId, playRef=None, db_params=None
             if dat["pageIndex"] != dat["pageCount"]:
                 response = requests.get(dat['newLink'],params={}) 
                 updatedDat = response.json() 
+                updatedDat['newLink'] = updatedDat['$ref'] + f'&limit=1&page={updatedDat["pageCount"]}'
                 data['event'][key_id] = updatedDat
             else:
                 data['event'][key_id] = dat
