@@ -1196,7 +1196,7 @@ export function addPlayerCards(data,league) {
 // ---------------------------------------------------------------------------------
 // ------------------- ADD CSS3DObjects FROM fetchLeagueEvents ---------------------
 // ---------------------------------------------------------------------------------
-export function addDetailedEventData(data, sport, league) {
+export function addDetailedEventData(data, sport, league, eventId) {
     // table
     removeCSSElements();
 
@@ -1222,10 +1222,9 @@ export function addDetailedEventData(data, sport, league) {
 
     // Loop through the elements and add new divs
     const item = data.event;
-    const key = item.details["id-request"];
     const newDiv = document.createElement('div');
     newDiv.setAttribute('data-date', item.date);
-    newDiv.setAttribute('data-event', key);
+    newDiv.setAttribute('data-event', eventId);
     newDiv.setAttribute('data-sport', sport);
     newDiv.setAttribute('data-league', league);
     newDiv.className = 'horz-detailed-item'; // Set the class
@@ -1236,7 +1235,7 @@ export function addDetailedEventData(data, sport, league) {
         const eventId   = newDiv.getAttribute('data-event');
         const sport     = newDiv.getAttribute('data-sport');
         const league    = newDiv.getAttribute('data-league');
-        wrappedFetchDetailedEventData(eventId,sport,league);
+        wrappedFetchDetailedEventData(sport, league, eventId);
         // Example: Hide loader after 3 seconds (replace this with your actual logic)
         // setTimeout(hideLoader, 3000);
     });
