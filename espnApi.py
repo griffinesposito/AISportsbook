@@ -384,3 +384,30 @@ def get_detailed_event_data(sport, league, eventId, playRef=None, db_params=None
 
     return data
 
+
+def get_season_league_events(sport,league,season,seasontype):
+    if seasontype.lower() == 'preseason':
+        seasontype = "1"
+    elif seasontype.lower() == 'regular':
+        seasontype = "2"
+    elif seasontype.lower() == 'postseason':
+        seasontype = "3"
+
+    endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/events?season={season}&seasontypes={seasontype}&limit=1000"
+
+    response = requests.get(endpoint,params={})
+    if response.status_code != 200:
+        return response.status_code, response.reason  
+
+    eventlinks = response.json()
+    return eventlinks  
+
+def get_event_play_by_play(sport, league, eventId):
+    endpoint = f"{base_url}/{sport.lower()}/leagues/{league.lower()}/events/{eventId}/competitions/{eventId}/plays?lang=en&region=us&limit=1000"
+    response = requests.get(endpoint,params={})
+    if response.status_code != 200:
+        return response.status_code, response.reason  
+
+    playByPlay = response.json()
+    return playByPlay
+
